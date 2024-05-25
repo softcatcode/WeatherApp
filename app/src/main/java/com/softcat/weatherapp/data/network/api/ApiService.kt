@@ -15,7 +15,7 @@ interface ApiService {
     ): WeatherCurrentDto
 
     @GET("forecast.json?")
-    suspend fun oadForecast(
+    suspend fun loadForecast(
         @Query("q") query: String,
         @Query("days") dayCount: Int = 4
     ): WeatherForecastDto
