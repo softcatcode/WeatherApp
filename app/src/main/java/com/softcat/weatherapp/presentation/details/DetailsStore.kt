@@ -4,7 +4,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.domain.entity.Forecast
 
-internal interface DetailsStore: Store<DetailsStore.Intent, DetailsStore.State, DetailsStore.Label> {
+interface DetailsStore: Store<DetailsStore.Intent, DetailsStore.State, DetailsStore.Label> {
 
     sealed interface Intent {
         data object BackClicked: Intent
