@@ -14,7 +14,7 @@ import com.softcat.weatherapp.domain.useCases.RemoveFromFavouriteUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-internal class DetailsStoreFactory @Inject constructor(
+class DetailsStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,
     private val getForecastUseCase: GetForecastUseCase,
     private val observeIsFavouriteUseCase: ObserveIsFavouriteUseCase,
