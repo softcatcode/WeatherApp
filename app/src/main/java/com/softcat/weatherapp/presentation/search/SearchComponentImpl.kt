@@ -6,18 +6,20 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.presentation.extensions.componentScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class SearchComponentImpl @Inject constructor(
+class SearchComponentImpl @AssistedInject constructor(
     storeFactory: SearchStoreFactory,
-    componentContext: ComponentContext,
-    openReason: SearchOpenReason,
-    private val onBackClickCallback: () -> Unit,
-    private val onOpenForecastCallback: (City) -> Unit,
-    private val onSavedToFavouritesCallback: () -> Unit
+    @Assisted("componentContext") componentContext: ComponentContext,
+    @Assisted("openReason") openReason: SearchOpenReason,
+    @Assisted("onBackClickCallback") private val onBackClickCallback: () -> Unit,
+    @Assisted("onOpenForecastCallback") private val onOpenForecastCallback: (City) -> Unit,
+    @Assisted("onSavedToFavouritesCallback") private val onSavedToFavouritesCallback: () -> Unit
 ): SearchComponent, ComponentContext by componentContext {
 
     private val store = instanceKeeper.getStore { storeFactory.create(openReason) }
@@ -52,5 +54,16 @@ class SearchComponentImpl @Inject constructor(
 
     override fun clickCity(city: City) {
         store.accept(SearchStore.Intent.CityClick(city))
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("componentContext") componentContext: ComponentContext,
+            @Assisted("openReason") openReason: SearchOpenReason,
+            @Assisted("onBackClickCallback") onBackClickCallback: () -> Unit,
+            @Assisted("onOpenForecastCallback") onOpenForecastCallback: (City) -> Unit,
+            @Assisted("onSavedToFavouritesCallback") onSavedToFavouritesCallback: () -> Unit
+        ): SearchComponentImpl
     }
 }

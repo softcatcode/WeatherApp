@@ -6,16 +6,18 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.presentation.extensions.componentScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class DetailsComponentImpl @Inject constructor(
-    componentContext: ComponentContext,
+class DetailsComponentImpl @AssistedInject constructor(
     storeFactory: DetailsStoreFactory,
-    city: City,
-    private val onBackClickCallback: () -> Unit
+    @Assisted("componentContext") componentContext: ComponentContext,
+    @Assisted("city") city: City,
+    @Assisted("onBackClickCallback") private val onBackClickCallback: () -> Unit
 ): DetailsComponent, ComponentContext by componentContext {
 
     private val store: DetailsStore = instanceKeeper.getStore { storeFactory.create(city) }
@@ -42,4 +44,12 @@ class DetailsComponentImpl @Inject constructor(
         store.accept(DetailsStore.Intent.BackClicked)
     }
 
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("componentContext") componentContext: ComponentContext,
+            @Assisted("city") city: City,
+            @Assisted("onBackClickCallback") onBackClickCallback: () -> Unit
+        ): DetailsComponentImpl
+    }
 }
