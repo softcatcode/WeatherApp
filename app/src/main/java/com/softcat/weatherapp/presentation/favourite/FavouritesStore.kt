@@ -7,7 +7,7 @@ interface FavouritesStore: Store<FavouritesStore.Intent, FavouritesStore.State, 
 
     sealed interface Intent {
 
-        data class CityItemClicked(val city: String): Intent
+        data class CityItemClicked(val city: City): Intent
 
         data object AddFavouritesClicked: Intent
 
@@ -39,7 +39,7 @@ interface FavouritesStore: Store<FavouritesStore.Intent, FavouritesStore.State, 
     }
 
     sealed interface Label {
-        data class CityItemClicked(val city: String): Label
+        data class CityItemClicked(val city: City): Label
 
         data object AddFavouritesClicked: Label
 

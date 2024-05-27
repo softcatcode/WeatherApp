@@ -11,7 +11,7 @@ import com.softcat.weatherapp.domain.useCases.GetFavouriteCitiesUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-internal class FavouritesStoreFactory @Inject constructor(
+class FavouritesStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
     private val getFavouriteCitiesUseCase: GetFavouriteCitiesUseCase
