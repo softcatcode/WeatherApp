@@ -9,7 +9,7 @@ lifecycleRuntimeKtx = "2.8.0"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 ksp = "2.0.0-1.0.21"
-mviKotlin = "4.0.0"
+mviKotlin = "3.2.1"
 decompose = "3.0.0"
 room = "2.6.1"
 dagger = "2.51.1"
@@ -38,7 +38,7 @@ mvikotlin-core = { group = "com.arkivanov.mvikotlin", name = "mvikotlin", versio
 mvikotlin-main = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-main", version.ref = "mviKotlin" }
 mvikotlin-coroutines = { group = "com.arkivanov.mvikotlin", name = "mvikotlin-extensions-coroutines", version.ref = "mviKotlin" }
 decompose-core = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
-decompose-jetpack = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
+decompose-jetpack = { group = "com.arkivanov.decompose", name = "extensions-compose-jetpack", version = "2.1.2" }
 room-core = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 dagger-core = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
