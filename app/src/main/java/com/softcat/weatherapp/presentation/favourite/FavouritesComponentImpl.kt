@@ -17,7 +17,7 @@ class FavouritesComponentImpl @AssistedInject constructor(
     storeFactory: FavouritesStoreFactory,
     @Assisted("componentContext") componentContext: ComponentContext,
     @Assisted("onCityItemClickedCallback") private val onCityItemClickedCallback: (City) -> Unit,
-    @Assisted("onFavouriteClickCallback") private val onFavouriteClickCallback: () -> Unit,
+    @Assisted("onAddToFavouritesClickCallback") private val onAddToFavouritesClickCallback: () -> Unit,
     @Assisted("onSearchClickCallback") private val onSearchClickCallback: () -> Unit
 ): FavouritesComponent, ComponentContext by componentContext {
 
@@ -31,7 +31,7 @@ class FavouritesComponentImpl @AssistedInject constructor(
     }
 
     private fun labelCollector(label: FavouritesStore.Label) = when (label) {
-        FavouritesStore.Label.AddFavouritesClicked -> onFavouriteClickCallback()
+        FavouritesStore.Label.AddFavouritesClicked -> onAddToFavouritesClickCallback()
         is FavouritesStore.Label.CityItemClicked -> onCityItemClickedCallback(label.city)
         FavouritesStore.Label.SearchClicked -> onSearchClickCallback()
     }
@@ -56,7 +56,7 @@ class FavouritesComponentImpl @AssistedInject constructor(
         fun create(
             @Assisted("componentContext") componentContext: ComponentContext,
             @Assisted("onCityItemClickedCallback") onCityItemClickedCallback: (City) -> Unit,
-            @Assisted("onFavouriteClickCallback") onFavouriteClickCallback: () -> Unit,
+            @Assisted("onAddToFavouritesClickCallback") onAddToFavouritesClickCallback: () -> Unit,
             @Assisted("onSearchClickCallback") onSearchClickCallback: () -> Unit
         ): FavouritesComponentImpl
     }
