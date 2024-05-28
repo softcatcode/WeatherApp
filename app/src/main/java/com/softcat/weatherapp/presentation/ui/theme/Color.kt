@@ -1,4 +1,4 @@
-package com.softcat.weatherapp.presentation.theme.ui
+package com.softcat.weatherapp.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

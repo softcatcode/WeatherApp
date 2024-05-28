@@ -5,7 +5,7 @@ import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.softcat.weatherapp.presentation.details.DetailsContent
 import com.softcat.weatherapp.presentation.favourite.FavouritesContent
 import com.softcat.weatherapp.presentation.search.SearchContent
-import com.softcat.weatherapp.presentation.theme.ui.WeatherAppTheme
+import com.softcat.weatherapp.presentation.ui.theme.WeatherAppTheme
 
 @Composable
 fun RootContent(component: RootComponent) {
