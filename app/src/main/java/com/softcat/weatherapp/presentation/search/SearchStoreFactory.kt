@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.domain.useCases.AddToFavouriteUseCase
 import com.softcat.weatherapp.domain.useCases.SearchCityUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -62,7 +63,9 @@ class SearchStoreFactory @Inject constructor(
                         }
 
                         SearchOpenReason.AddToFavourites -> {
-                            scope.launch { addToFavouriteUseCase(intent.city) }
+                            scope.launch(Dispatchers.Main.immediate) {
+                                addToFavouriteUseCase(intent.city)
+                            }
                             publish(SearchStore.Label.SavedToFavourites)
                         }
                     }

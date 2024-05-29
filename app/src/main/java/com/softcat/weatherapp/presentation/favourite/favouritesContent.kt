@@ -210,7 +210,7 @@ fun SearchCard(onClick: () -> Unit) {
             )
             Text(
                 modifier = Modifier.padding(end = 16.dp),
-                text = stringResource(id = R.string.button_search),
+                text = stringResource(id = R.string.title_search),
                 color = MaterialTheme.colorScheme.background
             )
         }
