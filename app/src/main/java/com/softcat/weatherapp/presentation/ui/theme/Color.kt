@@ -11,3 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Orange = Color(0xFFFF7F57)
+
+// Colors for calendar
+val CalendarPink = Color(0xFFB133A4)
+val CalendarPurple = Color(0xFF4E1A97)
