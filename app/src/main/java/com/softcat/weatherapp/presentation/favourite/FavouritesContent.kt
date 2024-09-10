@@ -1,6 +1,5 @@
 package com.softcat.weatherapp.presentation.favourite
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,16 +38,13 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.room.util.TableInfo
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
-import com.softcat.weatherapp.presentation.ui.theme.CardGradient
 import com.softcat.weatherapp.presentation.ui.theme.Orange
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
 

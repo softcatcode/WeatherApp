@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="button_add_favourite">Добавить</string>
+    <string name="title_search">Поиск</string>
+    <string name="title_upcoming">Ожидается</string>
+    <string name="title_empty_search_result">Не найдено</string>
+    <string name="title_search_error">Ошибка</string>
+
+    <string name="monday_label">ПН</string>
+    <string name="tuesday_label">ВТ</string>
+    <string name="wednesday_label">СР</string>
+    <string name="thursday_label">ЧТ</string>
+    <string name="friday_label">ПТ</string>
+    <string name="saturday_label">СБ</string>
+    <string name="sunday_label">ВС</string>
+</resources>
