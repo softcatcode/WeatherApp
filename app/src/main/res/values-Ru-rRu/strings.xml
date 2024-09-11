@@ -6,6 +6,9 @@
     <string name="title_empty_search_result">Не найдено</string>
     <string name="title_search_error">Ошибка</string>
 
+    <string name="from_label">от</string>
+    <string name="to_label">до</string>
+
     <string name="monday_label">ПН</string>
     <string name="tuesday_label">ВТ</string>
     <string name="wednesday_label">СР</string>
@@ -13,4 +16,14 @@
     <string name="friday_label">ПТ</string>
     <string name="saturday_label">СБ</string>
     <string name="sunday_label">ВС</string>
+
+    <string name="thunderstorm">гроза</string>
+    <string name="drizzle">моросит</string>
+    <string name="rain">дождь</string>
+    <string name="shower">ливень</string>
+    <string name="mist">туман</string>
+    <string name="sun">солнце</string>
+    <string name="clouds">облачно</string>
+    <string name="heavy_clouds">пасмурно</string>
+    <string name="snow">снег</string>
 </resources>
