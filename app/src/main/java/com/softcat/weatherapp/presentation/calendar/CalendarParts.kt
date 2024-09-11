@@ -12,14 +12,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.vector.DefaultTintColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -33,13 +40,14 @@ import com.softcat.weatherapp.domain.entity.WeatherType
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPink
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 
+private val specialFontFamily = FontFamily(
+    Font(R.font.exo2_regular, FontWeight.Normal),
+    Font(R.font.exo2_bold, FontWeight.Bold)
+)
+
 @Preview
 @Composable
 fun MonthTitle(title: String = "September") {
-    val fontFamily = FontFamily(
-        Font(R.font.exo2_regular, FontWeight.Normal),
-        Font(R.font.exo2_bold, FontWeight.Bold)
-    )
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,7 +57,7 @@ fun MonthTitle(title: String = "September") {
         fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.onBackground,
-        fontFamily = fontFamily
+        fontFamily = specialFontFamily
     )
 }
 
@@ -152,14 +160,56 @@ fun MonthDays(
     }
 }
 
+@Preview
 @Composable
 fun WeatherParameter(
-    title: String,
-    iconResId: Int,
-    minValue: Int,
-    maxValue: Int,
+    title: String = "Temperature",
+    iconResId: Int = R.drawable.temperature_parameter,
+    minValue: Float = -50f,
+    maxValue: Float = 50f,
+    value: Float = 10f,
+    onValueChange: (Float) -> Unit = {}
 ) {
-
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(MaterialTheme.colorScheme.background),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            modifier = Modifier.size(24.dp),
+            painter = painterResource(id = iconResId),
+            contentDescription = title,
+            tint = Unspecified
+        )
+        Text(
+            text = title,
+            fontSize = 16.sp,
+            fontFamily = specialFontFamily,
+        )
+        Slider(
+            modifier = Modifier
+                .weight(1f)
+                .padding(20.dp),
+            valueRange = minValue..maxValue,
+            value = value,
+            colors = SliderDefaults.colors().copy(
+                thumbColor = CalendarPurple,
+                disabledThumbColor = CalendarPurple,
+                activeTrackColor = MaterialTheme.colorScheme.secondary,
+                inactiveTrackColor = MaterialTheme.colorScheme.secondary
+            ),
+            onValueChange = onValueChange
+        )
+        Text(
+            modifier = Modifier,
+            text = value.toInt().toString(),
+            fontSize = 16.sp,
+            fontFamily = specialFontFamily,
+        )
+    }
 }
 
 @Composable
