@@ -5,18 +5,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -32,6 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
@@ -47,6 +54,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.domain.entity.WeatherType
+import com.softcat.weatherapp.domain.entity.toIconResId
+import com.softcat.weatherapp.domain.entity.toTitleResId
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPink
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 
@@ -73,9 +82,10 @@ fun MonthTitle(title: String = "September") {
 
 @Composable
 private fun MonthDayBox(
-    isHighlighted: Boolean,
     text: String,
-    cellSize: Int
+    cellSize: Int,
+    isHighlighted: Boolean = true,
+    isSpecified: Boolean = false
 ) {
     val textColor = if (isHighlighted) {
         White
@@ -100,6 +110,21 @@ private fun MonthDayBox(
             textAlign = TextAlign.Center,
             color = textColor
         )
+        if (isSpecified) {
+            val color = if (isHighlighted) {
+                MaterialTheme.colorScheme.background
+            } else {
+                MaterialTheme.colorScheme.onBackground
+            }
+            Spacer(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 5.dp)
+                    .size(3.dp)
+                    .clip(CircleShape)
+                    .background(color)
+            )
+        }
     }
 }
 
@@ -108,7 +133,8 @@ private fun MonthDayBox(
 fun MonthDays(
     daysCount: Int = 30,
     beginWeekDay: Int = 2,
-    highlightedDays: Set<Int> = setOf(5, 10, 11, 28)
+    highlightedDays: Set<Int> = setOf(5, 10, 11, 28),
+    currentDay: Int = 11,
 ) {
     val cellSize = 40
     Column(
@@ -161,6 +187,7 @@ fun MonthDays(
 
                     MonthDayBox(
                         isHighlighted = monthDay in highlightedDays,
+                        isSpecified = monthDay == currentDay,
                         text = text,
                         cellSize = cellSize
                     )
@@ -174,7 +201,7 @@ fun MonthDays(
 @Composable
 fun WeatherParameter(
     modifier: Modifier = Modifier,
-    title: String = "Wind speed",
+    titleResId: Int = R.string.wind_speed_parameter,
     iconResId: Int = R.drawable.wind_parameter,
     minValue: Float = -50f,
     maxValue: Float = 50f,
@@ -184,12 +211,11 @@ fun WeatherParameter(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp)
-            .background(MaterialTheme.colorScheme.background)
             .then(modifier),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
+        val title = stringResource(id = titleResId)
         Icon(
             modifier = Modifier.size(24.dp),
             painter = painterResource(id = iconResId),
@@ -197,7 +223,7 @@ fun WeatherParameter(
             tint = Unspecified
         )
         Text(
-            modifier = Modifier.padding(start = 10.dp),
+            modifier = Modifier.weight(3f).padding(start = 10.dp),
             text = title,
             fontSize = 16.sp,
             fontFamily = exo2FontFamily,
@@ -205,7 +231,7 @@ fun WeatherParameter(
         )
         Slider(
             modifier = Modifier
-                .weight(1f)
+                .weight(5f)
                 .padding(20.dp),
             valueRange = minValue..maxValue,
             value = value,
@@ -218,11 +244,12 @@ fun WeatherParameter(
             onValueChange = onValueChange
         )
         Text(
-            modifier = Modifier,
+            modifier = Modifier.weight(1f),
             text = value.toInt().toString(),
             fontSize = 16.sp,
             fontFamily = exo2FontFamily,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
         )
     }
 }
@@ -230,25 +257,27 @@ fun WeatherParameter(
 @Preview
 @Composable
 fun WeatherTypeSelector(
+    expandingColumnModifier: Modifier = Modifier,
+    elementModifier: Modifier = Modifier,
+    iconWithTextModifier: Modifier = Modifier.size(100.dp),
     currentType: WeatherType = WeatherType.Sun,
     onItemSelected: (WeatherType) -> Unit = {},
 ) {
     var expanded by remember { mutableStateOf(false) }
 
     WeatherTypeItem(
-        modifier = Modifier.background(MaterialTheme.colorScheme.background),
+        modifier = iconWithTextModifier,
         type = currentType,
         onClick = { expanded = true }
     )
     DropdownMenu(
-        modifier = Modifier
-            .width(150.dp)
-            .height(250.dp),
+        modifier = expandingColumnModifier,
         expanded = expanded,
         onDismissRequest = { expanded = false }
     ) {
         WeatherType.entries.forEach { type ->
             WeatherTypeItem(
+                modifier = elementModifier,
                 type = type,
                 onClick = {
                     onItemSelected(type)
@@ -269,34 +298,34 @@ private fun TemperatureInputField(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {
         Box(
-            modifier = Modifier.fillMaxHeight().padding(bottom = 15.dp),
-            contentAlignment = Alignment.BottomCenter
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(start = 5.dp),
+            contentAlignment = Alignment.BottomCenter,
         ) {
             Text(
                 text = labelText,
                 fontFamily = exo2FontFamily,
                 color = MaterialTheme.colorScheme.secondary,
-                fontSize = 14.sp,
+                fontSize = 16.sp,
             )
         }
         TextField(
-            modifier = Modifier
-                .size(128.dp),
+            modifier = Modifier.size(100.dp),
             value = value,
             onValueChange = onValueChange,
             singleLine = true,
             textStyle = TextStyle.Default.copy(
-                fontSize = 50.sp,
+                fontSize = 36.sp,
                 textAlign = TextAlign.Center,
                 fontFamily = exo2FontFamily,
                 color = CalendarPurple
             ),
             colors = TextFieldDefaults.colors().copy(
-                focusedContainerColor = MaterialTheme.colorScheme.background,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedContainerColor = Transparent,
+                unfocusedContainerColor = Transparent,
                 cursorColor = MaterialTheme.colorScheme.tertiary,
             ),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -316,21 +345,85 @@ fun TemperatureRangeInput(
     onMaxValueChange: (String) -> Unit = {},
 ) {
     Row(
-        modifier = Modifier
-            .height(100.dp)
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         TemperatureInputField(
+            modifier = Modifier.fillMaxWidth(0.5f),
             value = minValue,
             onValueChange = onMinValueChange,
             labelText = stringResource(id = R.string.from_label),
         )
         TemperatureInputField(
+            modifier = Modifier.fillMaxWidth(),
             value = maxValue,
             onValueChange = onMaxValueChange,
             labelText = stringResource(id = R.string.to_label),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun BottomSheetDragHandle() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(Modifier.height(5.dp))
+        Spacer(
+            modifier = Modifier
+                .clip(RoundedCornerShape(50))
+                .height(3.dp)
+                .width(50.dp)
+                .background(Gray)
+        )
+        Spacer(Modifier.height(3.dp))
+        Spacer(
+            modifier = Modifier
+                .clip(RoundedCornerShape(50))
+                .height(3.dp)
+                .width(30.dp)
+                .background(Gray)
+
+        )
+        Spacer(Modifier.height(10.dp))
+    }
+}
+
+@Preview
+@Composable
+fun WeatherTypeItem(
+    modifier: Modifier = Modifier.size(100.dp),
+    type: WeatherType = WeatherType.Clouds,
+    onClick: () -> Unit = {}
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val title = stringResource(id = type.toTitleResId())
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+        ) {
+            Icon(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(id = type.toIconResId()),
+                contentDescription = title,
+                tint = Unspecified,
+            )
+        }
+        Text(
+            modifier = Modifier
+                .wrapContentSize(),
+            text = title,
+            fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.secondary,
+            textAlign = TextAlign.Center,
+            fontFamily = exo2FontFamily
         )
     }
 }
