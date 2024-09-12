@@ -26,4 +26,9 @@
     <string name="clouds">clouds</string>
     <string name="heavy_clouds">heavy clouds</string>
     <string name="snow">snow</string>
+
+    <string name="wind_speed_parameter">Wind speed</string>
+    <string name="humidity_parameter">Humidity</string>
+    <string name="precipitations_parameter">Precipitations</string>
+    <string name="snow_volume_parameter">Snow volume</string>
 </resources>
