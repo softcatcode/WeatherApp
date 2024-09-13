@@ -31,4 +31,20 @@
     <string name="humidity_parameter">Humidity</string>
     <string name="precipitations_parameter">Precipitations</string>
     <string name="snow_volume_parameter">Snow volume</string>
+
+    <string name="back">Back</string>
+    <string name="settings">Settings</string>
+
+    <string name="january_title">January</string>
+    <string name="february_title">February</string>
+    <string name="march_title">March</string>
+    <string name="april_title">April</string>
+    <string name="may_title">May</string>
+    <string name="june_title">June</string>
+    <string name="july_title">July</string>
+    <string name="august_title">August</string>
+    <string name="september_title">September</string>
+    <string name="october_title">October</string>
+    <string name="november_title">November</string>
+    <string name="december_title">December</string>
 </resources>

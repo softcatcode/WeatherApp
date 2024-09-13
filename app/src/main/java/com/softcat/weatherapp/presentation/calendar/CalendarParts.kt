@@ -66,12 +66,16 @@ val exo2FontFamily = FontFamily(
 
 @Preview
 @Composable
-fun MonthTitle(title: String = "September") {
+fun MonthTitle(
+    modifier: Modifier = Modifier,
+    title: String = "September"
+) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+            .then(modifier),
         text = title,
         fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
@@ -131,10 +135,11 @@ private fun MonthDayBox(
 @Preview
 @Composable
 fun MonthDays(
+    modifier: Modifier = Modifier,
     daysCount: Int = 30,
     beginWeekDay: Int = 2,
     highlightedDays: Set<Int> = setOf(5, 10, 11, 28),
-    currentDay: Int = 11,
+    currentDay: Int? = 11,
 ) {
     val cellSize = 40
     Column(
@@ -142,7 +147,8 @@ fun MonthDays(
             .fillMaxWidth()
             .wrapContentHeight()
             .background(MaterialTheme.colorScheme.background)
-            .padding(vertical = 15.dp),
+            .padding(vertical = 15.dp)
+            .then(modifier),
 
     ) {
         Row(
@@ -176,7 +182,8 @@ fun MonthDays(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight(),
+                    .wrapContentHeight()
+                    .padding(vertical = 1.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 repeat(7) { dayNumber ->

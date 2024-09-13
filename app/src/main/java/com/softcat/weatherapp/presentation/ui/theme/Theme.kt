@@ -11,19 +11,21 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
-    onSurface = White,
+    background = White,
     onBackground = CalendarPurple,
-)
-
-private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    onSurface = White,
+    onSurface = Pink80,
+)
+
+private val LightColorScheme = lightColorScheme(
+    background = White,
     onBackground = CalendarPurple,
+    primary = Purple40,
+    secondary = PurpleGrey40,
+    tertiary = Pink40,
+    onSurface = Pink80,
 )
 
 /* Other default colors to override
