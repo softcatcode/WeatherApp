@@ -9,6 +9,7 @@ interface CalendarStore: Store<CalendarStore.Intent, CalendarStore.State, Calend
 
     data class State(
         val city: City,
+        val year: Int,
         val weatherParams: WeatherParameters,
         val calendarState: CalendarState
     ) {
@@ -34,6 +35,7 @@ interface CalendarStore: Store<CalendarStore.Intent, CalendarStore.State, Calend
         ): Intent
 
         data class SelectYear(
+            val city: City,
             val year: Int
         ): Intent
 
@@ -50,7 +52,7 @@ interface CalendarStore: Store<CalendarStore.Intent, CalendarStore.State, Calend
         ): Intent
 
         data class ChangePrecipitations(
-            val humidity: Float
+            val precipitations: Float
         ): Intent
 
         data class ChangeWindSpeed(

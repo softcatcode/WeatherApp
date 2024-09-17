@@ -5,10 +5,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class WeatherParameters(
-    val weatherType: WeatherType,
-    val minTemp: Float,
-    val maxTemp: Float,
-    val humidity: Float,
-    val windSpeed: Float,
-    val snowVolume: Float
+    val weatherType: WeatherType = WeatherType.Clouds,
+    val minTemp: Float = 0f,
+    val maxTemp: Float = 0f,
+    val humidity: Float = 0f,
+    val windSpeed: Float = 0f,
+    val precipitations: Float = 0f,
+    val snowVolume: Float = 0f
 ): Parcelable

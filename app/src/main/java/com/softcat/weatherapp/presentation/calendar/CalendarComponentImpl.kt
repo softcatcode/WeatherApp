@@ -44,7 +44,7 @@ class CalendarComponentImpl(
 
     override fun selectYear(year: Int) {
         store.accept(
-            CalendarStore.Intent.SelectYear(year)
+            CalendarStore.Intent.SelectYear(city, year)
         )
     }
 
