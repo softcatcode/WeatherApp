@@ -23,7 +23,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
+import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -204,6 +204,10 @@ fun MonthDays(
     }
 }
 
+private fun ClosedFloatingPointRange<Float>.format(): String {
+    return "$start - $endInclusive"
+}
+
 @Preview
 @Composable
 fun WeatherParameter(
@@ -212,8 +216,8 @@ fun WeatherParameter(
     iconResId: Int = R.drawable.wind_parameter,
     minValue: Float = -50f,
     maxValue: Float = 50f,
-    value: Float = 10f,
-    onValueChange: (Float) -> Unit = {}
+    value: ClosedFloatingPointRange<Float> = 0f..30f,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -236,7 +240,7 @@ fun WeatherParameter(
             fontFamily = exo2FontFamily,
             color = MaterialTheme.colorScheme.onBackground
         )
-        Slider(
+        RangeSlider(
             modifier = Modifier
                 .weight(5f)
                 .padding(20.dp),
@@ -245,14 +249,14 @@ fun WeatherParameter(
             colors = SliderDefaults.colors().copy(
                 thumbColor = CalendarPurple,
                 disabledThumbColor = CalendarPurple,
-                activeTrackColor = MaterialTheme.colorScheme.secondary,
+                activeTrackColor = CalendarPurple,
                 inactiveTrackColor = MaterialTheme.colorScheme.secondary
             ),
             onValueChange = onValueChange
         )
         Text(
             modifier = Modifier.weight(1f),
-            text = value.toInt().toString(),
+            text = value.format(),
             fontSize = 16.sp,
             fontFamily = exo2FontFamily,
             color = MaterialTheme.colorScheme.onBackground,

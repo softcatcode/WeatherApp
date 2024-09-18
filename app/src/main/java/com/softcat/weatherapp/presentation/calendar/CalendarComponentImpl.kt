@@ -9,11 +9,12 @@ import com.softcat.weatherapp.domain.entity.WeatherType
 import com.softcat.weatherapp.presentation.extensions.componentScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class CalendarComponentImpl(
+class CalendarComponentImpl @AssistedInject constructor(
     private val storeFactory: CalendarStoreFactory,
     @Assisted("componentContext") val componentContext: ComponentContext,
     @Assisted("city") val city: City,
@@ -60,25 +61,25 @@ class CalendarComponentImpl(
         )
     }
 
-    override fun changeWindSpeed(newValue: Float) {
+    override fun changeWindSpeed(newValue: ClosedFloatingPointRange<Float>) {
         store.accept(
             CalendarStore.Intent.ChangeWindSpeed(newValue)
         )
     }
 
-    override fun changeHumidity(newValue: Float) {
+    override fun changeHumidity(newValue: ClosedFloatingPointRange<Float>) {
         store.accept(
             CalendarStore.Intent.ChangeHumidity(newValue)
         )
     }
 
-    override fun changePrecipitations(newValue: Float) {
+    override fun changePrecipitations(newValue: ClosedFloatingPointRange<Float>) {
         store.accept(
             CalendarStore.Intent.ChangePrecipitations(newValue)
         )
     }
 
-    override fun changeSnowVolume(newValue: Float) {
+    override fun changeSnowVolume(newValue: ClosedFloatingPointRange<Float>) {
         store.accept(
             CalendarStore.Intent.ChangeSnowVolume(newValue)
         )

@@ -16,8 +16,8 @@ interface CalendarComponent {
     fun changeMaxTemp(temp: String)
 
     // slider parameters
-    fun changeWindSpeed(newValue: Float)
-    fun changeHumidity(newValue: Float)
-    fun changePrecipitations(newValue: Float)
-    fun changeSnowVolume(newValue: Float)
+    fun changeWindSpeed(newValue: ClosedFloatingPointRange<Float>)
+    fun changeHumidity(newValue: ClosedFloatingPointRange<Float>)
+    fun changePrecipitations(newValue: ClosedFloatingPointRange<Float>)
+    fun changeSnowVolume(newValue: ClosedFloatingPointRange<Float>)
 }
