@@ -64,19 +64,19 @@ class CalendarStoreFactory @Inject constructor(
         ): Msg
 
         data class ChangeHumidity(
-            val humidity: Float
+            val humidity: ClosedFloatingPointRange<Float>
         ): Msg
 
         data class ChangePrecipitations(
-            val precipitations: Float
+            val precipitations: ClosedFloatingPointRange<Float>
         ): Msg
 
         data class ChangeWindSpeed(
-            val windSpeed: Float
+            val windSpeed: ClosedFloatingPointRange<Float>
         ): Msg
 
         data class ChangeSnowVolume(
-            val snowVolume: Float
+            val snowVolume: ClosedFloatingPointRange<Float>
         ): Msg
     }
 
@@ -135,23 +135,19 @@ class CalendarStoreFactory @Inject constructor(
     private object ReducerImpl: Reducer<CalendarStore.State, Msg> {
         override fun CalendarStore.State.reduce(msg: Msg): CalendarStore.State = when (msg) {
             is Msg.ChangeHumidity ->
-                copy(weatherParams = weatherParams.copy(humidity = msg.humidity))
-            is Msg.ChangeMaxTemp -> {
-                val newValue = msg.maxTemp.toFloatOrNull() ?: weatherParams.maxTemp
-                copy(weatherParams = weatherParams.copy(maxTemp = newValue))
-            }
-            is Msg.ChangeMinTemp -> {
-                val newValue = msg.minTemp.toFloatOrNull() ?: weatherParams.minTemp
-                copy(weatherParams = weatherParams.copy(minTemp = newValue))
-            }
+                copy(weatherParams = weatherParams.updateHumidity(msg.humidity))
+            is Msg.ChangeMaxTemp ->
+                copy(weatherParams = weatherParams.updateMaxTemperature(msg.maxTemp))
+            is Msg.ChangeMinTemp ->
+                copy(weatherParams = weatherParams.updateMinTemperature(msg.minTemp))
             is Msg.ChangePrecipitations ->
-                copy(weatherParams = weatherParams.copy(precipitations = msg.precipitations))
+                copy(weatherParams = weatherParams.updatePrecipitations(msg.precipitations))
             is Msg.ChangeSnowVolume ->
-                copy(weatherParams = weatherParams.copy(snowVolume = msg.snowVolume))
+                copy(weatherParams = weatherParams.updateSnowVolume(msg.snowVolume))
+            is Msg.ChangeWindSpeed ->
+                copy(weatherParams = weatherParams.updateWindSpeed(msg.windSpeed))
             is Msg.ChangeWeatherType ->
                 copy(weatherParams = weatherParams.copy(weatherType = msg.weatherType))
-            is Msg.ChangeWindSpeed ->
-                copy(weatherParams = weatherParams.copy(windSpeed = msg.windSpeed))
             is Msg.SelectYear -> {
                 copy(
                     year = msg.year,
