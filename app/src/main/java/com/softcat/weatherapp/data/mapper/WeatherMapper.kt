@@ -18,7 +18,12 @@ fun WeatherDto.toEntity(): Weather = Weather(
     tempC = tempC,
     conditionText = condition.description,
     conditionUrl = condition.iconUrl.correctIconUrl(),
-    date = date.toCalendar()
+    date = date.toCalendar(),
+    formattedDate = "",
+    humidity = humidity,
+    windSpeed = windSpeed,
+    snowVolume = snowVolume,
+    precipitations = precipitations
 )
 
 fun WeatherForecastDto.toEntity() = Forecast(
@@ -29,7 +34,12 @@ fun WeatherForecastDto.toEntity() = Forecast(
                 tempC = tempC,
                 conditionText = condition.description,
                 conditionUrl = condition.iconUrl.correctIconUrl(),
-                date = dayDto.date.toCalendar()
+                date = dayDto.date.toCalendar(),
+                formattedDate = dayDto.formattedDate,
+                humidity = humidity,
+                windSpeed = windSpeed,
+                snowVolume = snowVolume,
+                precipitations = precipitations
             )
         }
     }

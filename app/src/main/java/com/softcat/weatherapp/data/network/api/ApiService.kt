@@ -20,6 +20,12 @@ interface ApiService {
         @Query("days") dayCount: Int = 4
     ): WeatherForecastDto
 
+    @GET("history.json?")
+    suspend fun loadWeatherHistory(
+        @Query("q") query: String,
+        @Query("dt") date: String,
+    ): WeatherForecastDto
+
     @GET("search.json?")
     suspend fun searchCity(
         @Query("q") query: String
