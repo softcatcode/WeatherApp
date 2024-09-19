@@ -5,7 +5,7 @@ import com.softcat.weatherapp.domain.entity.WeatherParameters
 import kotlinx.coroutines.flow.Flow
 
 interface CalendarRepository {
-    suspend fun selectYearDays(params: WeatherParameters, city: City, year: Int)
+    suspend fun selectYearDays(params: WeatherParameters, city: City, selectedYear: Int)
 
     fun getHighlightedDays(): Flow< List<Set<Int>> >
 }

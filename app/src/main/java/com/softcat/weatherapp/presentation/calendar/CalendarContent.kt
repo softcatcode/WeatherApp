@@ -191,7 +191,7 @@ fun MonthList(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 70.dp)
+            .padding(top = 100.dp)
             .then(modifier)
     ) {
         itemsIndexed(
