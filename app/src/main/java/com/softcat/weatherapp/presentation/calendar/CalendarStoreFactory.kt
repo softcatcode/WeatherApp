@@ -10,6 +10,7 @@ import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.domain.entity.WeatherParameters
 import com.softcat.weatherapp.domain.entity.WeatherType
 import com.softcat.weatherapp.domain.useCases.GetHighlightedDaysUseCase
+import com.softcat.weatherapp.domain.useCases.ResetHighlightedDaysUseCase
 import com.softcat.weatherapp.domain.useCases.SelectYearDaysUseCase
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class CalendarStoreFactory @Inject constructor(
     private val getHighlightedDaysUseCase: GetHighlightedDaysUseCase,
     private val selectYearDaysUseCase: SelectYearDaysUseCase,
+    private val resetHighlightedDaysUseCase: ResetHighlightedDaysUseCase,
     val storeFactory: StoreFactory
 ) {
     fun create(city: City): CalendarStore =
@@ -42,6 +44,8 @@ class CalendarStoreFactory @Inject constructor(
     }
 
     sealed interface Msg {
+
+        data object LoadingStarted: Msg
 
         data class HighlightDays(
             val days: List<Set<Int>>
@@ -83,6 +87,7 @@ class CalendarStoreFactory @Inject constructor(
     private inner class BootstrapperImpl: CoroutineBootstrapper<Action>() {
         override fun invoke() {
             scope.launch {
+                resetHighlightedDaysUseCase()
                 getHighlightedDaysUseCase().collect {
                     dispatch(Action.CalendarUpdated(highlightedDays = it))
                 }
@@ -102,38 +107,47 @@ class CalendarStoreFactory @Inject constructor(
             intent: CalendarStore.Intent,
             getState: () -> CalendarStore.State
         ) {
-            val msg = when (intent) {
+            when (intent) {
                 is CalendarStore.Intent.ChangeHumidity ->
-                    Msg.ChangeHumidity(intent.humidity)
+                    dispatch(Msg.ChangeHumidity(intent.humidity))
                 is CalendarStore.Intent.ChangeMaxTemp ->
-                    Msg.ChangeMaxTemp(intent.maxTemp)
+                    dispatch(Msg.ChangeMaxTemp(intent.maxTemp))
                 is CalendarStore.Intent.ChangeMinTemp ->
-                    Msg.ChangeMinTemp(intent.minTemp)
+                    dispatch(Msg.ChangeMinTemp(intent.minTemp))
                 is CalendarStore.Intent.ChangePrecipitations ->
-                    Msg.ChangePrecipitations(intent.precipitations)
+                    dispatch(Msg.ChangePrecipitations(intent.precipitations))
                 is CalendarStore.Intent.ChangeSnowVolume ->
-                    Msg.ChangeSnowVolume(intent.snowVolume)
+                    dispatch(Msg.ChangeSnowVolume(intent.snowVolume))
                 is CalendarStore.Intent.ChangeWeatherType ->
-                    Msg.ChangeWeatherType(intent.weatherType)
+                    dispatch(Msg.ChangeWeatherType(intent.weatherType))
                 is CalendarStore.Intent.ChangeWindSpeed ->
-                    Msg.ChangeWindSpeed(intent.windSpeed)
+                    dispatch(Msg.ChangeWindSpeed(intent.windSpeed))
                 is CalendarStore.Intent.SelectYear -> {
-                    val currentYear = Calendar.getInstance(Locale.getDefault())[Calendar.YEAR]
-                    if (intent.year in 1900..currentYear) {
-                        scope.launch {
-                            selectYearDaysUseCase(getState().weatherParams, intent.city, intent.year)
-                        }
-                        Msg.SelectYear(intent.year)
-                    } else
-                        null
+                    val state = getState()
+                    dispatch(Msg.LoadingStarted)
+                    scope.launch {
+                        selectYearDaysUseCase(state.weatherParams, state.city, intent.year)
+                    }
+                    dispatch(Msg.SelectYear(intent.year))
+                }
+                CalendarStore.Intent.BackClicked -> {
+                    publish(CalendarStore.Label.BackClicked)
+                }
+                is CalendarStore.Intent.LoadHighlightedDays -> {
+                    dispatch(Msg.LoadingStarted)
+                    val state = getState()
+                    scope.launch {
+                        selectYearDaysUseCase(state.weatherParams, state.city, state.year)
+                    }
                 }
             }
-            msg?.let {dispatch(it) }
         }
     }
 
     private object ReducerImpl: Reducer<CalendarStore.State, Msg> {
         override fun CalendarStore.State.reduce(msg: Msg): CalendarStore.State = when (msg) {
+            Msg.LoadingStarted ->
+                copy(calendarState = CalendarStore.State.CalendarState.Loading)
             is Msg.ChangeHumidity ->
                 copy(weatherParams = weatherParams.updateHumidity(msg.humidity))
             is Msg.ChangeMaxTemp ->
@@ -148,14 +162,11 @@ class CalendarStoreFactory @Inject constructor(
                 copy(weatherParams = weatherParams.updateWindSpeed(msg.windSpeed))
             is Msg.ChangeWeatherType ->
                 copy(weatherParams = weatherParams.copy(weatherType = msg.weatherType))
-            is Msg.SelectYear -> {
-                copy(
-                    year = msg.year,
-                    calendarState = CalendarStore.State.CalendarState.Loading
-                )
-            }
-            is Msg.HighlightDays ->
+            is Msg.SelectYear ->
+                copy(year = msg.year)
+            is Msg.HighlightDays -> {
                 copy(calendarState = CalendarStore.State.CalendarState.Loaded(msg.days))
+            }
         }
     }
 }

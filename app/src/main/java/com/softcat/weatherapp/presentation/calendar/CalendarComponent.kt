@@ -7,6 +7,10 @@ interface CalendarComponent {
 
     val model: StateFlow<CalendarStore.State>
 
+    fun back()
+
+    fun highlightDays()
+
     // scroll view selectors
     fun selectWeatherType(type: WeatherType)
     fun selectYear(year: Int)

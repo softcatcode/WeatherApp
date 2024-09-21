@@ -23,7 +23,8 @@ interface ApiService {
     @GET("history.json?")
     suspend fun loadWeatherHistory(
         @Query("q") query: String,
-        @Query("dt") date: String,
+        @Query("dt") startDate: String,
+        @Query("end_dt") endDate: String,
     ): WeatherForecastDto
 
     @GET("search.json?")

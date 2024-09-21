@@ -9,6 +9,8 @@ interface DetailsStore: Store<DetailsStore.Intent, DetailsStore.State, DetailsSt
     sealed interface Intent {
         data object BackClicked: Intent
         data object ChangeFavouriteStatusClicked: Intent
+
+        data object OpenCityCalendarClicked: Intent
     }
 
     data class State(
@@ -30,5 +32,7 @@ interface DetailsStore: Store<DetailsStore.Intent, DetailsStore.State, DetailsSt
 
     sealed interface Label {
         data object BackClicked: Label
+
+        data object OpenCityCalendarClicked: Label
     }
 }

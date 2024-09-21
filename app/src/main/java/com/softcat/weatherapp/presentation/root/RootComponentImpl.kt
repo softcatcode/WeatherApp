@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.softcat.weatherapp.domain.entity.City
+import com.softcat.weatherapp.presentation.calendar.CalendarComponentImpl
 import com.softcat.weatherapp.presentation.details.DetailsComponentImpl
 import com.softcat.weatherapp.presentation.favourite.FavouritesComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchComponentImpl
@@ -22,6 +23,7 @@ class RootComponentImpl @AssistedInject constructor(
     private val detailsComponentFactory: DetailsComponentImpl.Factory,
     private val favouritesComponentFactory: FavouritesComponentImpl.Factory,
     private val searchComponentFactory: SearchComponentImpl.Factory,
+    private val calendarComponentFactory: CalendarComponentImpl.Factory,
     @Assisted("componentContext") componentContext: ComponentContext
 ): RootComponent, ComponentContext by componentContext {
 
@@ -35,12 +37,13 @@ class RootComponentImpl @AssistedInject constructor(
     )
 
     private fun child(config: Config, componentContext: ComponentContext): RootComponent.Child =
-        when(config) {
+        when (config) {
             is Config.Details -> {
                 val component = detailsComponentFactory.create(
                     city = config.city,
                     componentContext = componentContext,
-                    onBackClickCallback = { navigation.pop() }
+                    onBackClickCallback = { navigation.pop() },
+                    openCityCalendarCallback = { navigation.push(Config.Calendar(config.city)) }
                 )
                 RootComponent.Child.CityDetails(component)
             }
@@ -65,6 +68,15 @@ class RootComponentImpl @AssistedInject constructor(
                 )
                 RootComponent.Child.Favourites(component)
             }
+
+            is Config.Calendar -> {
+                val component = calendarComponentFactory.create(
+                    componentContext = componentContext,
+                    city = config.city,
+                    onBackClicked = { navigation.pop() }
+                )
+                RootComponent.Child.Calendar(component)
+            }
         }
 
     sealed interface Config: Parcelable {
@@ -76,6 +88,9 @@ class RootComponentImpl @AssistedInject constructor(
 
         @Parcelize
         data class Details(val city: City): Config
+
+        @Parcelize
+        data class Calendar(val city: City): Config
     }
 
     @AssistedFactory

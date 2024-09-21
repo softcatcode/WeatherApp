@@ -41,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -207,6 +208,7 @@ private fun TopBar(
     cityName: String,
     isFavourite: Boolean,
     onFavouriteStatusClicked: () -> Unit,
+    onCalendarClicked: () -> Unit,
     onBackClicked: () -> Unit
 ) {
     CenterAlignedTopAppBar(
@@ -225,13 +227,23 @@ private fun TopBar(
             }
         },
         actions = {
-            val icon = if (isFavourite) Icons.Default.Star else Icons.Default.StarBorder
-            IconButton(onClick = { onFavouriteStatusClicked() }) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.background
-                )
+            Row {
+                val icon = if (isFavourite) Icons.Default.Star else Icons.Default.StarBorder
+                IconButton(onClick = onFavouriteStatusClicked) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.background
+                    )
+                }
+                IconButton(onClick = onCalendarClicked) {
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(R.drawable.calendar),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.background
+                    )
+                }
             }
         }
     )
@@ -246,6 +258,7 @@ fun DetailsContent(component: DetailsComponent) {
                 cityName = state.city.name,
                 isFavourite = state.isFavourite,
                 onFavouriteStatusClicked = { component.changeFavouriteStatus() },
+                onCalendarClicked = { component.openCityCalendar() },
                 onBackClicked = { component.back() }
             )
         },

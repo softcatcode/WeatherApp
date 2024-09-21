@@ -9,4 +9,6 @@ interface DetailsComponent {
     fun changeFavouriteStatus()
 
     fun back()
+
+    fun openCityCalendar()
 }

@@ -5,6 +5,8 @@ import com.softcat.weatherapp.data.network.dto.WeatherDto
 import com.softcat.weatherapp.data.network.dto.WeatherForecastDto
 import com.softcat.weatherapp.domain.entity.Forecast
 import com.softcat.weatherapp.domain.entity.Weather
+import com.softcat.weatherapp.domain.entity.WeatherType
+import com.softcat.weatherapp.domain.entity.weatherTypeOf
 import java.util.Calendar
 import java.util.Date
 
@@ -23,7 +25,8 @@ fun WeatherDto.toEntity(): Weather = Weather(
     humidity = humidity,
     windSpeed = windSpeed,
     snowVolume = snowVolume,
-    precipitations = precipitations
+    precipitations = precipitations,
+    type = weatherTypeOf(condition.code)
 )
 
 fun WeatherForecastDto.toEntity() = Forecast(
@@ -39,7 +42,8 @@ fun WeatherForecastDto.toEntity() = Forecast(
                 humidity = humidity,
                 windSpeed = windSpeed,
                 snowVolume = snowVolume,
-                precipitations = precipitations
+                precipitations = precipitations,
+                type = weatherTypeOf(condition.code)
             )
         }
     }

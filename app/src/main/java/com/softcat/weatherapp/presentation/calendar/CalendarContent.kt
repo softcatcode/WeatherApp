@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -45,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softcat.weatherapp.R
-import com.softcat.weatherapp.domain.entity.WeatherType
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import java.time.LocalDate
 import java.time.YearMonth
@@ -186,11 +189,13 @@ fun MonthList(
     val currentYear = calendar[Calendar.YEAR]
     val currentMonth = calendar[Calendar.MONTH]
     val currentDay = calendar[Calendar.DAY_OF_MONTH]
+    val state = rememberLazyListState()
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 100.dp)
-            .then(modifier)
+            .padding(top = 100.dp, bottom = 50.dp)
+            .then(modifier),
+        state = state
     ) {
         itemsIndexed(
             items = listOf(
@@ -215,28 +220,50 @@ fun MonthList(
                 daysCount = YearMonth.of(year, monthIndex + 1).lengthOfMonth(),
                 weekdayOffset = weekday - 1,
                 currentDay = currentDay.takeIf {
-                    currentYear == year && currentMonth == monthIndex + 1
+                    currentYear == year && currentMonth == monthIndex
                 },
                 highlightedDays = highlightedDays?.getOrNull(monthIndex).orEmpty()
             )
         }
     }
+    LaunchedEffect(Unit) {
+        if (currentYear == year)
+            state.scrollToItem(currentMonth)
+    }
+}
+
+@Composable
+private fun CalendarScaffoldContent(state: CalendarStore.State) {
+    when (val calendarState = state.calendarState) {
+        is CalendarStore.State.CalendarState.Initial -> {}
+
+        is CalendarStore.State.CalendarState.Loading -> {}
+
+        is CalendarStore.State.CalendarState.Loaded -> {
+            MonthList(
+                modifier = Modifier.padding(horizontal = 5.dp),
+                year = state.year,
+                highlightedDays = calendarState.highlightedDays
+            )
+        }
+
+        is CalendarStore.State.CalendarState.Error -> {}
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 fun CalendarContent(
-    highlightedDays: List<Set<Int>>? = null,
-    year: Int = 2024,
+    component: CalendarComponent
 ) {
+    val state by component.model.collectAsState()
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     Scaffold(
         topBar = {
             CalendarTopBar(
-                onYearChange = {},
-                onBackClick = {},
-                selectedYear = Calendar.getInstance().get(Calendar.YEAR)
+                onYearChange = { component.selectYear(year = it) },
+                onBackClick = { component.back() },
+                selectedYear = state.year
             )
         },
         floatingActionButton = {
@@ -256,28 +283,27 @@ fun CalendarContent(
             }
         }
     ) { paddings ->
-        MonthList(
-            modifier = Modifier.padding(horizontal = 5.dp),
-            year = year,
-            highlightedDays = highlightedDays
-        )
+        CalendarScaffoldContent(state)
         CalendarBottomSheet(
             isExpanded = isExpanded,
-            onDismiss = { isExpanded = false },
-            currentWeatherType = WeatherType.Clouds,
-            minTemperature = "12",
-            maxTemperature = "24",
-            onMinTempChange = {},
-            onMaxTempChange = {},
-            onWeatherTypeSelected = {},
-            onWindSpeedValueChange = {},
-            onHumidityValueChange = {},
-            onSnowVolumeValueChange = {},
-            onPrecipitationsValueChange = {},
-            precipitations = 0f..10f,
-            snowVolume = 0f..10f,
-            windSpeed = 0f..10f,
-            humidity = 0f..10f
+            onDismiss = {
+                isExpanded = false
+                component.highlightDays()
+            },
+            currentWeatherType = state.weatherParams.weatherType,
+            minTemperature = state.weatherParams.temperatureMin.toString(),
+            maxTemperature = state.weatherParams.temperatureMax.toString(),
+            onMinTempChange = { component.changeMinTemp(it) },
+            onMaxTempChange = { component.changeMaxTemp(it) },
+            onWeatherTypeSelected = { component.selectWeatherType(it) },
+            onWindSpeedValueChange = { component.changeWindSpeed(it) },
+            onHumidityValueChange = { component.changeHumidity(it) },
+            onSnowVolumeValueChange = { component.changeSnowVolume(it) },
+            onPrecipitationsValueChange = { component.changePrecipitations(it) },
+            precipitations = state.weatherParams.precipitations,
+            snowVolume = state.weatherParams.snowVolume,
+            windSpeed = state.weatherParams.windSpeed,
+            humidity = state.weatherParams.humidity
         )
     }
 }

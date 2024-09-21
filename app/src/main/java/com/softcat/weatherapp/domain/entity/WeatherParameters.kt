@@ -5,17 +5,17 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class WeatherParameters(
-    val weatherType: WeatherType = WeatherType.Clouds,
-    val temperatureMin: Float = 0f,
-    val temperatureMax: Float = 0f,
-    val humidityMin: Float = 0f,
-    val humidityMax: Float = 100f,
-    val windSpeedMin: Float = 0f,
-    val windSpeedMax: Float = 100f,
-    val precipitationsMin: Float = 0f,
-    val precipitationsMax: Float = 100f,
-    val snowVolumeMin: Float = 0f,
-    val snowVolumeMax: Float = 100f
+    val weatherType: WeatherType = WeatherType.Any,
+    val temperatureMin: Int = MIN_TEMPERATURE,
+    val temperatureMax: Int = MAX_TEMPERATURE,
+    val humidityMin: Float = MIN_HUMIDITY,
+    val humidityMax: Float = MAX_HUMIDITY,
+    val windSpeedMin: Float = MIN_WIND_SPEED,
+    val windSpeedMax: Float = MAX_WIND_SPEED,
+    val precipitationsMin: Float = MIN_PRECIPITATIONS,
+    val precipitationsMax: Float = MAX_PRECIPITATIONS,
+    val snowVolumeMin: Float = MIN_SNOW_VOLUME,
+    val snowVolumeMax: Float = MAX_SNOW_VOLUME
 ): Parcelable {
     val humidity: ClosedFloatingPointRange<Float>
         get() = humidityMin..humidityMax
@@ -30,7 +30,7 @@ data class WeatherParameters(
         get() = snowVolumeMin..snowVolumeMax
 
     val temperature: ClosedFloatingPointRange<Float>
-        get() = temperatureMin..temperatureMax
+        get() = temperatureMin.toFloat()..temperatureMax.toFloat()
 
     fun updateHumidity(newValue: ClosedFloatingPointRange<Float>) = copy(
         humidityMin = newValue.start,
@@ -53,7 +53,7 @@ data class WeatherParameters(
     )
 
     fun updateMinTemperature(newValue: String): WeatherParameters {
-        val newTemp = newValue.toFloatOrNull() ?: temperatureMin
+        val newTemp = newValue.toIntOrNull() ?: temperatureMin
         return if (newTemp <= temperatureMax)
             copy(temperatureMin = newTemp)
         else
@@ -61,10 +61,23 @@ data class WeatherParameters(
     }
 
     fun updateMaxTemperature(newValue: String): WeatherParameters {
-        val newTemp = newValue.toFloatOrNull() ?: temperatureMax
+        val newTemp = newValue.toIntOrNull() ?: temperatureMax
         return if (newTemp >= temperatureMin)
             copy(temperatureMax = newTemp)
         else
             copy()
+    }
+
+    companion object {
+        const val MIN_WIND_SPEED = 0f
+        const val MAX_WIND_SPEED = 30f
+        const val MIN_HUMIDITY = 0f
+        const val MAX_HUMIDITY = 100f
+        const val MIN_PRECIPITATIONS = 0f
+        const val MAX_PRECIPITATIONS = 1000f
+        const val MIN_SNOW_VOLUME = 0f
+        const val MAX_SNOW_VOLUME = 1000f
+        const val MIN_TEMPERATURE = -50
+        const val MAX_TEMPERATURE = 50
     }
 }

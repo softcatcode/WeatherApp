@@ -16,8 +16,9 @@ import kotlinx.coroutines.launch
 class DetailsComponentImpl @AssistedInject constructor(
     storeFactory: DetailsStoreFactory,
     @Assisted("componentContext") componentContext: ComponentContext,
-    @Assisted("city") city: City,
-    @Assisted("onBackClickCallback") private val onBackClickCallback: () -> Unit
+    @Assisted("city") private val city: City,
+    @Assisted("onBackClickCallback") private val onBackClickCallback: () -> Unit,
+    @Assisted("openCityCalendarCallback") private val openCityCalendarCallback: (City) -> Unit
 ): DetailsComponent, ComponentContext by componentContext {
 
     private val store: DetailsStore = instanceKeeper.getStore { storeFactory.create(city) }
@@ -31,6 +32,7 @@ class DetailsComponentImpl @AssistedInject constructor(
 
     private fun labelCollector(label: DetailsStore.Label) = when (label) {
         DetailsStore.Label.BackClicked -> onBackClickCallback()
+        DetailsStore.Label.OpenCityCalendarClicked -> openCityCalendarCallback(city)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -44,12 +46,17 @@ class DetailsComponentImpl @AssistedInject constructor(
         store.accept(DetailsStore.Intent.BackClicked)
     }
 
+    override fun openCityCalendar() {
+        store.accept(DetailsStore.Intent.OpenCityCalendarClicked)
+    }
+
     @AssistedFactory
     interface Factory {
         fun create(
             @Assisted("componentContext") componentContext: ComponentContext,
             @Assisted("city") city: City,
-            @Assisted("onBackClickCallback") onBackClickCallback: () -> Unit
+            @Assisted("onBackClickCallback") onBackClickCallback: () -> Unit,
+            @Assisted("openCityCalendarCallback") openCityCalendarCallback: (City) -> Unit
         ): DetailsComponentImpl
     }
 }

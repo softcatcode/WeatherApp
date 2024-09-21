@@ -105,6 +105,10 @@ class DetailsStoreFactory @Inject constructor(
                             addToFavouritesUseCase(state.city)
                     }
                 }
+
+                DetailsStore.Intent.OpenCityCalendarClicked -> {
+                    publish(DetailsStore.Label.OpenCityCalendarClicked)
+                }
             }
         }
     }
