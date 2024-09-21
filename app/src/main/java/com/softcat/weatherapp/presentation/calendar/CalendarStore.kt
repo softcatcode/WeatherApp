@@ -30,6 +30,10 @@ interface CalendarStore: Store<CalendarStore.Intent, CalendarStore.State, Calend
 
     sealed interface Intent {
 
+        data object BackClicked: Intent
+
+        data object LoadHighlightedDays: Intent
+
         data class ChangeWeatherType(
             val weatherType: WeatherType
         ): Intent

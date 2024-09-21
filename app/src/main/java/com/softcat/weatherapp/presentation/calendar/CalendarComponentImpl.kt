@@ -18,7 +18,7 @@ class CalendarComponentImpl @AssistedInject constructor(
     private val storeFactory: CalendarStoreFactory,
     @Assisted("componentContext") val componentContext: ComponentContext,
     @Assisted("city") val city: City,
-    @Assisted("onBackPressed") val onBackPressed: () -> Unit
+    @Assisted("onBackClicked") val onBackClicked: () -> Unit
 ): CalendarComponent, ComponentContext by componentContext {
 
     private val store: CalendarStore = instanceKeeper.getStore { storeFactory.create(city) }
@@ -31,11 +31,18 @@ class CalendarComponentImpl @AssistedInject constructor(
     }
 
     private fun labelCollector(label: CalendarStore.Label) = when (label) {
-        is CalendarStore.Label.BackClicked -> onBackPressed()
+        is CalendarStore.Label.BackClicked -> onBackClicked()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val model: StateFlow<CalendarStore.State> = store.stateFlow
+    override fun back() {
+        store.accept(CalendarStore.Intent.BackClicked)
+    }
+
+    override fun highlightDays() {
+        store.accept(CalendarStore.Intent.LoadHighlightedDays)
+    }
 
     override fun selectWeatherType(type: WeatherType) {
         store.accept(
@@ -90,7 +97,7 @@ class CalendarComponentImpl @AssistedInject constructor(
         fun create(
             @Assisted("componentContext") componentContext: ComponentContext,
             @Assisted("city") city: City,
-            @Assisted("onBackPressed") onBackPressed: () -> Unit,
+            @Assisted("onBackClicked") onBackClicked: () -> Unit,
         ): CalendarComponentImpl
     }
 }

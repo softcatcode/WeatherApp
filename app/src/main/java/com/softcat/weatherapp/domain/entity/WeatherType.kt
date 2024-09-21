@@ -11,7 +11,8 @@ enum class WeatherType {
     Sun,
     Clouds,
     HeavyClouds,
-    Snow
+    Snow,
+    Any
 }
 
 fun WeatherType.toIconResId() = when (this) {
@@ -24,6 +25,7 @@ fun WeatherType.toIconResId() = when (this) {
     WeatherType.Clouds -> R.drawable.clouds
     WeatherType.HeavyClouds -> R.drawable.heavy_clouds
     WeatherType.Snow -> R.drawable.snow
+    WeatherType.Any -> R.drawable.any
 }
 
 fun WeatherType.toTitleResId() = when (this) {
@@ -36,4 +38,18 @@ fun WeatherType.toTitleResId() = when (this) {
     WeatherType.Clouds -> R.string.clouds
     WeatherType.HeavyClouds -> R.string.heavy_clouds
     WeatherType.Snow -> R.string.snow
+    WeatherType.Any -> R.string.any
+}
+
+fun weatherTypeOf(code: Int) = when (code) {
+    1000 -> WeatherType.Sun
+    1003, 1006 -> WeatherType.Clouds
+    1009 -> WeatherType.HeavyClouds
+    1030 -> WeatherType.Mist
+    1273, 1276, 1279, 1282 -> WeatherType.Thunderstorm
+    1150, 1153, 1168, 1171 -> WeatherType.Drizzle
+    1180, 1183, 1186, 1189, 1198, 1201, 1063 -> WeatherType.Rain
+    1192, 1195 -> WeatherType.ShowerRain
+    1210, 1213, 1216, 1219, 1222, 1225 -> WeatherType.Snow
+    else -> WeatherType.Any
 }

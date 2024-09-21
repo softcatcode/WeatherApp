@@ -5,13 +5,14 @@ import com.softcat.weatherapp.data.network.api.ApiService
 import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.domain.entity.Weather
 import com.softcat.weatherapp.domain.entity.WeatherParameters
+import com.softcat.weatherapp.domain.entity.WeatherType
 import com.softcat.weatherapp.domain.interfaces.CalendarRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
 class CalendarRepositoryImpl @Inject constructor(
@@ -30,16 +31,22 @@ class CalendarRepositoryImpl @Inject constructor(
     private val highlightedDaysFlow = flow {
         getHighlightedDaysRequest.emit(null)
         getHighlightedDaysRequest.collect { request ->
-            request?.let {
-                loadDaysWithCorrespondingWeather(it.params, it.city, it.selectedYear)
+            if (request == null) {
+                _monthsDays = List(12) { mutableSetOf() }
+            } else with (request) {
+                loadDaysWithCorrespondingWeather(params, city, selectedYear)
             }
             emit(monthsDays)
         }
-    }
+    }.shareIn(
+        scope = coroutineScope,
+        started = SharingStarted.Eagerly,
+        replay = 1
+    )
 
-    private var _monthsDays = List(12) { mutableSetOf<Int>() }
+    private var _monthsDays: List<MutableSet<Int>> = List(12) { mutableSetOf() }
     private val monthsDays: List<Set<Int>>
-        get() = _monthsDays
+        get() = List(12) { _monthsDays[it] }
 
     override suspend fun selectYearDays(
         params: WeatherParameters,
@@ -52,11 +59,9 @@ class CalendarRepositoryImpl @Inject constructor(
     }
 
     override fun getHighlightedDays() = highlightedDaysFlow
-        .stateIn(
-            scope = coroutineScope,
-            started = SharingStarted.Eagerly,
-            initialValue = List(12) { mutableSetOf() }
-        )
+    override suspend fun reset() {
+        getHighlightedDaysRequest.emit(null)
+    }
 
     private suspend fun getWeatherForecast(daysCount: Int, cityId: Int): List<Weather> {
         return try {
@@ -73,7 +78,8 @@ class CalendarRepositoryImpl @Inject constructor(
         return try {
             apiService.loadWeatherHistory(
                 query = WeatherRepositoryImpl.cityIdToQuery(cityId),
-                date = "$currentYear-01-01"
+                startDate = "$currentYear-01-01",
+                endDate = "$currentYear-12-31"
             ).toEntity().upcoming
         } catch (e: Exception) {
             emptyList()
@@ -90,12 +96,12 @@ class CalendarRepositoryImpl @Inject constructor(
         _monthsDays = List(12) { mutableSetOf() }
 
         (nextWeatherList + prevWeatherList).filter { weather ->
+            (params.weatherType == WeatherType.Any || weather.type == params.weatherType) &&
             weather.tempC in params.temperature &&
             weather.humidity in params.humidity &&
             weather.precipitations in params.precipitations &&
             weather.windSpeed in params.windSpeed &&
             weather.snowVolume in params.snowVolume
-
         }.forEach { weather ->
             val date = weather.formattedDate
             val year = date.substringBefore('-', "0").toInt()

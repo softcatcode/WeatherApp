@@ -26,6 +26,7 @@
     <string name="clouds">облачно</string>
     <string name="heavy_clouds">пасмурно</string>
     <string name="snow">снег</string>
+    <string name="any">любая</string>
 
     <string name="wind_speed_parameter">Скорость ветра</string>
     <string name="humidity_parameter">Влажность</string>

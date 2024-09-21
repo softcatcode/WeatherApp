@@ -18,16 +18,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.softcat.weatherapp.R
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_HUMIDITY
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_PRECIPITATIONS
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_SNOW_VOLUME
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_WIND_SPEED
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_HUMIDITY
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_PRECIPITATIONS
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_SNOW_VOLUME
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_WIND_SPEED
 import com.softcat.weatherapp.domain.entity.WeatherType
-
-private const val minWindSpeed = 0f
-private const val maxWindSpeed = 30f
-private const val minHumidity = 0f
-private const val maxHumidity = 100f
-private const val minPrecipitations = 0f
-private const val maxPrecipitations = 1000f
-private const val minSnowVolume = 0f
-private const val maxSnowVolume = 1000f
 
 private fun LazyListScope.temperatureSelector(
     currentWeatherType: WeatherType,
@@ -104,8 +103,8 @@ fun CalendarBottomSheet(
             tonalElevation = 1.dp,
             containerColor = MaterialTheme.colorScheme.background,
             contentColor = MaterialTheme.colorScheme.background,
-            scrimColor = MaterialTheme.colorScheme.background,
-            dragHandle = { BottomSheetDragHandle() },
+            scrimColor = MaterialTheme.colorScheme.background.copy(alpha = 0.5f),
+            dragHandle = { BottomSheetDragHandle() }
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
@@ -122,8 +121,8 @@ fun CalendarBottomSheet(
                     WeatherParameter(
                         titleResId = R.string.wind_speed_parameter,
                         iconResId = R.drawable.wind_parameter,
-                        minValue = minWindSpeed,
-                        maxValue = maxWindSpeed,
+                        minValue = MIN_WIND_SPEED,
+                        maxValue = MAX_WIND_SPEED,
                         value = windSpeed,
                         onValueChange = onWindSpeedValueChange
                     )
@@ -132,8 +131,8 @@ fun CalendarBottomSheet(
                     WeatherParameter(
                         titleResId = R.string.humidity_parameter,
                         iconResId = R.drawable.humidity_parameter,
-                        minValue = minHumidity,
-                        maxValue = maxHumidity,
+                        minValue = MIN_HUMIDITY,
+                        maxValue = MAX_HUMIDITY,
                         value = humidity,
                         onValueChange = onHumidityValueChange
                     )
@@ -142,8 +141,8 @@ fun CalendarBottomSheet(
                     WeatherParameter(
                         titleResId = R.string.precipitations_parameter,
                         iconResId = R.drawable.precipitations_parameter,
-                        minValue = minPrecipitations,
-                        maxValue = maxPrecipitations,
+                        minValue = MIN_PRECIPITATIONS,
+                        maxValue = MAX_PRECIPITATIONS,
                         value = precipitations,
                         onValueChange = onPrecipitationsValueChange
                     )
@@ -152,8 +151,8 @@ fun CalendarBottomSheet(
                     WeatherParameter(
                         titleResId = R.string.snow_volume_parameter,
                         iconResId = R.drawable.snow_volume_parameter,
-                        minValue = minSnowVolume,
-                        maxValue = maxSnowVolume,
+                        minValue = MIN_SNOW_VOLUME,
+                        maxValue = MAX_SNOW_VOLUME,
                         value = snowVolume,
                         onValueChange = onSnowVolumeValueChange
                     )

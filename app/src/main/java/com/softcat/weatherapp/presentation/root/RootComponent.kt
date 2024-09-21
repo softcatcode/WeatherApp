@@ -18,6 +18,6 @@ interface RootComponent {
 
         data class CityDetails(val component: DetailsComponent): Child
 
-        data class Calendar(val component: CalendarComponent)
+        data class Calendar(val component: CalendarComponent): Child
     }
 }

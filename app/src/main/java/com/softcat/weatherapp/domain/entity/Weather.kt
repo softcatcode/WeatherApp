@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.Calendar
 
 data class Weather(
+    val type: WeatherType,
     val tempC: Float,
     val conditionText: String,
     val conditionUrl: String,

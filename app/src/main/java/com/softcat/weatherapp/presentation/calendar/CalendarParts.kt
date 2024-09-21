@@ -137,7 +137,7 @@ private fun MonthDayBox(
 fun MonthDays(
     modifier: Modifier = Modifier,
     daysCount: Int = 30,
-    beginWeekDay: Int = 2,
+    beginWeekDay: Int = 6,
     highlightedDays: Set<Int> = setOf(5, 10, 11, 28),
     currentDay: Int? = 11,
 ) {
@@ -178,7 +178,7 @@ fun MonthDays(
                 }
             }
         }
-        repeat((daysCount + 6) / 7) { weekNumber ->
+        repeat((daysCount + beginWeekDay + 6) / 7) { weekNumber ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -324,7 +324,7 @@ private fun TemperatureInputField(
             )
         }
         TextField(
-            modifier = Modifier.size(100.dp),
+            modifier = Modifier,
             value = value,
             onValueChange = onValueChange,
             singleLine = true,
