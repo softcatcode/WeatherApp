@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +39,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,6 +53,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softcat.weatherapp.R
+import com.softcat.weatherapp.presentation.utils.HintButton
+import com.softcat.weatherapp.presentation.utils.HintDialog
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Locale
@@ -104,6 +108,7 @@ fun YearButton(
 fun CalendarTopBar(
     onYearChange: (Int) -> Unit = {},
     onBackClick: () -> Unit = {},
+    onHintIconClick: () -> Unit = {},
     minYear: Int = 1990,
     maxYear: Int = 2025,
     selectedYear: Int = 2024
@@ -140,12 +145,14 @@ fun CalendarTopBar(
                 onClick = onBackClick
             ) {
                 Icon(
+                    modifier = Modifier.size(24.dp),
                     imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                     contentDescription = stringResource(id = R.string.back),
                     tint = MaterialTheme.colorScheme.background
                 )
             }
-        }
+        },
+        actions = { HintButton(onClick = onHintIconClick) }
     )
 }
 
@@ -241,7 +248,9 @@ private fun CalendarStateContent(state: CalendarStore.State) {
         is CalendarStore.State.CalendarState.Loading -> {
             Box(Modifier.fillMaxSize()) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(70.dp).align(Alignment.Center),
+                    modifier = Modifier
+                        .size(70.dp)
+                        .align(Alignment.Center),
                     color = MaterialTheme.colorScheme.onBackground
                 )
             }
@@ -266,11 +275,13 @@ fun CalendarContent(
 ) {
     val state by component.model.collectAsState()
     var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var hintDialogVisible by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             CalendarTopBar(
                 onYearChange = { component.selectYear(year = it) },
                 onBackClick = { component.back() },
+                onHintIconClick = { hintDialogVisible = true },
                 selectedYear = state.year
             )
         },
@@ -313,5 +324,12 @@ fun CalendarContent(
             windSpeed = state.weatherParams.windSpeed,
             humidity = state.weatherParams.humidity
         )
+        if (hintDialogVisible) {
+            HintDialog(
+                onDismissRequest = { hintDialogVisible = false },
+                title = stringResource(id = R.string.hint),
+                text = stringResource(id = R.string.calendar_hint)
+            )
+        }
     }
 }

@@ -28,6 +28,7 @@
     <string name="snow">snow</string>
     <string name="any">any</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="hint">hint</string>
 
     <string name="wind_speed_parameter">Wind speed</string>
     <string name="humidity_parameter">Humidity</string>
@@ -49,4 +50,6 @@
     <string name="october_title">October</string>
     <string name="november_title">November</string>
     <string name="december_title">December</string>
+
+    <string name="calendar_hint">Specify days with certain weather</string>
 </resources>

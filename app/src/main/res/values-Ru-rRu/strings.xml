@@ -5,6 +5,7 @@
     <string name="title_upcoming">Ожидается</string>
     <string name="title_empty_search_result">Не найдено</string>
     <string name="title_search_error">Ошибка</string>
+    <string name="hint">Подсказка</string>
 
     <string name="from_label">от</string>
     <string name="to_label">до</string>
@@ -48,4 +49,6 @@
     <string name="october_title">Октябрь</string>
     <string name="november_title">Ноябрь</string>
     <string name="december_title">Декабрь</string>
+
+    <string name="calendar_hint">Отметить дни с определённой погодой</string>
 </resources>
