@@ -247,9 +247,9 @@ fun WeatherParameter(
             valueRange = minValue..maxValue,
             value = value,
             colors = SliderDefaults.colors().copy(
-                thumbColor = CalendarPurple,
-                disabledThumbColor = CalendarPurple,
-                activeTrackColor = CalendarPurple,
+                thumbColor = MaterialTheme.colorScheme.onBackground,
+                disabledThumbColor = MaterialTheme.colorScheme.onBackground,
+                activeTrackColor = MaterialTheme.colorScheme.onBackground,
                 inactiveTrackColor = MaterialTheme.colorScheme.secondary
             ),
             onValueChange = onValueChange
@@ -332,7 +332,7 @@ private fun TemperatureInputField(
                 fontSize = 36.sp,
                 textAlign = TextAlign.Center,
                 fontFamily = exo2FontFamily,
-                color = CalendarPurple
+                color = MaterialTheme.colorScheme.onBackground
             ),
             colors = TextFieldDefaults.colors().copy(
                 focusedContainerColor = Transparent,

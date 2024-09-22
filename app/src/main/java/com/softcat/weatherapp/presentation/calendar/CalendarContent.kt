@@ -49,7 +49,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softcat.weatherapp.R
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.Locale
@@ -66,7 +65,7 @@ fun YearButton(
         Transparent
     }
     val textColor = if (isSelected) {
-        CalendarPurple
+        MaterialTheme.colorScheme.onBackground
     } else {
         MaterialTheme.colorScheme.background
     }
@@ -110,7 +109,7 @@ fun CalendarTopBar(
     TopAppBar(
         modifier = Modifier,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = CalendarPurple,
+            containerColor = MaterialTheme.colorScheme.onBackground,
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
