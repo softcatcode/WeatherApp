@@ -189,6 +189,7 @@ fun AddFavouriteCityCard(onClick: () -> Unit) {
 fun SearchCard(onClick: () -> Unit) {
     val gradient = WeatherCardGradient.gradients[3 % WeatherCardGradient.gradients.size]
     Card(
+        modifier = Modifier.padding(top = 30.dp),
         shape = CircleShape
     ) {
         Row(
