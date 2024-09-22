@@ -54,7 +54,10 @@ class SearchStoreFactory @Inject constructor(
             when (intent) {
                 SearchStore.Intent.BackClick -> publish(SearchStore.Label.BackClick)
 
-                is SearchStore.Intent.ChangeSearchQuery -> dispatch(Msg.ChangeSearchQuery(intent.query))
+                is SearchStore.Intent.ChangeSearchQuery -> {
+                    dispatch(Msg.ChangeSearchQuery(intent.query))
+                    launchSearchProcess(state = getState())
+                }
 
                 is SearchStore.Intent.CityClick -> {
                     when (openReason) {
@@ -70,18 +73,18 @@ class SearchStoreFactory @Inject constructor(
                         }
                     }
                 }
+            }
+        }
 
-                SearchStore.Intent.SearchClick -> {
-                    searchJob?.cancel()
-                    searchJob = scope.launch {
-                        try {
-                            dispatch(Msg.LoadingSearchResult)
-                            val cities = searchCityUseCase(getState().searchQuery)
-                            dispatch(Msg.SearchResultLoaded(cities))
-                        } catch (e: Exception) {
-                            dispatch(Msg.SearchResultError)
-                        }
-                    }
+        private fun launchSearchProcess(state: SearchStore.State) {
+            searchJob?.cancel()
+            searchJob = scope.launch {
+                try {
+                    dispatch(Msg.LoadingSearchResult)
+                    val cities = searchCityUseCase(state.searchQuery)
+                    dispatch(Msg.SearchResultLoaded(cities))
+                } catch (e: Exception) {
+                    dispatch(Msg.SearchResultError)
                 }
             }
         }

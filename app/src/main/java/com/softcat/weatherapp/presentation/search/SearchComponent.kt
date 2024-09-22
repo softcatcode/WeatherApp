@@ -10,7 +10,5 @@ interface SearchComponent {
 
     fun back()
 
-    fun clickSearch()
-
     fun clickCity(city: City)
 }

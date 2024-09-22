@@ -27,6 +27,7 @@
     <string name="heavy_clouds">heavy clouds</string>
     <string name="snow">snow</string>
     <string name="any">any</string>
+    <string name="ok" translatable="false">OK</string>
 
     <string name="wind_speed_parameter">Wind speed</string>
     <string name="humidity_parameter">Humidity</string>
