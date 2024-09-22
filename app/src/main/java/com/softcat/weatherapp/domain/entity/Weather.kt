@@ -1,6 +1,5 @@
 package com.softcat.weatherapp.domain.entity
 
-import com.google.gson.annotations.SerializedName
 import java.util.Calendar
 
 data class Weather(
@@ -14,4 +13,5 @@ data class Weather(
     val windSpeed: Float,
     val snowVolume: Float,
     val precipitations: Float,
+    val astrologicalParams: AstrologicalParameters?
 )
