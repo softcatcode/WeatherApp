@@ -6,10 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +19,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -159,25 +157,22 @@ fun AddFavouriteCityCard(onClick: () -> Unit) {
         shape = MaterialTheme.shapes.extraLarge,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
     ) {
-        Column(
+        Box(
             modifier = Modifier
                 .sizeIn(minHeight = 196.dp)
                 .fillMaxSize()
                 .padding(24.dp)
-                .clickable { onClick() }
+                .clickable { onClick() },
+            contentAlignment = Alignment.Center
         ) {
             Icon(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(16.dp)
-                    .size(48.dp),
-                imageVector = Icons.Default.Edit,
+                modifier = Modifier.size(100.dp),
+                imageVector = Icons.Default.Add,
                 tint = Orange,
                 contentDescription = null
             )
-            Spacer(Modifier.weight(1f))
             Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier.align(Alignment.BottomCenter),
                 text = stringResource(id = R.string.button_add_favourite),
                 style = MaterialTheme.typography.titleMedium
             )
