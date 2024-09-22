@@ -48,10 +48,6 @@ class SearchComponentImpl @AssistedInject constructor(
         store.accept(SearchStore.Intent.BackClick)
     }
 
-    override fun clickSearch() {
-        store.accept(SearchStore.Intent.SearchClick)
-    }
-
     override fun clickCity(city: City) {
         store.accept(SearchStore.Intent.CityClick(city))
     }

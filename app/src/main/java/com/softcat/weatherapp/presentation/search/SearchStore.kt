@@ -10,8 +10,6 @@ interface SearchStore: Store<SearchStore.Intent, SearchStore.State, SearchStore.
 
         data object BackClick: Intent
 
-        data object SearchClick: Intent
-
         data class CityClick(val city: City): Intent
     }
 

@@ -22,7 +22,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -71,38 +74,53 @@ fun SearchContent(component: SearchComponent) {
         modifier = Modifier.focusRequester(focusRequester),
         placeholder = {
             Text(
-                text = stringResource(R.string.title_search)
+                text = stringResource(R.string.title_search),
+                color = Color.Black
             )
         },
         query = state.searchQuery,
         onQueryChange = { component.changeSearchQuery(it) },
-        onSearch = { component.clickSearch() },
+        onSearch = {},
         active = true,
         onActiveChange = {},
+        colors = SearchBarDefaults.colors(
+            inputFieldColors = TextFieldDefaults.colors(
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
+            )
+        ),
         leadingIcon = {
             IconButton(onClick = { component.back() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null
+                    contentDescription = stringResource(id = R.string.back),
+                    tint = Color.Black
                 )
             }
         },
         trailingIcon = {
-            IconButton(onClick = { component.clickSearch() }) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = null
-                )
-            }
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = stringResource(id = R.string.title_search),
+                tint = Color.Black
+            )
         }
     ) {
         when (val searchState = state.searchState) {
             SearchStore.State.SearchState.EmptyResult -> {
-                Text(text = stringResource(id = R.string.title_empty_search_result), textAlign = TextAlign.Center)
+                Text(
+                    text = stringResource(id = R.string.title_empty_search_result),
+                    textAlign = TextAlign.Center,
+                    color = Color.Black
+                )
             }
 
             SearchStore.State.SearchState.Error -> {
-                Text(text = stringResource(id = R.string.title_empty_search_result), textAlign = TextAlign.Center)
+                Text(
+                    text = stringResource(id = R.string.title_empty_search_result),
+                    textAlign = TextAlign.Center,
+                    color = Color.Black
+                )
             }
 
             SearchStore.State.SearchState.Initial -> {}

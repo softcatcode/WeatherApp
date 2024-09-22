@@ -197,7 +197,7 @@ fun SearchCard(onClick: () -> Unit) {
             Icon(
                 imageVector = Icons.Default.Search,
                 tint = MaterialTheme.colorScheme.background,
-                contentDescription = null,
+                contentDescription = stringResource(id = R.string.title_search),
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
             Text(
