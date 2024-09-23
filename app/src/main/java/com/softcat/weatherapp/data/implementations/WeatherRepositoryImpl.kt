@@ -8,9 +8,11 @@ import javax.inject.Inject
 class WeatherRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ): WeatherRepository {
-    override suspend fun getWeather(cityId: Int) = apiService.loadCurrentWeather(cityIdToQuery(cityId)).toEntity()
+    override suspend fun getWeather(cityId: Int) =
+        apiService.loadCurrentWeather(cityIdToQuery(cityId)).toEntity()
 
-    override suspend fun getForecast(cityId: Int) = apiService.loadForecast(cityIdToQuery(cityId)).toEntity()
+    override suspend fun getForecast(cityId: Int) =
+        apiService.loadForecast(cityIdToQuery(cityId)).toEntity()
 
     companion object {
         private const val PREFIX_CITY_ID = "id:"
