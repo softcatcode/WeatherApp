@@ -68,7 +68,7 @@ class CalendarRepositoryImpl @Inject constructor(
             apiService.loadForecast(
                 query = WeatherRepositoryImpl.cityIdToQuery(cityId),
                 dayCount = daysCount
-            ).toEntity().upcoming
+            ).toEntity(dropCurrentForecast = false).upcoming
         } catch (e: Exception) {
             emptyList()
         }

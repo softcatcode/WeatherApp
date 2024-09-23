@@ -7,11 +7,9 @@ import com.softcat.weatherapp.data.network.dto.WeatherForecastDto
 import com.softcat.weatherapp.domain.entity.AstrologicalParameters
 import com.softcat.weatherapp.domain.entity.Forecast
 import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.entity.WeatherType
 import com.softcat.weatherapp.domain.entity.weatherTypeOf
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 
 fun WeatherCurrentDto.toEntity() = value.toEntity()
 
@@ -40,9 +38,9 @@ fun WeatherDto.toEntity(): Weather = Weather(
     astrologicalParams = null
 )
 
-fun WeatherForecastDto.toEntity() = Forecast(
+fun WeatherForecastDto.toEntity(dropCurrentForecast: Boolean = true) = Forecast(
     weather = current.toEntity(),
-    upcoming = forecastDto.days.drop(1).map { dayDto ->
+    upcoming = forecastDto.days.drop(if (dropCurrentForecast) 1 else 0).map { dayDto ->
         with (dayDto.weather) {
             Weather(
                 tempC = tempC,
