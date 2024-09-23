@@ -77,7 +77,7 @@ data class WeatherParameters(
         const val MAX_PRECIPITATIONS = 1000f
         const val MIN_SNOW_VOLUME = 0f
         const val MAX_SNOW_VOLUME = 1000f
-        const val MIN_TEMPERATURE = -50
-        const val MAX_TEMPERATURE = 50
+        const val MIN_TEMPERATURE = -40
+        const val MAX_TEMPERATURE = 40
     }
 }

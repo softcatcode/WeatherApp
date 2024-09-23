@@ -40,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -51,6 +52,8 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.domain.entity.Forecast
 import com.softcat.weatherapp.domain.entity.Weather
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_TEMPERATURE
+import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_TEMPERATURE
 import com.softcat.weatherapp.presentation.extensions.formattedFullDate
 import com.softcat.weatherapp.presentation.extensions.formattedShortWeekDay
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
@@ -249,6 +252,20 @@ private fun TopBar(
     )
 }
 
+private fun getBackgroundGradient(state: DetailsStore.State): Brush {
+    val forecastState = state.forecastState
+    return if (forecastState is DetailsStore.State.ForecastState.Loaded) {
+        val t = forecastState.forecast.weather.tempC
+        val r = 1f / (MAX_TEMPERATURE - MIN_TEMPERATURE) * 0.8f * (t - MIN_TEMPERATURE)
+        val b = 1f - r
+        val firstColor = Color(r, 0f, b)
+        val secondColor = Color(r, 0.4f, b)
+        Brush.linearGradient(listOf(firstColor, secondColor))
+    } else {
+        WeatherCardGradient.gradients[1].primaryGradient
+    }
+}
+
 @Composable
 fun DetailsContent(component: DetailsComponent) {
     val state by component.model.collectAsState()
@@ -265,7 +282,7 @@ fun DetailsContent(component: DetailsComponent) {
         containerColor = Color.Transparent,
         modifier = Modifier
             .fillMaxSize()
-            .background(WeatherCardGradient.gradients[1].primaryGradient),
+            .background(getBackgroundGradient(state)),
         contentColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {

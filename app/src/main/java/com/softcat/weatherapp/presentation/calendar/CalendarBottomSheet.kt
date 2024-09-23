@@ -52,7 +52,8 @@ private fun LazyListScope.temperatureSelector(
                     .padding(vertical = 2.dp),
                 iconWithTextModifier = Modifier
                     .weight(1f)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .padding(vertical = 3.dp),
                 onItemSelected = onWeatherTypeSelected,
                 currentType = currentWeatherType
             )

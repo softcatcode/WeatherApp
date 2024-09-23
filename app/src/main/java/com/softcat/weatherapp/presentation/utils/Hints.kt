@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,10 +35,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softcat.weatherapp.R
 
+@Composable
+fun HintButton(
+    onClick: () -> Unit
+) {
+    IconButton(onClick) {
+        Icon(
+            modifier = Modifier.size(24.dp),
+            imageVector = Icons.Outlined.Info,
+            contentDescription = stringResource(id = R.string.hint),
+            tint = MaterialTheme.colorScheme.background
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun AlertDialogExample(
+fun HintDialog(
     onDismissRequest: () -> Unit = {},
     title: String = "Title",
     text: String = "some text",
@@ -88,7 +104,9 @@ fun AlertDialogExample(
             )
             TextButton(onClick = onDismissRequest) {
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(50)),
                     text = stringResource(id = R.string.ok),
                     color = MaterialTheme.colorScheme.secondary,
                     fontSize = 16.sp,

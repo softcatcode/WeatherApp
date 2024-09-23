@@ -205,7 +205,7 @@ fun MonthDays(
 }
 
 private fun ClosedFloatingPointRange<Float>.format(): String {
-    return "$start - $endInclusive"
+    return "${start.toInt()} - ${endInclusive.toInt()}"
 }
 
 @Preview
@@ -228,15 +228,17 @@ fun WeatherParameter(
     ) {
         val title = stringResource(id = titleResId)
         Icon(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(32.dp),
             painter = painterResource(id = iconResId),
             contentDescription = title,
             tint = Unspecified
         )
         Text(
-            modifier = Modifier.weight(3f).padding(start = 10.dp),
+            modifier = Modifier
+                .weight(2f)
+                .padding(start = 10.dp),
             text = title,
-            fontSize = 16.sp,
+            fontSize = 12.sp,
             fontFamily = exo2FontFamily,
             color = MaterialTheme.colorScheme.onBackground
         )
@@ -255,7 +257,7 @@ fun WeatherParameter(
             onValueChange = onValueChange
         )
         Text(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1.5f),
             text = value.format(),
             fontSize = 16.sp,
             fontFamily = exo2FontFamily,
@@ -418,7 +420,9 @@ fun WeatherTypeItem(
         val title = stringResource(id = type.toTitleResId())
         IconButton(
             onClick = onClick,
-            modifier = Modifier.weight(1f).fillMaxWidth(),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
         ) {
             Icon(
                 modifier = Modifier.fillMaxSize(),

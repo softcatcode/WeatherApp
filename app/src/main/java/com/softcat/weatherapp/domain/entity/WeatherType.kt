@@ -25,7 +25,7 @@ fun WeatherType.toIconResId() = when (this) {
     WeatherType.Clouds -> R.drawable.clouds
     WeatherType.HeavyClouds -> R.drawable.heavy_clouds
     WeatherType.Snow -> R.drawable.snow
-    WeatherType.Any -> R.drawable.any
+    WeatherType.Any -> R.drawable.any_weather
 }
 
 fun WeatherType.toTitleResId() = when (this) {
