@@ -38,9 +38,9 @@ fun WeatherDto.toEntity(): Weather = Weather(
     astrologicalParams = null
 )
 
-fun WeatherForecastDto.toEntity(dropCurrentForecast: Boolean = true) = Forecast(
+fun WeatherForecastDto.toEntity() = Forecast(
     weather = current.toEntity(),
-    upcoming = forecastDto.days.drop(if (dropCurrentForecast) 1 else 0).map { dayDto ->
+    upcoming = forecastDto.days.map { dayDto ->
         with (dayDto.weather) {
             Weather(
                 tempC = tempC,
