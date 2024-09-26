@@ -6,6 +6,7 @@
     <string name="title_empty_search_result">Не найдено</string>
     <string name="title_search_error">Ошибка</string>
     <string name="hint">Подсказка</string>
+    <string name="feels_like">Ощущается как</string>
 
     <string name="from_label">от</string>
     <string name="to_label">до</string>
@@ -24,15 +25,19 @@
     <string name="shower">ливень</string>
     <string name="mist">туман</string>
     <string name="sun">солнце</string>
+    <string name="moon">луна</string>
     <string name="clouds">облачно</string>
     <string name="heavy_clouds">пасмурно</string>
     <string name="snow">снег</string>
     <string name="any">любая</string>
 
+    <string name="weather_type">Описание</string>
     <string name="wind_speed_parameter">Скорость ветра</string>
     <string name="humidity_parameter">Влажность</string>
     <string name="precipitations_parameter">Дождевые осадки</string>
     <string name="snow_volume_parameter">Количество снега</string>
+    <string name="temperature">Температура</string>
+    <string name="unknown_parameter_value">Неизвестно</string>
 
     <string name="back">Назад</string>
     <string name="settings">Настройки</string>
@@ -51,4 +56,7 @@
     <string name="december_title">Декабрь</string>
 
     <string name="calendar_hint">Отметить дни с определённой погодой</string>
+
+    <string name="meters_per_second">м/с</string>
+    <string name="millimeters">мм</string>
 </resources>

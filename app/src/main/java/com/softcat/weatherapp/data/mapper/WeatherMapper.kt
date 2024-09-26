@@ -26,6 +26,7 @@ fun AstrologicalParametersDto.toEntity() = AstrologicalParameters(
 
 fun WeatherDto.toEntity(): Weather = Weather(
     tempC = tempC,
+    feelsLike = feelsLike,
     conditionText = condition.description,
     conditionUrl = condition.iconUrl.correctIconUrl(),
     date = date.toCalendar(),
@@ -44,6 +45,7 @@ fun WeatherForecastDto.toEntity() = Forecast(
         with (dayDto.weather) {
             Weather(
                 tempC = tempC,
+                feelsLike = feelsLike,
                 conditionText = condition.description,
                 conditionUrl = condition.iconUrl.correctIconUrl(),
                 date = dayDto.date.toCalendar(),
