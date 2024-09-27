@@ -5,6 +5,8 @@
     <string name="title_upcoming">Upcoming</string>
     <string name="title_empty_search_result">Not found</string>
     <string name="title_search_error">Error</string>
+    <string name="hint">hint</string>
+    <string name="feels_like">Feels like</string>
 
     <string name="from_label">from</string>
     <string name="to_label">to</string>
@@ -23,17 +25,20 @@
     <string name="shower">shower</string>
     <string name="mist">mist</string>
     <string name="sun">sun</string>
+    <string name="moon">moon</string>
     <string name="clouds">clouds</string>
     <string name="heavy_clouds">heavy clouds</string>
     <string name="snow">snow</string>
     <string name="any">any</string>
     <string name="ok" translatable="false">OK</string>
-    <string name="hint">hint</string>
 
+    <string name="weather_type">Description</string>
     <string name="wind_speed_parameter">Wind speed</string>
     <string name="humidity_parameter">Humidity</string>
     <string name="precipitations_parameter">Precipitations</string>
     <string name="snow_volume_parameter">Snow volume</string>
+    <string name="temperature">Temperature</string>
+    <string name="unknown_parameter_value">Unknown</string>
 
     <string name="back">Back</string>
     <string name="settings">Settings</string>
@@ -52,4 +57,7 @@
     <string name="december_title">December</string>
 
     <string name="calendar_hint">Specify days with certain weather</string>
+
+    <string name="meters_per_second">m/h</string>
+    <string name="millimeters">mm</string>
 </resources>
