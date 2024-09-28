@@ -22,5 +22,8 @@ fun Float.toTemperatureString() = "${roundToInt()}°C"
 fun Calendar.formattedFullDate(): String =
     SimpleDateFormat("EEEE | d MMM y", Locale.getDefault()).format(time)
 
+fun Calendar.formattedTime(): String =
+    SimpleDateFormat("HH:mm", Locale.getDefault()).format(time)
+
 fun Calendar.formattedShortWeekDay(): String =
     SimpleDateFormat("EEE", Locale.getDefault()).format(time)

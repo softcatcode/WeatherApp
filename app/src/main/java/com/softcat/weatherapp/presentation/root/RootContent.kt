@@ -7,6 +7,7 @@ import com.softcat.weatherapp.presentation.calendar.CalendarContent
 import com.softcat.weatherapp.presentation.details.DetailsContent
 import com.softcat.weatherapp.presentation.favourite.FavouritesContent
 import com.softcat.weatherapp.presentation.hourly.HourWeatherItem
+import com.softcat.weatherapp.presentation.hourly.HourlyWeatherScaffold
 import com.softcat.weatherapp.presentation.search.SearchContent
 import com.softcat.weatherapp.presentation.ui.theme.WeatherAppTheme
 
@@ -20,7 +21,7 @@ fun RootContent(component: RootComponent) {
 //                is RootComponent.Child.SearchCity -> SearchContent(instance.component)
 //                is RootComponent.Child.Calendar -> CalendarContent(instance.component)
 //            }
-            HourWeatherItem()
+            HourlyWeatherScaffold()
         }
     }
 }

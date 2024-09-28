@@ -6,7 +6,9 @@
     <string name="title_empty_search_result">Not found</string>
     <string name="title_search_error">Error</string>
     <string name="hint">hint</string>
+    <string name="extra_info">Extra information</string>
     <string name="feels_like">Feels like</string>
+    <string name="hourly_weather_title">Hourly weather</string>
 
     <string name="from_label">from</string>
     <string name="to_label">to</string>
