@@ -5,6 +5,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -201,7 +201,6 @@ fun MonthList(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 100.dp, bottom = 50.dp)
             .then(modifier),
         state = state
     ) {
@@ -241,7 +240,10 @@ fun MonthList(
 }
 
 @Composable
-private fun CalendarStateContent(state: CalendarStore.State) {
+private fun CalendarStateContent(
+    state: CalendarStore.State,
+    paddings: PaddingValues
+) {
     when (val calendarState = state.calendarState) {
         is CalendarStore.State.CalendarState.Initial -> {}
 
@@ -258,7 +260,7 @@ private fun CalendarStateContent(state: CalendarStore.State) {
 
         is CalendarStore.State.CalendarState.Loaded -> {
             MonthList(
-                modifier = Modifier.padding(horizontal = 5.dp),
+                modifier = Modifier.padding(horizontal = 5.dp).padding(paddingValues = paddings),
                 year = state.year,
                 highlightedDays = calendarState.highlightedDays
             )
@@ -302,7 +304,7 @@ fun CalendarContent(
             }
         }
     ) { paddings ->
-        CalendarStateContent(state)
+        CalendarStateContent(state, paddings)
         CalendarBottomSheet(
             isExpanded = isExpanded,
             onDismiss = {
