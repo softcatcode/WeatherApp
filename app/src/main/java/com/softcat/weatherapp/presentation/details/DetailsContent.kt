@@ -230,23 +230,21 @@ private fun TopBar(
             }
         },
         actions = {
-            Row {
-                val icon = if (isFavourite) Icons.Default.Star else Icons.Default.StarBorder
-                IconButton(onClick = onFavouriteStatusClicked) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.background
-                    )
-                }
-                IconButton(onClick = onCalendarClicked) {
-                    Icon(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(R.drawable.calendar),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.background
-                    )
-                }
+            val icon = if (isFavourite) Icons.Default.Star else Icons.Default.StarBorder
+            IconButton(onClick = onFavouriteStatusClicked) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.background
+                )
+            }
+            IconButton(onClick = onCalendarClicked) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(R.drawable.calendar),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.background
+                )
             }
         }
     )

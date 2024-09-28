@@ -6,7 +6,9 @@
     <string name="title_empty_search_result">Не найдено</string>
     <string name="title_search_error">Ошибка</string>
     <string name="hint">Подсказка</string>
+    <string name="extra_info">Дополнительная информация</string>
     <string name="feels_like">Ощущается как</string>
+    <string name="hourly_weather_title">Погода по часам</string>
 
     <string name="from_label">от</string>
     <string name="to_label">до</string>
@@ -36,7 +38,7 @@
     <string name="humidity_parameter">Влажность</string>
     <string name="precipitations_parameter">Дождевые осадки</string>
     <string name="snow_volume_parameter">Количество снега</string>
-    <string name="temperature">Температура</string>
+    <string name="temperature">Темп.</string>
     <string name="unknown_parameter_value">Неизвестно</string>
 
     <string name="back">Назад</string>
