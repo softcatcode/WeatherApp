@@ -29,7 +29,7 @@ fun WeatherDto.toEntity(): Weather = Weather(
     feelsLike = feelsLike,
     conditionText = condition.description,
     conditionUrl = condition.iconUrl.correctIconUrl(),
-    date = date.toCalendar(),
+    date = (date ?: 0L).toCalendar(),
     formattedDate = "",
     humidity = humidity,
     windSpeed = windSpeed,
@@ -39,9 +39,8 @@ fun WeatherDto.toEntity(): Weather = Weather(
     astrologicalParams = null
 )
 
-fun WeatherForecastDto.toEntity() = Forecast(
-    weather = current.toEntity(),
-    upcoming = forecastDto.days.map { dayDto ->
+fun WeatherForecastDto.toEntity(): Forecast {
+    val upcoming = forecastDto.days.map { dayDto ->
         with (dayDto.weather) {
             Weather(
                 tempC = tempC,
@@ -59,6 +58,16 @@ fun WeatherForecastDto.toEntity() = Forecast(
             )
         }
     }
-)
+    val hourlyWeather = forecastDto.days.map { dayDto ->
+        dayDto.hoursWeather.map {
+            it.toEntity().copy(date = (it.timeEpoch ?: 0L).toCalendar())
+        }
+    }
+    return Forecast(
+        weather = current.toEntity(),
+        upcoming = upcoming,
+        hourly = hourlyWeather
+    )
+}
 
 private fun String.correctIconUrl() = "https:$this".replace("64x64", "128x128")
