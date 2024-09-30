@@ -4,7 +4,6 @@
     <string name="title_search">Поиск</string>
     <string name="title_upcoming">Ожидается</string>
     <string name="title_empty_search_result">Не найдено</string>
-    <string name="title_search_error">Ошибка</string>
     <string name="hint">Подсказка</string>
     <string name="error_title">Ошибка</string>
     <string name="extra_info">Дополнительная информация</string>
