@@ -7,7 +7,7 @@
     <string name="title_search_error">Ошибка</string>
     <string name="hint">Подсказка</string>
     <string name="extra_info">Дополнительная информация</string>
-    <string name="feels_like">Ощущается как</string>
+    <string name="feels_like">Ощущается</string>
     <string name="hourly_weather_title">Погода по часам</string>
 
     <string name="from_label">от</string>
