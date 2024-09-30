@@ -2,6 +2,7 @@ package com.softcat.weatherapp.presentation.hourly
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -29,7 +29,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -101,7 +100,8 @@ fun WeatherExtraInfo(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .padding(horizontal = 36.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
         shape = RoundedCornerShape(20),
         colors = CardDefaults.cardColors(
@@ -142,7 +142,7 @@ fun WeatherExtraInfo(
                         modifier = Modifier.fillMaxWidth(),
                         text = text,
                         fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = Color.Black
                     )
                 }
             }
@@ -157,19 +157,19 @@ fun TemperatureIndicator(
     temperatureValue: String
 ) {
     Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.SpaceEvenly
+        modifier = modifier,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.wrapContentHeight().fillMaxWidth(),
             text = stringResource(id = titleStrId),
             fontSize = 12.sp,
             color = MaterialTheme.colorScheme.secondary
         )
         Text(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
             text = temperatureValue,
-            fontSize = 20.sp,
+            fontSize = 25.sp,
             fontWeight = FontWeight.SemiBold
         )
     }
@@ -187,7 +187,8 @@ fun HourWeatherItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp)
+            .height(60.dp)
+            .clickable { expanded = true }
             .then(modifier),
         shape = RoundedCornerShape(10),
         colors = CardDefaults.cardColors(
@@ -209,50 +210,37 @@ fun HourWeatherItem(
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    modifier = Modifier.fillMaxHeight(0.5f).fillMaxWidth(),
+                    modifier = Modifier.wrapContentHeight().fillMaxWidth(),
                     text = time,
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.secondary
                 )
                 Text(
-                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize(),
                     text = weather.conditionText,
                     fontSize = 14.sp,
                     color = Color.Black,
-                    maxLines = 1
+                    maxLines = 2
                 )
             }
             Spacer(Modifier.width(5.dp))
             GlideImage(
-                modifier = Modifier
-                    .size(36.dp),
+                modifier = Modifier.size(52.dp),
                 model = weather.conditionUrl,
                 contentDescription = null
             )
             Spacer(Modifier.width(5.dp))
             TemperatureIndicator(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                modifier = Modifier.weight(1f),
                 titleStrId = R.string.temperature,
                 temperatureValue = "${weather.tempC.toInt()} °C"
             )
             Spacer(Modifier.width(5.dp))
             TemperatureIndicator(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                modifier = Modifier.weight(1f),
                 titleStrId = R.string.feels_like,
                 temperatureValue = "${weather.feelsLike.toInt()} °C"
             )
-            IconButton(onClick = { expanded = true }) {
-                Icon(
-                    modifier = Modifier.size(24.dp),
-                    imageVector = Icons.Outlined.Info,
-                    contentDescription = stringResource(id = R.string.extra_info),
-                    tint = MaterialTheme.colorScheme.secondary
-                )
-            }
         }
     }
     DropdownMenu(
@@ -297,7 +285,6 @@ fun HourlyWeatherTopBar(
         title = {
             Text(
                 text = stringResource(id = R.string.hourly_weather_title),
-                fontSize = 16.sp
             )
         },
         colors = TopAppBarDefaults.topAppBarColors().copy(
@@ -314,28 +301,5 @@ fun HourlyWeatherTopBar(
             }
         }
     )
-}
-
-@Preview
-@Composable
-fun HourlyWeatherScaffold(
-
-) {
-    Scaffold(
-        topBar = {
-            HourlyWeatherTopBar(
-                onBackClicked = { }
-            )
-        }
-    ) { paddings ->
-        val l = mutableListOf<Weather>()
-        repeat(24) {
-            l.add(defaultWeather)
-        }
-        HourlyWeatherList(
-            modifier = Modifier.padding(paddings).fillMaxSize(),
-            weatherList = l
-        )
-    }
 }
 

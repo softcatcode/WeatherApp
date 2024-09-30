@@ -111,6 +111,10 @@ class DetailsStoreFactory @Inject constructor(
                 DetailsStore.Intent.OpenCityCalendarClicked -> {
                     publish(DetailsStore.Label.OpenCityCalendarClicked)
                 }
+
+                is DetailsStore.Intent.OpenHourlyWeatherClicked -> {
+                    publish(DetailsStore.Label.OpenHourlyWeatherClicked(intent.dayIndex))
+                }
             }
         }
     }

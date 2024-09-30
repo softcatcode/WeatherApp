@@ -6,5 +6,6 @@ data class DayDto(
     @SerializedName("date") val formattedDate: String,
     @SerializedName("date_epoch") val date: Long,
     @SerializedName("day") val weather: DayWeatherParametersDto,
-    @SerializedName("astro") val astrologicalParams: AstrologicalParametersDto
+    @SerializedName("astro") val astrologicalParams: AstrologicalParametersDto,
+    @SerializedName("hour") val hoursWeather: List<WeatherDto>
 )

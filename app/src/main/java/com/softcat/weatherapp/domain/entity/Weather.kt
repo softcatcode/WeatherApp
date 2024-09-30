@@ -1,7 +1,10 @@
 package com.softcat.weatherapp.domain.entity
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.util.Calendar
 
+@Parcelize
 data class Weather(
     val type: WeatherType,
     val tempC: Float,
@@ -15,4 +18,4 @@ data class Weather(
     val snowVolume: Float,
     val precipitations: Float,
     val astrologicalParams: AstrologicalParameters?
-)
+): Parcelable

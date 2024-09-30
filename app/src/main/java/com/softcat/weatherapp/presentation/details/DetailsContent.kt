@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideIn
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Star
@@ -84,7 +85,10 @@ private fun Loading() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun Loaded(forecast: Forecast) {
+private fun Loaded(
+    forecast: Forecast,
+    onWeatherItemClicked: (Int) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -113,13 +117,19 @@ private fun Loaded(forecast: Forecast) {
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(Modifier.weight(1f))
-        AnimatedUpcomingWeatherContainer(daysWeather = forecast.upcoming)
+        AnimatedUpcomingWeatherContainer(
+            daysWeather = forecast.upcoming,
+            onWeatherItemClicked = onWeatherItemClicked
+        )
         Spacer(Modifier.weight(0.5f))
     }
 }
 
 @Composable
-private fun UpcomingWeather(daysWeather: List<Weather>) {
+private fun UpcomingWeather(
+    daysWeather: List<Weather>,
+    onWeatherItemClicked: (Int) -> Unit
+) {
     Card(
         modifier = Modifier.padding(24.dp),
         shape = MaterialTheme.shapes.extraLarge,
@@ -144,8 +154,11 @@ private fun UpcomingWeather(daysWeather: List<Weather>) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(daysWeather) {
-                    SmallWeatherCard(it)
+                itemsIndexed(daysWeather) { index, item ->
+                    SmallWeatherCard(
+                        weather = item,
+                        onClick = { onWeatherItemClicked(index) }
+                    )
                 }
             }
         }
@@ -153,7 +166,10 @@ private fun UpcomingWeather(daysWeather: List<Weather>) {
 }
 
 @Composable
-private fun AnimatedUpcomingWeatherContainer(daysWeather: List<Weather>) {
+private fun AnimatedUpcomingWeatherContainer(
+    daysWeather: List<Weather>,
+    onWeatherItemClicked: (Int) -> Unit
+) {
     val state = remember {
         MutableTransitionState(false).apply { targetState = true }
     }
@@ -167,17 +183,24 @@ private fun AnimatedUpcomingWeatherContainer(daysWeather: List<Weather>) {
         visibleState = state,
         enter = animation
     ) {
-        UpcomingWeather(daysWeather)
+        UpcomingWeather(
+            daysWeather = daysWeather,
+            onWeatherItemClicked = onWeatherItemClicked
+        )
     }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun SmallWeatherCard(weather: Weather) {
+private fun SmallWeatherCard(
+    weather: Weather,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .height(128.dp)
-            .width(100.dp),
+            .width(100.dp)
+            .clickable { onClick() },
         colors = CardDefaults.cardColors().copy(
             containerColor = MaterialTheme.colorScheme.background
         ),
@@ -287,7 +310,10 @@ fun DetailsContent(component: DetailsComponent) {
             when (val forecastState = state.forecastState) {
                 DetailsStore.State.ForecastState.Error -> Error()
                 DetailsStore.State.ForecastState.Initial -> Initial()
-                is DetailsStore.State.ForecastState.Loaded -> Loaded(forecastState.forecast)
+                is DetailsStore.State.ForecastState.Loaded -> Loaded(
+                    forecastState.forecast,
+                    onWeatherItemClicked = { index -> component.openHourlyWeather(index) }
+                )
                 DetailsStore.State.ForecastState.Loading -> Loading()
             }
         }

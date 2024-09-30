@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.softcat.weatherapp.domain.entity.City
+import com.softcat.weatherapp.domain.entity.Weather
 import com.softcat.weatherapp.presentation.extensions.componentScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -18,7 +19,8 @@ class DetailsComponentImpl @AssistedInject constructor(
     @Assisted("componentContext") componentContext: ComponentContext,
     @Assisted("city") private val city: City,
     @Assisted("onBackClickCallback") private val onBackClickCallback: () -> Unit,
-    @Assisted("openCityCalendarCallback") private val openCityCalendarCallback: (City) -> Unit
+    @Assisted("openCityCalendarCallback") private val openCityCalendarCallback: () -> Unit,
+    @Assisted("openHourlyWeatherCallback") private val openHourlyWeatherCallback: (List<Weather>) -> Unit
 ): DetailsComponent, ComponentContext by componentContext {
 
     private val store: DetailsStore = instanceKeeper.getStore { storeFactory.create(city) }
@@ -32,7 +34,12 @@ class DetailsComponentImpl @AssistedInject constructor(
 
     private fun labelCollector(label: DetailsStore.Label) = when (label) {
         DetailsStore.Label.BackClicked -> onBackClickCallback()
-        DetailsStore.Label.OpenCityCalendarClicked -> openCityCalendarCallback(city)
+        DetailsStore.Label.OpenCityCalendarClicked -> openCityCalendarCallback()
+        is DetailsStore.Label.OpenHourlyWeatherClicked -> {
+            val state = model.value.forecastState as? DetailsStore.State.ForecastState.Loaded
+            val hourlyWeather = state?.forecast?.hourly?.getOrNull(label.dayIndex).orEmpty()
+            openHourlyWeatherCallback(hourlyWeather)
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -50,13 +57,18 @@ class DetailsComponentImpl @AssistedInject constructor(
         store.accept(DetailsStore.Intent.OpenCityCalendarClicked)
     }
 
+    override fun openHourlyWeather(dayIndex: Int) {
+        store.accept(DetailsStore.Intent.OpenHourlyWeatherClicked(dayIndex))
+    }
+
     @AssistedFactory
     interface Factory {
         fun create(
             @Assisted("componentContext") componentContext: ComponentContext,
             @Assisted("city") city: City,
             @Assisted("onBackClickCallback") onBackClickCallback: () -> Unit,
-            @Assisted("openCityCalendarCallback") openCityCalendarCallback: (City) -> Unit
+            @Assisted("openCityCalendarCallback") openCityCalendarCallback: () -> Unit,
+            @Assisted("openHourlyWeatherCallback") openHourlyWeatherCallback: (List<Weather>) -> Unit
         ): DetailsComponentImpl
     }
 }

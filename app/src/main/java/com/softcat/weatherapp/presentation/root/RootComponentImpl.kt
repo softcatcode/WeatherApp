@@ -9,9 +9,11 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.softcat.weatherapp.domain.entity.City
+import com.softcat.weatherapp.domain.entity.Weather
 import com.softcat.weatherapp.presentation.calendar.CalendarComponentImpl
 import com.softcat.weatherapp.presentation.details.DetailsComponentImpl
 import com.softcat.weatherapp.presentation.favourite.FavouritesComponentImpl
+import com.softcat.weatherapp.presentation.hourly.HourlyWeatherComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchOpenReason
 import dagger.assisted.Assisted
@@ -24,6 +26,7 @@ class RootComponentImpl @AssistedInject constructor(
     private val favouritesComponentFactory: FavouritesComponentImpl.Factory,
     private val searchComponentFactory: SearchComponentImpl.Factory,
     private val calendarComponentFactory: CalendarComponentImpl.Factory,
+    private val hourlyWeatherComponentFactory: HourlyWeatherComponentImpl.Factory,
     @Assisted("componentContext") componentContext: ComponentContext
 ): RootComponent, ComponentContext by componentContext {
 
@@ -43,7 +46,10 @@ class RootComponentImpl @AssistedInject constructor(
                     city = config.city,
                     componentContext = componentContext,
                     onBackClickCallback = { navigation.pop() },
-                    openCityCalendarCallback = { navigation.push(Config.Calendar(config.city)) }
+                    openCityCalendarCallback = { navigation.push(Config.Calendar(config.city)) },
+                    openHourlyWeatherCallback = { weatherList ->
+                        navigation.push(Config.HourlyWeather(weatherList))
+                    }
                 )
                 RootComponent.Child.CityDetails(component)
             }
@@ -77,6 +83,15 @@ class RootComponentImpl @AssistedInject constructor(
                 )
                 RootComponent.Child.Calendar(component)
             }
+
+            is Config.HourlyWeather -> {
+                val component = hourlyWeatherComponentFactory.create(
+                    componentContext = componentContext,
+                    hoursWeather = config.hoursWeather,
+                    onBackClick = { navigation.pop() }
+                )
+                RootComponent.Child.HourlyWeather(component)
+            }
         }
 
     sealed interface Config: Parcelable {
@@ -91,6 +106,9 @@ class RootComponentImpl @AssistedInject constructor(
 
         @Parcelize
         data class Calendar(val city: City): Config
+
+        @Parcelize
+        data class HourlyWeather(val hoursWeather: List<Weather>): Config
     }
 
     @AssistedFactory
