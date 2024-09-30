@@ -46,7 +46,10 @@ class RootComponentImpl @AssistedInject constructor(
                     city = config.city,
                     componentContext = componentContext,
                     onBackClickCallback = { navigation.pop() },
-                    openCityCalendarCallback = { navigation.push(Config.Calendar(config.city)) }
+                    openCityCalendarCallback = { navigation.push(Config.Calendar(config.city)) },
+                    openHourlyWeatherCallback = { weatherList ->
+                        navigation.push(Config.HourlyWeather(weatherList))
+                    }
                 )
                 RootComponent.Child.CityDetails(component)
             }
