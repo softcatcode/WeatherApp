@@ -28,10 +28,14 @@ class HourlyWeatherComponentImpl @AssistedInject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override val model: StateFlow<HourlyWeatherStore.State> = store.stateFlow
 
-    override fun back() {
+    init {
         scope.launch {
             store.labels.collect(::labelCollector)
         }
+    }
+
+    override fun back() {
+        store.accept(HourlyWeatherStore.Intent.BackClick)
     }
 
     private fun labelCollector(label: HourlyWeatherStore.Label) = when (label) {

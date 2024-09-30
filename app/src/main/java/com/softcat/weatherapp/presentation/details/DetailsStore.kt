@@ -11,6 +11,8 @@ interface DetailsStore: Store<DetailsStore.Intent, DetailsStore.State, DetailsSt
         data object ChangeFavouriteStatusClicked: Intent
 
         data object OpenCityCalendarClicked: Intent
+
+        data class OpenHourlyWeatherClicked(val dayIndex: Int): Intent
     }
 
     data class State(
@@ -34,5 +36,7 @@ interface DetailsStore: Store<DetailsStore.Intent, DetailsStore.State, DetailsSt
         data object BackClicked: Label
 
         data object OpenCityCalendarClicked: Label
+
+        data class OpenHourlyWeatherClicked(val dayIndex: Int): Label
     }
 }
