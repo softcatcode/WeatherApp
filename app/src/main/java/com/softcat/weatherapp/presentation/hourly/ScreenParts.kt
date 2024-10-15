@@ -62,7 +62,7 @@ private val defaultWeather = Weather(
     type = WeatherType.Clouds,
     tempC = 20f,
     feelsLike = 23f,
-    conditionText = "Overcast Clouds",
+    conditionText = "Overcast Clouds with a bit of sun",
     conditionUrl = "//cdn.weatherapi.com/weather/64x64/night/113.png",
     date = Calendar.getInstance(),
     formattedDate = "2024-09-29",
@@ -218,7 +218,7 @@ fun HourWeatherItem(
                 Text(
                     modifier = Modifier.fillMaxSize(),
                     text = weather.conditionText,
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     color = Color.Black,
                     maxLines = 2
                 )

@@ -19,7 +19,7 @@ interface CalendarStore: Store<CalendarStore.Intent, CalendarStore.State, Calend
             data object Loading: CalendarState
 
             data class Error(
-                val message: String
+                val throwable: Throwable
             ): CalendarState
 
             data class Loaded(

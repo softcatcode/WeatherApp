@@ -10,4 +10,6 @@ interface CalendarRepository {
     fun getHighlightedDays(): SharedFlow<List<Set<Int>>>
 
     suspend fun reset()
+
+    fun getErrorFlow(): SharedFlow<Throwable>
 }

@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import com.softcat.weatherapp.R
 
 @Preview
@@ -55,15 +56,16 @@ fun ErrorDialog(
 ) {
     BasicAlertDialog(
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color.Transparent)
             .then(modifier),
+        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true),
         onDismissRequest = onDismissRequest,
     ) {
         Card(
-            shape = RoundedCornerShape(20)
+            shape = RoundedCornerShape(15)
         ) {
             Column(
-                modifier = Modifier.padding(5.dp)
+                modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
