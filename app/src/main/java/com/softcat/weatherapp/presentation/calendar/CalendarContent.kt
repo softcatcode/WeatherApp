@@ -53,6 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softcat.weatherapp.R
+import com.softcat.weatherapp.presentation.utils.ErrorDialog
 import com.softcat.weatherapp.presentation.utils.HintButton
 import com.softcat.weatherapp.presentation.utils.HintDialog
 import java.time.LocalDate
@@ -215,6 +216,7 @@ fun MonthList(
                 R.string.july_title,
                 R.string.august_title,
                 R.string.september_title,
+                R.string.october_title,
                 R.string.november_title,
                 R.string.december_title,
             ),
@@ -242,7 +244,8 @@ fun MonthList(
 @Composable
 private fun CalendarStateContent(
     state: CalendarStore.State,
-    paddings: PaddingValues
+    paddings: PaddingValues,
+    onErrorDismiss: () -> Unit = {}
 ) {
     when (val calendarState = state.calendarState) {
         is CalendarStore.State.CalendarState.Initial -> {}
@@ -260,13 +263,20 @@ private fun CalendarStateContent(
 
         is CalendarStore.State.CalendarState.Loaded -> {
             MonthList(
-                modifier = Modifier.padding(horizontal = 5.dp).padding(paddingValues = paddings),
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .padding(paddingValues = paddings),
                 year = state.year,
                 highlightedDays = calendarState.highlightedDays
             )
         }
 
-        is CalendarStore.State.CalendarState.Error -> {}
+        is CalendarStore.State.CalendarState.Error -> {
+            ErrorDialog(
+                throwable = calendarState.throwable,
+                onDismissRequest = onErrorDismiss
+            )
+        }
     }
 }
 
@@ -304,7 +314,11 @@ fun CalendarContent(
             }
         }
     ) { paddings ->
-        CalendarStateContent(state, paddings)
+        CalendarStateContent(
+            state = state,
+            paddings = paddings,
+            onErrorDismiss = { component.highlightDays() }
+        )
         CalendarBottomSheet(
             isExpanded = isExpanded,
             onDismiss = {

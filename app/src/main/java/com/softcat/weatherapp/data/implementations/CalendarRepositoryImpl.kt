@@ -9,9 +9,11 @@ import com.softcat.weatherapp.domain.entity.WeatherType
 import com.softcat.weatherapp.domain.interfaces.CalendarRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.shareIn
 import javax.inject.Inject
 
@@ -38,6 +40,10 @@ class CalendarRepositoryImpl @Inject constructor(
             }
             emit(monthsDays)
         }
+    }.retry {
+        errorFlow.emit(it)
+        delay(5000L)
+        true
     }.shareIn(
         scope = coroutineScope,
         started = SharingStarted.Eagerly,
@@ -47,6 +53,8 @@ class CalendarRepositoryImpl @Inject constructor(
     private var _monthsDays: List<MutableSet<Int>> = List(12) { mutableSetOf() }
     private val monthsDays: List<Set<Int>>
         get() = List(12) { _monthsDays[it] }
+
+    private val errorFlow = MutableSharedFlow<Throwable>()
 
     override suspend fun selectYearDays(
         params: WeatherParameters,
@@ -63,27 +71,21 @@ class CalendarRepositoryImpl @Inject constructor(
         getHighlightedDaysRequest.emit(null)
     }
 
+    override fun getErrorFlow() = errorFlow
+
     private suspend fun getWeatherForecast(daysCount: Int, cityId: Int): List<Weather> {
-        return try {
-            apiService.loadForecast(
-                query = WeatherRepositoryImpl.cityIdToQuery(cityId),
-                dayCount = daysCount
-            ).toEntity().upcoming
-        } catch (e: Exception) {
-            emptyList()
-        }
+        return apiService.loadForecast(
+            query = WeatherRepositoryImpl.cityIdToQuery(cityId),
+            dayCount = daysCount
+        ).toEntity().upcoming
     }
 
     private suspend fun getPreviousWeather(currentYear: Int, cityId: Int): List<Weather> {
-        return try {
-            apiService.loadWeatherHistory(
-                query = WeatherRepositoryImpl.cityIdToQuery(cityId),
-                startDate = "$currentYear-01-01",
-                endDate = "$currentYear-12-31"
-            ).toEntity().upcoming
-        } catch (e: Exception) {
-            emptyList()
-        }
+        return apiService.loadWeatherHistory(
+            query = WeatherRepositoryImpl.cityIdToQuery(cityId),
+            startDate = "$currentYear-01-01",
+            endDate = "$currentYear-12-31"
+        ).toEntity().upcoming
     }
 
     private suspend fun loadDaysWithCorrespondingWeather(

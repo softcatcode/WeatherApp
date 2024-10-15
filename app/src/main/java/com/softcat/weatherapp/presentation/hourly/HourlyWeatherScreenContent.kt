@@ -7,6 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun HourlyWeatherStateContent(
@@ -32,6 +33,7 @@ fun HourlyWeatherContent(
 ) {
     val state = component.model.collectAsState()
     Scaffold(
+        modifier = Modifier.padding(bottom = 2.dp),
         topBar = {
             HourlyWeatherTopBar(onBackClicked = {
                 component.back()

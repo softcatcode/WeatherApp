@@ -9,6 +9,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.domain.entity.WeatherParameters
 import com.softcat.weatherapp.domain.entity.WeatherType
+import com.softcat.weatherapp.domain.useCases.GetErrorFlowUseCase
 import com.softcat.weatherapp.domain.useCases.GetHighlightedDaysUseCase
 import com.softcat.weatherapp.domain.useCases.ResetHighlightedDaysUseCase
 import com.softcat.weatherapp.domain.useCases.SelectYearDaysUseCase
@@ -20,6 +21,7 @@ class CalendarStoreFactory @Inject constructor(
     private val getHighlightedDaysUseCase: GetHighlightedDaysUseCase,
     private val selectYearDaysUseCase: SelectYearDaysUseCase,
     private val resetHighlightedDaysUseCase: ResetHighlightedDaysUseCase,
+    private val errorFlowUseCase: GetErrorFlowUseCase,
     val storeFactory: StoreFactory
 ) {
     fun create(city: City): CalendarStore =
@@ -41,11 +43,15 @@ class CalendarStoreFactory @Inject constructor(
         data class CalendarUpdated(
             val highlightedDays: List<Set<Int>>
         ): Action
+
+        data class Error(val error: Throwable): Action
     }
 
     sealed interface Msg {
 
         data object LoadingStarted: Msg
+
+        data class Error(val error: Throwable): Msg
 
         data class HighlightDays(
             val days: List<Set<Int>>
@@ -92,6 +98,11 @@ class CalendarStoreFactory @Inject constructor(
                     dispatch(Action.CalendarUpdated(highlightedDays = it))
                 }
             }
+            scope.launch {
+                errorFlowUseCase.calendarErrors().collect {
+                    dispatch(Action.Error(it))
+                }
+            }
         }
     }
 
@@ -100,6 +111,7 @@ class CalendarStoreFactory @Inject constructor(
         override fun executeAction(action: Action, getState: () -> CalendarStore.State) {
             when (action) {
                 is Action.CalendarUpdated -> dispatch(Msg.HighlightDays(action.highlightedDays))
+                is Action.Error -> dispatch(Msg.Error(action.error))
             }
         }
 
@@ -167,6 +179,8 @@ class CalendarStoreFactory @Inject constructor(
             is Msg.HighlightDays -> {
                 copy(calendarState = CalendarStore.State.CalendarState.Loaded(msg.days))
             }
+            is Msg.Error ->
+                copy(calendarState = CalendarStore.State.CalendarState.Error(msg.error))
         }
     }
 }
