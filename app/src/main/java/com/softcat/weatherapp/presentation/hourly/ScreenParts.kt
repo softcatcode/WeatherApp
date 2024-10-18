@@ -187,7 +187,7 @@ fun HourWeatherItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
+            .height(70.dp)
             .clickable { expanded = true }
             .then(modifier),
         shape = RoundedCornerShape(10),
@@ -219,6 +219,7 @@ fun HourWeatherItem(
                     modifier = Modifier.fillMaxSize(),
                     text = weather.conditionText,
                     fontSize = 16.sp,
+                    lineHeight = 16.sp,
                     color = Color.Black,
                     maxLines = 2
                 )
