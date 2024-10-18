@@ -51,6 +51,11 @@ class FavouritesComponentImpl @AssistedInject constructor(
         store.accept(FavouritesStore.Intent.CityItemClicked(city))
     }
 
+    override fun reloadCities() {
+        val cities = model.value.cityItems.map { it.city }
+        store.accept(FavouritesStore.Intent.ReloadCities(cities))
+    }
+
     @AssistedFactory
     interface Factory {
         fun create(
