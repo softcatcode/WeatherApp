@@ -71,7 +71,7 @@ class DetailsStoreFactory @Inject constructor(
                 try {
                     dispatch(Action.ForecastLoadingStarted)
                     val forecast = getForecastUseCase(city.id).let { forecast ->
-                        forecast.copy(upcoming = forecast.upcoming.drop(1))
+                        forecast.copy(upcoming = forecast.upcoming)
                     }
                     dispatch(Action.ForecastLoaded(forecast))
                 } catch (e: Exception) {

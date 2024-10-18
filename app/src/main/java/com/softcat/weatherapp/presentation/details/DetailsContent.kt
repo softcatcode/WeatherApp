@@ -5,6 +5,7 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideIn
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -45,6 +47,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,7 +61,9 @@ import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_TEMP
 import com.softcat.weatherapp.presentation.extensions.formattedFullDate
 import com.softcat.weatherapp.presentation.extensions.formattedShortWeekDay
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
+import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
+import com.softcat.weatherapp.presentation.utils.defaultWeather
 
 @Composable
 private fun Initial() {
@@ -157,7 +162,8 @@ private fun UpcomingWeather(
                 itemsIndexed(daysWeather) { index, item ->
                     SmallWeatherCard(
                         weather = item,
-                        onClick = { onWeatherItemClicked(index) }
+                        onClick = { onWeatherItemClicked(index) },
+                        isForCurrentDay = index == 0
                     )
                 }
             }
@@ -192,18 +198,25 @@ private fun AnimatedUpcomingWeatherContainer(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
+@Preview
 private fun SmallWeatherCard(
-    weather: Weather,
-    onClick: () -> Unit
+    weather: Weather = defaultWeather,
+    onClick: () -> Unit = {},
+    isForCurrentDay: Boolean = false
 ) {
-    Card(
+    val cardBorder = if (isForCurrentDay)
+        BorderStroke(1.dp, CalendarPurple)
+    else
+        BorderStroke(0.dp, Color.Unspecified)
+    OutlinedCard(
         modifier = Modifier
             .height(128.dp)
             .width(100.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors().copy(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.background,
         ),
+        border = cardBorder,
         shape = MaterialTheme.shapes.extraLarge
     ) {
         Column(
@@ -222,7 +235,10 @@ private fun SmallWeatherCard(
                 contentDescription = null
             )
             Text(
-                text = weather.date.formattedShortWeekDay(),
+                text = if (isForCurrentDay)
+                        stringResource(id = R.string.today)
+                    else
+                        weather.date.formattedShortWeekDay(),
             )
         }
     }
