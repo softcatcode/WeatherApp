@@ -95,4 +95,8 @@ dependencies {
 
     implementation(libs.icons)
     implementation(libs.glide.compose)
+
+    // widgets' utils
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.appwidget)
 }
