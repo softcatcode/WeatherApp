@@ -63,6 +63,7 @@ import com.softcat.weatherapp.presentation.extensions.formattedShortWeekDay
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
+import com.softcat.weatherapp.presentation.utils.ErrorDialog
 import com.softcat.weatherapp.presentation.utils.defaultWeather
 
 @Composable
@@ -71,8 +72,14 @@ private fun Initial() {
 }
 
 @Composable
-private fun Error() {
-
+private fun Error(
+    error: Throwable,
+    onErrorDismiss: () -> Unit
+) {
+    ErrorDialog(
+        throwable = error,
+        onDismissRequest = onErrorDismiss
+    )
 }
 
 @Composable
@@ -324,7 +331,10 @@ fun DetailsContent(component: DetailsComponent) {
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (val forecastState = state.forecastState) {
-                DetailsStore.State.ForecastState.Error -> Error()
+                is DetailsStore.State.ForecastState.Error -> Error(
+                    error = forecastState.error,
+                    onErrorDismiss = { component.back() }
+                )
                 DetailsStore.State.ForecastState.Initial -> Initial()
                 is DetailsStore.State.ForecastState.Loaded -> Loaded(
                     forecastState.forecast,

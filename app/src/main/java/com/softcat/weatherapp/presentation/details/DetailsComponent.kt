@@ -13,9 +13,4 @@ interface DetailsComponent {
     fun openCityCalendar()
 
     fun openHourlyWeather(dayIndex: Int)
-
-//    sealed interface Child {
-//        data class HourlyWeather(val component: HourlyWeatherComponent): Child
-//
-//    }
 }

@@ -45,7 +45,7 @@ class DetailsStoreFactory @Inject constructor(
 
         data object ForecastLoadingStarted: Action
 
-        data object ForecastLoadingError: Action
+        data class ForecastLoadingError(val error: Throwable): Action
     }
 
     private sealed interface Msg {
@@ -53,7 +53,7 @@ class DetailsStoreFactory @Inject constructor(
 
         data class ForecastLoaded(val forecast: Forecast): Msg
 
-        data object LoadingError: Msg
+        data class LoadingError(val error: Throwable): Msg
 
         data object LoadingStarted: Msg
     }
@@ -75,7 +75,7 @@ class DetailsStoreFactory @Inject constructor(
                     }
                     dispatch(Action.ForecastLoaded(forecast))
                 } catch (e: Exception) {
-                    dispatch(Action.ForecastLoadingError)
+                    dispatch(Action.ForecastLoadingError(e))
                 }
             }
         }
@@ -88,7 +88,7 @@ class DetailsStoreFactory @Inject constructor(
             when (action) {
                 is Action.FavouriteStatusChanged -> dispatch(Msg.FavouriteStatusChanged(action.isFavourite))
                 is Action.ForecastLoaded -> dispatch(Msg.ForecastLoaded(action.forecast))
-                Action.ForecastLoadingError -> dispatch(Msg.LoadingError)
+                is Action.ForecastLoadingError -> dispatch(Msg.LoadingError(action.error))
                 Action.ForecastLoadingStarted -> dispatch(Msg.LoadingStarted)
             }
 
@@ -126,7 +126,7 @@ class DetailsStoreFactory @Inject constructor(
 
             is Msg.ForecastLoaded -> copy(forecastState = DetailsStore.State.ForecastState.Loaded(msg.forecast))
 
-            Msg.LoadingError -> copy(forecastState = DetailsStore.State.ForecastState.Error)
+            is Msg.LoadingError -> copy(forecastState = DetailsStore.State.ForecastState.Error(msg.error))
 
             Msg.LoadingStarted -> copy(forecastState = DetailsStore.State.ForecastState.Loading)
         }
