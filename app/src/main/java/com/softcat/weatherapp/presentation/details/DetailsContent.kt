@@ -234,7 +234,8 @@ private fun SmallWeatherCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = weather.tempC.toTemperatureString()
+                text = weather.tempC.toTemperatureString(),
+                color = Color.Black
             )
             GlideImage(
                 modifier = Modifier.size(48.dp),
@@ -246,6 +247,7 @@ private fun SmallWeatherCard(
                         stringResource(id = R.string.today)
                     else
                         weather.date.formattedShortWeekDay(),
+                color = Color.Black
             )
         }
     }
