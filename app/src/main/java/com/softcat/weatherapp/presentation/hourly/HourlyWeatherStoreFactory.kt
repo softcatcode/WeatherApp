@@ -8,7 +8,6 @@ import com.softcat.weatherapp.domain.entity.Weather
 import javax.inject.Inject
 
 class HourlyWeatherStoreFactory @Inject constructor(
-
     private val storeFactory: StoreFactory,
 ) {
     fun create(hoursWeather: List<Weather>): HourlyWeatherStore =

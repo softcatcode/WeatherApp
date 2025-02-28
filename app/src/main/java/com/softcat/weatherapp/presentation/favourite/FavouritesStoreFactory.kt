@@ -123,14 +123,18 @@ class FavouritesStoreFactory @Inject constructor(
             }
         }
 
+        fun loadCities(cities: List<City>) {
+            cities.forEach {
+                scope.launch { loadCity(it) }
+            }
+        }
+
         override fun executeAction(action: Action, getState: () -> FavouritesStore.State) =
             when(action) {
                 is Action.FavouriteCitiesLoaded -> {
                     val cities = action.cities
                     dispatch(Msg.FavouriteCitiesLoaded(cities))
-                    cities.forEach {
-                        scope.launch { loadCity(it) }
-                    }
+                    loadCities(action.cities)
                 }
             }
 
@@ -146,6 +150,9 @@ class FavouritesStoreFactory @Inject constructor(
             }
             FavouritesStore.Intent.SearchClicked -> {
                 publish(FavouritesStore.Label.SearchClicked)
+            }
+            is FavouritesStore.Intent.ReloadCities -> {
+                loadCities(intent.cities)
             }
         }
     }

@@ -2,6 +2,7 @@ package com.softcat.weatherapp.data.implementations
 
 import com.softcat.weatherapp.data.mapper.toEntity
 import com.softcat.weatherapp.data.network.api.ApiService
+import com.softcat.weatherapp.domain.entity.Weather
 import com.softcat.weatherapp.domain.interfaces.WeatherRepository
 import javax.inject.Inject
 
@@ -13,6 +14,9 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override suspend fun getForecast(cityId: Int) =
         apiService.loadForecast(cityIdToQuery(cityId)).toEntity()
+
+    override suspend fun getTodayLocalForecast(cityId: Int): List<Weather> =
+        apiService.loadForecast(cityIdToQuery(cityId), 1).toEntity().hourly.first()
 
     companion object {
         private const val PREFIX_CITY_ID = "id:"

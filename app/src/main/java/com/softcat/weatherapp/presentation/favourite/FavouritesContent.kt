@@ -3,6 +3,8 @@ package com.softcat.weatherapp.presentation.favourite
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -36,21 +38,34 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.ExperimentalWearMaterialApi
+import androidx.wear.compose.material.FractionalThreshold
+import androidx.wear.compose.material.rememberSwipeableState
+import androidx.wear.compose.material.swipeable
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
 import com.softcat.weatherapp.presentation.ui.theme.Orange
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
+import kotlin.math.abs
 
 @Composable
 fun FavouritesContent(component: FavouritesComponent) {
     val state by component.model.collectAsState()
+    val transformableState = rememberTransformableState { _, panChange, _ ->
+        if (abs(panChange.x) > 150f)
+            component.reloadCities()
+    }
     LazyVerticalGrid(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .transformable(transformableState),
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),

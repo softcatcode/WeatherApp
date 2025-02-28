@@ -26,7 +26,7 @@ interface DetailsStore: Store<DetailsStore.Intent, DetailsStore.State, DetailsSt
 
             data object Loading: ForecastState
 
-            data object Error: ForecastState
+            data class Error(val error: Throwable): ForecastState
 
             data class Loaded(val forecast: Forecast): ForecastState
         }

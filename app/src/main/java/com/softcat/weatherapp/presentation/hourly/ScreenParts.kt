@@ -49,34 +49,12 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.softcat.weatherapp.R
-import com.softcat.weatherapp.domain.entity.AstrologicalParameters
 import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.entity.WeatherType
 import com.softcat.weatherapp.presentation.extensions.formattedTime
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import com.softcat.weatherapp.presentation.ui.theme.Pink80
 import com.softcat.weatherapp.presentation.ui.theme.Purple80
-import java.util.Calendar
-
-private val defaultWeather = Weather(
-    type = WeatherType.Clouds,
-    tempC = 20f,
-    feelsLike = 23f,
-    conditionText = "Overcast Clouds with a bit of sun",
-    conditionUrl = "//cdn.weatherapi.com/weather/64x64/night/113.png",
-    date = Calendar.getInstance(),
-    formattedDate = "2024-09-29",
-    humidity = 20f,
-    windSpeed = 3f,
-    snowVolume = 0f,
-    precipitations = 2f,
-    astrologicalParams = AstrologicalParameters(
-        sunriseTime = "06:12 AM",
-        sunsetTime = "21:32 PM",
-        moonriseTime = "22:01 AM",
-        moonsetTime = "05:05 AM",
-    )
-)
+import com.softcat.weatherapp.presentation.utils.defaultWeather
 
 @Preview
 @Composable
@@ -187,7 +165,7 @@ fun HourWeatherItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
+            .height(70.dp)
             .clickable { expanded = true }
             .then(modifier),
         shape = RoundedCornerShape(10),
@@ -219,6 +197,7 @@ fun HourWeatherItem(
                     modifier = Modifier.fillMaxSize(),
                     text = weather.conditionText,
                     fontSize = 16.sp,
+                    lineHeight = 16.sp,
                     color = Color.Black,
                     maxLines = 2
                 )
