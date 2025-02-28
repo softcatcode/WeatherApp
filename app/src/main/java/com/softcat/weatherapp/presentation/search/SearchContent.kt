@@ -54,10 +54,14 @@ private fun CityCard(city: City, onClick: (City) -> Unit) {
         ) {
             Text(
                 text = city.name,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.Black,
             )
             Spacer(Modifier.height(8.dp))
-            Text(text = city.country)
+            Text(
+                text = city.country,
+                color = Color.Black,
+            )
         }
     }
 }

@@ -169,8 +169,7 @@ private fun UpcomingWeather(
                 itemsIndexed(daysWeather) { index, item ->
                     SmallWeatherCard(
                         weather = item,
-                        onClick = { onWeatherItemClicked(index) },
-                        isForCurrentDay = index == 0
+                        onClick = { onWeatherItemClicked(index) }
                     )
                 }
             }
