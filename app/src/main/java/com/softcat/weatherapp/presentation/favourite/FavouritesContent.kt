@@ -189,7 +189,8 @@ fun AddFavouriteCityCard(onClick: () -> Unit) {
             Text(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 text = stringResource(id = R.string.button_add_favourite),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.Black
             )
         }
     }
