@@ -1,20 +1,28 @@
 package com.softcat.weatherapp.presentation.favourite
 
+import android.content.Context
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.weatherapp.domain.entity.City
+import com.softcat.weatherapp.domain.useCases.GetCurrentCityNameUseCase
 import com.softcat.weatherapp.domain.useCases.GetCurrentWeatherUseCase
 import com.softcat.weatherapp.domain.useCases.GetFavouriteCitiesUseCase
+import com.softcat.weatherapp.domain.useCases.SaveToDatastoreUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FavouritesStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
-    private val getFavouriteCitiesUseCase: GetFavouriteCitiesUseCase
+    private val getFavouriteCitiesUseCase: GetFavouriteCitiesUseCase,
+    private val saveCityToDatastoreUseCase: SaveToDatastoreUseCase,
+    private val getCurrentCityNameUseCase: GetCurrentCityNameUseCase,
+    private val context: Context,
 ) {
 
     fun create(): FavouritesStore =
@@ -50,6 +58,11 @@ class FavouritesStoreFactory @Inject constructor(
     private inner class BootstrapperImpl: CoroutineBootstrapper<Action>() {
         override fun invoke() {
             scope.launch {
+                getCurrentCityNameUseCase(context) { cityName ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        saveCityToDatastoreUseCase(cityName)
+                    }
+                }
                 getFavouriteCitiesUseCase().collect {
                     dispatch(Action.FavouriteCitiesLoaded(it))
                 }

@@ -1,5 +1,7 @@
 package com.softcat.weatherapp.presentation.extensions
 
+import android.content.Context
+import androidx.datastore.preferences.preferencesDataStore
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import kotlinx.coroutines.CoroutineScope
@@ -27,3 +29,9 @@ fun Calendar.formattedTime(): String =
 
 fun Calendar.formattedShortWeekDay(): String =
     SimpleDateFormat("EEE", Locale.getDefault()).format(time)
+
+private const val DATASTORE_NAME = "meow_datastore"
+
+val Context.dataStore by preferencesDataStore(
+    name = DATASTORE_NAME
+)
