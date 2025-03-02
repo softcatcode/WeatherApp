@@ -100,4 +100,6 @@ dependencies {
     // widgets' utils
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.appwidget)
+
+    implementation(libs.datastore)
 }

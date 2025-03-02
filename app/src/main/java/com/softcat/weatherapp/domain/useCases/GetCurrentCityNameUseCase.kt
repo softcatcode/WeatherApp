@@ -9,8 +9,6 @@ class GetCurrentCityNameUseCase @Inject constructor(
 ) {
     operator fun invoke(
         context: Context,
-        latitude: Double,
-        longitude: Double,
-        onCityObtained: (String) -> Unit
-    ) = repository.getCurrentCity(context, latitude, longitude, onCityObtained)
+        onCityNameLoaded: (String) -> Unit
+    ) = repository.getCurrentCity(context, onCityNameLoaded)
 }
