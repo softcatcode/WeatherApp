@@ -1,20 +1,19 @@
 package com.softcat.weatherapp.data.implementations
 
-import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import com.softcat.weatherapp.domain.interfaces.DatastoreRepository
-import com.softcat.weatherapp.presentation.extensions.dataStore
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class DatastoreRepositoryImpl @Inject constructor(
-    private val context: Context
+    private val dataStore: DataStore<Preferences>
 ): DatastoreRepository {
 
     override suspend fun saveCityToDatastore(cityName: String) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences ->
             val datastoreKey = stringPreferencesKey(CITY_NAME_KEY)
             preferences[datastoreKey] = cityName
         }
@@ -22,7 +21,7 @@ class DatastoreRepositoryImpl @Inject constructor(
 
     override suspend fun getLastCityFromDatastore(): String? {
         val datastoreKey = stringPreferencesKey(CITY_NAME_KEY)
-        return context.dataStore.data.first()[datastoreKey]
+        return dataStore.data.first()[datastoreKey]
     }
 
     companion object {

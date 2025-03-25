@@ -29,9 +29,3 @@ fun Calendar.formattedTime(): String =
 
 fun Calendar.formattedShortWeekDay(): String =
     SimpleDateFormat("EEE", Locale.getDefault()).format(time)
-
-private const val DATASTORE_NAME = "meow_datastore"
-
-val Context.dataStore by preferencesDataStore(
-    name = DATASTORE_NAME
-)
