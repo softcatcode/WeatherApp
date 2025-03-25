@@ -1,9 +1,11 @@
 package com.softcat.weatherapp.di.modules
 
 import android.content.Context
+import android.location.Geocoder
 import com.softcat.weatherapp.data.implementations.CalendarRepositoryImpl
 import com.softcat.weatherapp.data.implementations.FavouriteRepositoryImpl
 import com.softcat.weatherapp.data.implementations.DatastoreRepositoryImpl
+import com.softcat.weatherapp.data.implementations.LocationRepositoryImpl
 import com.softcat.weatherapp.data.implementations.SearchRepositoryImpl
 import com.softcat.weatherapp.data.implementations.WeatherRepositoryImpl
 import com.softcat.weatherapp.data.local.db.FavouritesDatabase
@@ -13,11 +15,13 @@ import com.softcat.weatherapp.di.annotations.ApplicationScope
 import com.softcat.weatherapp.domain.interfaces.CalendarRepository
 import com.softcat.weatherapp.domain.interfaces.FavouriteRepository
 import com.softcat.weatherapp.domain.interfaces.DatastoreRepository
+import com.softcat.weatherapp.domain.interfaces.LocationRepository
 import com.softcat.weatherapp.domain.interfaces.SearchRepository
 import com.softcat.weatherapp.domain.interfaces.WeatherRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import java.util.Locale
 
 @Module
 interface DataModule {
@@ -42,6 +46,10 @@ interface DataModule {
     @Binds
     fun bindDatastoreRepository(impl: DatastoreRepositoryImpl): DatastoreRepository
 
+    @ApplicationScope
+    @Binds
+    fun bindLocationRepository(impl: LocationRepositoryImpl): LocationRepository
+
 
     companion object {
 
@@ -56,5 +64,9 @@ interface DataModule {
         @ApplicationScope
         @Provides
         fun provideFavouriteCitiesDao(db: FavouritesDatabase) = db.getCitiesDao()
+
+        @ApplicationScope
+        @Provides
+        fun provideGeocoder(context: Context) = Geocoder(context, Locale.getDefault())
     }
 }
