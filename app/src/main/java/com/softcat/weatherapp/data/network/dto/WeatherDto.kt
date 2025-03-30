@@ -3,7 +3,7 @@ package com.softcat.weatherapp.data.network.dto
 import com.google.gson.annotations.SerializedName
 
 data class WeatherDto(
-    @SerializedName("last_updated_epoch") val date: Long?,
+    @SerializedName("last_updated_epoch") val lastUpdated: Long?,
     @SerializedName("time_epoch") val timeEpoch: Long?,
     @SerializedName("temp_c") val tempC: Float,
     @SerializedName("feelslike_c") val feelsLike: Float,
