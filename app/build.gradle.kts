@@ -102,4 +102,5 @@ dependencies {
     implementation(libs.androidx.glance.appwidget)
 
     implementation(libs.datastore)
+    implementation(libs.mockito)
 }
