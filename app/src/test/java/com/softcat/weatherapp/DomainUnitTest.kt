@@ -12,6 +12,7 @@ import com.softcat.weatherapp.domain.interfaces.WeatherRepository
 import com.softcat.weatherapp.domain.useCases.AddToFavouriteUseCase
 import com.softcat.weatherapp.domain.useCases.GetCurrentCityNameUseCase
 import com.softcat.weatherapp.domain.useCases.GetCurrentWeatherUseCase
+import com.softcat.weatherapp.domain.useCases.GetFavouriteCitiesUseCase
 import com.softcat.weatherapp.domain.useCases.GetForecastUseCase
 import com.softcat.weatherapp.domain.useCases.GetHighlightedDaysUseCase
 import com.softcat.weatherapp.domain.useCases.GetLastCityFromDatastoreUseCase
@@ -162,5 +163,13 @@ class DomainUnitTest {
         selectYearDaysUseCase(params, city, year)
         verify(calendarRepository, times(1))
             .selectYearDays(params, city, year)
+    }
+
+    @Test
+    fun getFavouriteCitiesUseCaseTest(): Unit = runBlocking {
+        val getFavouriteCitiesUseCase = GetFavouriteCitiesUseCase(favouriteRepository)
+        getFavouriteCitiesUseCase()
+        verify(favouriteRepository, times(1))
+            .getFavouriteCities()
     }
 }
