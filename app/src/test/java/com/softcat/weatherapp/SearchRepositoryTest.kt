@@ -4,9 +4,9 @@ import com.softcat.weatherapp.data.implementations.SearchRepositoryImpl
 import com.softcat.weatherapp.data.network.dto.CityDto
 import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.domain.interfaces.SearchRepository
-import com.softcat.weatherapp.objectMocks.apiServiceMock
-import com.softcat.weatherapp.objectMocks.searchResultDto
-import com.softcat.weatherapp.objectMocks.setupApiServiceMock
+import com.softcat.weatherapp.testing.objectMocks.apiServiceMock
+import com.softcat.weatherapp.testing.objectMocks.searchResultDto
+import com.softcat.weatherapp.testing.objectMocks.setupApiServiceMock
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

@@ -1,4 +1,4 @@
-package com.softcat.weatherapp.jsonMocks
+package com.softcat.weatherapp.testing.jsonMocks
 
 val weatherHistoryJson = """
     {

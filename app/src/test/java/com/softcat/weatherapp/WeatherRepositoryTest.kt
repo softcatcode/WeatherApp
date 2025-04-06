@@ -7,10 +7,10 @@ import com.softcat.weatherapp.data.network.dto.WeatherDto
 import com.softcat.weatherapp.domain.entity.Weather
 import com.softcat.weatherapp.domain.entity.weatherTypeOf
 import com.softcat.weatherapp.domain.interfaces.WeatherRepository
-import com.softcat.weatherapp.objectMocks.apiServiceMock
-import com.softcat.weatherapp.objectMocks.currentWeatherDto
-import com.softcat.weatherapp.objectMocks.setupApiServiceMock
-import com.softcat.weatherapp.objectMocks.weatherForecastDto
+import com.softcat.weatherapp.testing.objectMocks.apiServiceMock
+import com.softcat.weatherapp.testing.objectMocks.currentWeatherDto
+import com.softcat.weatherapp.testing.objectMocks.setupApiServiceMock
+import com.softcat.weatherapp.testing.objectMocks.weatherForecastDto
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -96,7 +96,7 @@ class WeatherRepositoryTest {
     }
 
     @Test
-    fun getForecastTest() = runBlocking {
+    fun getForecastTest(): Unit = runBlocking {
         val cityId = Random.nextInt(1, 100)
         val result = repository.getForecast(cityId)
 
