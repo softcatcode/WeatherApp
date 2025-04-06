@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.retry
 import kotlinx.coroutines.flow.shareIn
+import java.util.Calendar
 import javax.inject.Inject
 
 class CalendarRepositoryImpl @Inject constructor(
@@ -93,8 +94,15 @@ class CalendarRepositoryImpl @Inject constructor(
         city: City,
         selectedYear: Int
     ) {
-        val nextWeatherList = getWeatherForecast(10, city.id)
-        val prevWeatherList = getPreviousWeather(selectedYear, city.id)
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val nextWeatherList = if (currentYear == selectedYear)
+            getWeatherForecast(10, city.id)
+        else
+            emptyList()
+        val prevWeatherList = if (currentYear > selectedYear)
+            getPreviousWeather(selectedYear, city.id)
+        else
+            emptyList()
         _monthsDays = List(12) { mutableSetOf() }
 
         (nextWeatherList + prevWeatherList).filter { weather ->
