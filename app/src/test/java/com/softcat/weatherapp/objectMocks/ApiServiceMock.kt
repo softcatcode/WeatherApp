@@ -1,4 +1,4 @@
-package com.softcat.weatherapp.testing.objectMocks
+package com.softcat.weatherapp.objectMocks
 
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -6,10 +6,10 @@ import com.softcat.weatherapp.data.network.api.ApiService
 import com.softcat.weatherapp.data.network.dto.CityDto
 import com.softcat.weatherapp.data.network.dto.WeatherCurrentDto
 import com.softcat.weatherapp.data.network.dto.WeatherForecastDto
-import com.softcat.weatherapp.testing.jsonMocks.currentWeatherJson
-import com.softcat.weatherapp.testing.jsonMocks.searchResultJson
-import com.softcat.weatherapp.testing.jsonMocks.weatherForecastJson
-import com.softcat.weatherapp.testing.jsonMocks.weatherHistoryJson
+import com.softcat.weatherapp.jsonMocks.currentWeatherJson
+import com.softcat.weatherapp.jsonMocks.searchResultJson
+import com.softcat.weatherapp.jsonMocks.weatherForecastJson
+import com.softcat.weatherapp.jsonMocks.weatherHistoryJson
 import kotlinx.coroutines.runBlocking
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.anyInt

@@ -7,10 +7,10 @@ import com.softcat.weatherapp.data.network.dto.WeatherDto
 import com.softcat.weatherapp.domain.entity.Weather
 import com.softcat.weatherapp.domain.entity.weatherTypeOf
 import com.softcat.weatherapp.domain.interfaces.WeatherRepository
-import com.softcat.weatherapp.testing.objectMocks.apiServiceMock
-import com.softcat.weatherapp.testing.objectMocks.currentWeatherDto
-import com.softcat.weatherapp.testing.objectMocks.setupApiServiceMock
-import com.softcat.weatherapp.testing.objectMocks.weatherForecastDto
+import com.softcat.weatherapp.objectMocks.apiServiceMock
+import com.softcat.weatherapp.objectMocks.currentWeatherDto
+import com.softcat.weatherapp.objectMocks.setupApiServiceMock
+import com.softcat.weatherapp.objectMocks.weatherForecastDto
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -19,11 +19,6 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import kotlin.random.Random
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 class WeatherRepositoryTest {
 
     val repository: WeatherRepository = WeatherRepositoryImpl(

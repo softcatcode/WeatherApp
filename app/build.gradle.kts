@@ -120,4 +120,5 @@ dependencies {
     implementation(libs.datastore)
     testImplementation(libs.mockito)
     androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.mockito)
 }
