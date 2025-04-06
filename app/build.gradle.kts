@@ -52,6 +52,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -66,11 +72,21 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.material)
     implementation(libs.play.services.location)
-    testImplementation(libs.junit)
+    implementation(libs.androidx.rules)
+
+    testImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.play.services.location)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.datastore)
+    androidTestImplementation(libs.dagger.core)
+    androidTestImplementation(libs.room.core)
+    androidTestImplementation(project(":app"))
+    androidTestImplementation(project(":app"))
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -102,5 +118,6 @@ dependencies {
     implementation(libs.androidx.glance.appwidget)
 
     implementation(libs.datastore)
-    implementation(libs.mockito)
+    testImplementation(libs.mockito)
+    androidTestImplementation(libs.mockito.android)
 }
