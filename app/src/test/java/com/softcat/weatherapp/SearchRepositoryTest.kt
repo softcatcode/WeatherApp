@@ -19,7 +19,7 @@ class SearchRepositoryTest {
         setupApiServiceMock()
     }
 
-    fun checkCityConversion(result: List<City>, dtoList: List<CityDto>) {
+    private fun checkCityConversion(result: List<City>, dtoList: List<CityDto>) {
         assert(result.size == dtoList.size)
         for (i in 0 until result.size) {
             assert(result[i].id == dtoList[i].id)
