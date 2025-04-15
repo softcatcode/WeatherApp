@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class WeatherParameters(
     val weatherType: WeatherType = WeatherType.Any,
-    val temperatureMin: Int = MIN_TEMPERATURE,
-    val temperatureMax: Int = MAX_TEMPERATURE,
+    val temperatureMin: Float = MIN_TEMPERATURE,
+    val temperatureMax: Float = MAX_TEMPERATURE,
     val humidityMin: Float = MIN_HUMIDITY,
     val humidityMax: Float = MAX_HUMIDITY,
     val windSpeedMin: Float = MIN_WIND_SPEED,
@@ -30,7 +30,7 @@ data class WeatherParameters(
         get() = snowVolumeMin..snowVolumeMax
 
     val temperature: ClosedFloatingPointRange<Float>
-        get() = temperatureMin.toFloat()..temperatureMax.toFloat()
+        get() = temperatureMin..temperatureMax
 
     fun updateHumidity(newValue: ClosedFloatingPointRange<Float>) = copy(
         humidityMin = newValue.start,
@@ -53,16 +53,16 @@ data class WeatherParameters(
     )
 
     fun updateMinTemperature(newValue: String): WeatherParameters {
-        val newTemp = newValue.toIntOrNull() ?: temperatureMin
-        return if (newTemp <= temperatureMax)
+        val newTemp = newValue.toFloatOrNull() ?: temperatureMin
+        return if (newTemp in MIN_TEMPERATURE..temperatureMax)
             copy(temperatureMin = newTemp)
         else
             copy()
     }
 
     fun updateMaxTemperature(newValue: String): WeatherParameters {
-        val newTemp = newValue.toIntOrNull() ?: temperatureMax
-        return if (newTemp >= temperatureMin)
+        val newTemp = newValue.toFloatOrNull() ?: temperatureMax
+        return if (newTemp in temperatureMin..MAX_TEMPERATURE)
             copy(temperatureMax = newTemp)
         else
             copy()
@@ -77,7 +77,7 @@ data class WeatherParameters(
         const val MAX_PRECIPITATIONS = 1000f
         const val MIN_SNOW_VOLUME = 0f
         const val MAX_SNOW_VOLUME = 1000f
-        const val MIN_TEMPERATURE = -40
-        const val MAX_TEMPERATURE = 40
+        const val MIN_TEMPERATURE = -40f
+        const val MAX_TEMPERATURE = 40f
     }
 }

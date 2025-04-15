@@ -99,7 +99,7 @@ class CalendarStoreFactory @Inject constructor(
                 }
             }
             scope.launch {
-                errorFlowUseCase.calendarErrors().collect {
+                errorFlowUseCase().collect {
                     dispatch(Action.Error(it))
                 }
             }
