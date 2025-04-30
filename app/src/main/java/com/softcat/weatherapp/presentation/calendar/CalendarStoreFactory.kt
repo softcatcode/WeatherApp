@@ -4,24 +4,17 @@ import android.icu.util.Calendar
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.weatherapp.domain.entity.City
 import com.softcat.weatherapp.domain.entity.WeatherParameters
 import com.softcat.weatherapp.domain.entity.WeatherType
-import com.softcat.weatherapp.domain.useCases.GetErrorFlowUseCase
-import com.softcat.weatherapp.domain.useCases.GetHighlightedDaysUseCase
-import com.softcat.weatherapp.domain.useCases.ResetHighlightedDaysUseCase
 import com.softcat.weatherapp.domain.useCases.SelectYearDaysUseCase
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
 class CalendarStoreFactory @Inject constructor(
-    private val getHighlightedDaysUseCase: GetHighlightedDaysUseCase,
     private val selectYearDaysUseCase: SelectYearDaysUseCase,
-    private val resetHighlightedDaysUseCase: ResetHighlightedDaysUseCase,
-    private val errorFlowUseCase: GetErrorFlowUseCase,
     val storeFactory: StoreFactory
 ) {
     fun create(city: City): CalendarStore =
@@ -34,7 +27,6 @@ class CalendarStoreFactory @Inject constructor(
                 calendarState = CalendarStore.State.CalendarState.Initial,
                 city = city
             ),
-            bootstrapper = BootstrapperImpl(),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
@@ -90,24 +82,9 @@ class CalendarStoreFactory @Inject constructor(
         ): Msg
     }
 
-    private inner class BootstrapperImpl: CoroutineBootstrapper<Action>() {
-        override fun invoke() {
-            scope.launch {
-                resetHighlightedDaysUseCase()
-                getHighlightedDaysUseCase().collect {
-                    dispatch(Action.CalendarUpdated(highlightedDays = it))
-                }
-            }
-            scope.launch {
-                errorFlowUseCase().collect {
-                    dispatch(Action.Error(it))
-                }
-            }
-        }
-    }
-
     private inner class ExecutorImpl: CoroutineExecutor
         <CalendarStore.Intent, Action, CalendarStore.State, Msg, CalendarStore.Label>() {
+
         override fun executeAction(action: Action, getState: () -> CalendarStore.State) {
             when (action) {
                 is Action.CalendarUpdated -> dispatch(Msg.HighlightDays(action.highlightedDays))
@@ -149,7 +126,13 @@ class CalendarStoreFactory @Inject constructor(
                     dispatch(Msg.LoadingStarted)
                     val state = getState()
                     scope.launch {
-                        selectYearDaysUseCase(state.weatherParams, state.city, state.year)
+                        selectYearDaysUseCase(
+                            state.weatherParams, state.city, state.year
+                        ).onSuccess { data ->
+                            dispatch(Msg.HighlightDays(data))
+                        }.onFailure { throwable ->
+                            dispatch(Msg.Error(throwable))
+                        }
                     }
                 }
             }

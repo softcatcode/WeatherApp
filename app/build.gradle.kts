@@ -4,9 +4,11 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.parcelize)
     alias(libs.plugins.ksp)
+    id("jacoco")
 }
 
 android {
+
     namespace = "com.softcat.weatherapp"
     compileSdk = 34
 
@@ -34,6 +36,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+        }
+        debug {
+            isMinifyEnabled = false
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
         }
     }
     compileOptions {
@@ -53,10 +62,18 @@ android {
         }
     }
     testOptions {
-        unitTests.isReturnDefaultValues = true
         unitTests {
+            //unitTests.isReturnDefaultValues = true
             isIncludeAndroidResources = true
         }
+        reportDir = "/customJacocoReportDir"
+        testCoverage {
+            jacocoVersion = "0.8.13"
+        }
+
+    }
+    testCoverage {
+        jacocoVersion = "0.8.13"
     }
 }
 

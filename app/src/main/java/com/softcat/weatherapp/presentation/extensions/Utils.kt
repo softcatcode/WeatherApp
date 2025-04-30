@@ -1,7 +1,5 @@
 package com.softcat.weatherapp.presentation.extensions
 
-import android.content.Context
-import androidx.datastore.preferences.preferencesDataStore
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.lifecycle.doOnDestroy
 import kotlinx.coroutines.CoroutineScope

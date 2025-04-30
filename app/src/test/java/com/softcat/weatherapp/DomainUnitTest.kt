@@ -16,15 +16,12 @@ import com.softcat.weatherapp.domain.interfaces.WeatherRepository
 import com.softcat.weatherapp.domain.useCases.AddToFavouriteUseCase
 import com.softcat.weatherapp.domain.useCases.GetCurrentCityNameUseCase
 import com.softcat.weatherapp.domain.useCases.GetCurrentWeatherUseCase
-import com.softcat.weatherapp.domain.useCases.GetErrorFlowUseCase
 import com.softcat.weatherapp.domain.useCases.GetFavouriteCitiesUseCase
 import com.softcat.weatherapp.domain.useCases.GetForecastUseCase
-import com.softcat.weatherapp.domain.useCases.GetHighlightedDaysUseCase
 import com.softcat.weatherapp.domain.useCases.GetLastCityFromDatastoreUseCase
 import com.softcat.weatherapp.domain.useCases.GetTodayForecastUseCase
 import com.softcat.weatherapp.domain.useCases.ObserveIsFavouriteUseCase
 import com.softcat.weatherapp.domain.useCases.RemoveFromFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.ResetHighlightedDaysUseCase
 import com.softcat.weatherapp.domain.useCases.SaveToDatastoreUseCase
 import com.softcat.weatherapp.domain.useCases.SearchCityUseCase
 import com.softcat.weatherapp.domain.useCases.SelectYearDaysUseCase
@@ -87,14 +84,6 @@ class DomainUnitTest {
     }
 
     @Test
-    fun getHighlightedDaysUseCaseTest(): Unit = runBlocking {
-        val getHighlightedDaysUseCase = GetHighlightedDaysUseCase(calendarRepository)
-        getHighlightedDaysUseCase()
-        verify(calendarRepository, times(1))
-            .getHighlightedDays()
-    }
-
-    @Test
     fun getLastCityFromDatastoreUseCaseTest(): Unit = runBlocking {
         val getLastCityFromDatastoreUseCase = GetLastCityFromDatastoreUseCase(datastoreRepository)
         getLastCityFromDatastoreUseCase()
@@ -130,14 +119,6 @@ class DomainUnitTest {
     }
 
     @Test
-    fun resetHighlightedDaysUseCaseTest(): Unit = runBlocking {
-        val resetHighlightedDaysUseCase = ResetHighlightedDaysUseCase(calendarRepository)
-        resetHighlightedDaysUseCase()
-        verify(calendarRepository, times(1))
-            .reset()
-    }
-
-    @Test
     fun saveToDatastoreUseCaseTest(): Unit = runBlocking {
         val saveToDatastoreUseCase = SaveToDatastoreUseCase(datastoreRepository)
         val value = "some text"
@@ -168,14 +149,6 @@ class DomainUnitTest {
         selectYearDaysUseCase(params, city, year)
         verify(calendarRepository, times(1))
             .selectYearDays(params, city, year)
-    }
-
-    @Test
-    fun getErrorFlowUseCaseTest(): Unit = runBlocking {
-        val getErrorFlowUseCase = GetErrorFlowUseCase(calendarRepository)
-        getErrorFlowUseCase()
-        verify(calendarRepository, times(1))
-            .getErrorFlow()
     }
 
     @Test

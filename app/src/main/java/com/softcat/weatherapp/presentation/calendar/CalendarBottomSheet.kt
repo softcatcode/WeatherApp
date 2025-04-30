@@ -43,7 +43,7 @@ private fun LazyListScope.temperatureSelector(
                 .height(100.dp),
         ) {
             WeatherTypeSelector(
-                expandingColumnModifier = Modifier
+                modifier = Modifier
                     .weight(1f)
                     .height(250.dp),
                 elementModifier = Modifier

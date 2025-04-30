@@ -270,7 +270,7 @@ fun WeatherParameter(
 @Preview
 @Composable
 fun WeatherTypeSelector(
-    expandingColumnModifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     elementModifier: Modifier = Modifier,
     iconWithTextModifier: Modifier = Modifier.size(100.dp),
     currentType: WeatherType = WeatherType.Sun,
@@ -284,7 +284,7 @@ fun WeatherTypeSelector(
         onClick = { expanded = true }
     )
     DropdownMenu(
-        modifier = expandingColumnModifier,
+        modifier = modifier,
         expanded = expanded,
         onDismissRequest = { expanded = false }
     ) {
@@ -409,12 +409,14 @@ fun BottomSheetDragHandle() {
 @Preview
 @Composable
 fun WeatherTypeItem(
-    modifier: Modifier = Modifier.size(100.dp),
+    modifier: Modifier = Modifier,
     type: WeatherType = WeatherType.Clouds,
     onClick: () -> Unit = {}
 ) {
     Column(
-        modifier = modifier,
+        modifier = Modifier
+            .size(100.dp)
+            .then(modifier),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val title = stringResource(id = type.toTitleResId())
