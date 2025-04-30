@@ -1,12 +1,12 @@
 package com.softcat.weatherapp
 
+import com.softcat.domain.entity.Weather
+import com.softcat.domain.entity.weatherTypeOf
+import com.softcat.domain.interfaces.WeatherRepository
 import com.softcat.weatherapp.data.implementations.WeatherRepositoryImpl
 import com.softcat.weatherapp.data.mapper.toCalendar
 import com.softcat.weatherapp.data.network.dto.DayDto
 import com.softcat.weatherapp.data.network.dto.WeatherDto
-import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.entity.weatherTypeOf
-import com.softcat.weatherapp.domain.interfaces.WeatherRepository
 import com.softcat.weatherapp.objectMocks.apiServiceMock
 import com.softcat.weatherapp.objectMocks.currentWeatherDto
 import com.softcat.weatherapp.objectMocks.setupApiServiceMock

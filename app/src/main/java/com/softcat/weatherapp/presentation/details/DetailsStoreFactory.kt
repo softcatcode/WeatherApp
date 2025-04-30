@@ -5,12 +5,12 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.Forecast
-import com.softcat.weatherapp.domain.useCases.AddToFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.GetForecastUseCase
-import com.softcat.weatherapp.domain.useCases.ObserveIsFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.RemoveFromFavouriteUseCase
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.Forecast
+import com.softcat.domain.useCases.AddToFavouriteUseCase
+import com.softcat.domain.useCases.GetForecastUseCase
+import com.softcat.domain.useCases.ObserveIsFavouriteUseCase
+import com.softcat.domain.useCases.RemoveFromFavouriteUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

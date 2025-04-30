@@ -16,8 +16,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.softcat.weatherapp.domain.useCases.RemoveFromFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.SearchCityUseCase
+import com.softcat.domain.useCases.RemoveFromFavouriteUseCase
+import com.softcat.domain.useCases.SearchCityUseCase
 import kotlinx.coroutines.launch
 
 @Composable

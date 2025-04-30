@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.play.services.location)
     implementation(libs.androidx.rules)
+    implementation(project(":domain"))
 
     testImplementation(libs.androidx.junit)
     androidTestImplementation(libs.junit)

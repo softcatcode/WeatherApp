@@ -1,6 +1,6 @@
 package com.softcat.weatherapp.presentation.favourite
 
-import com.softcat.weatherapp.domain.entity.City
+import com.softcat.domain.entity.City
 import kotlinx.coroutines.flow.StateFlow
 
 interface FavouritesComponent {

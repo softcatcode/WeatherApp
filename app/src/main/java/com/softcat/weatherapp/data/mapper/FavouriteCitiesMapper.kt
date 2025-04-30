@@ -1,7 +1,7 @@
 package com.softcat.weatherapp.data.mapper
 
+import com.softcat.domain.entity.City
 import com.softcat.weatherapp.data.local.model.CityDbModel
-import com.softcat.weatherapp.domain.entity.City
 
 fun City.toDbModel(): CityDbModel = CityDbModel(id, name, country)
 

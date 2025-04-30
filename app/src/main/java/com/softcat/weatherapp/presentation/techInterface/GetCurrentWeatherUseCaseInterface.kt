@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.softcat.weatherapp.domain.useCases.GetCurrentWeatherUseCase
+import com.softcat.domain.useCases.GetCurrentWeatherUseCase
 import kotlinx.coroutines.launch
 
 @Composable

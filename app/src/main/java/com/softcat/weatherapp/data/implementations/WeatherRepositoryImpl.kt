@@ -1,9 +1,9 @@
 package com.softcat.weatherapp.data.implementations
 
+import com.softcat.domain.entity.Weather
+import com.softcat.domain.interfaces.WeatherRepository
 import com.softcat.weatherapp.data.mapper.toEntity
 import com.softcat.weatherapp.data.network.api.ApiService
-import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.interfaces.WeatherRepository
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(

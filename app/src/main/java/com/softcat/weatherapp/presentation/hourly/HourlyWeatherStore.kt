@@ -1,7 +1,7 @@
 package com.softcat.weatherapp.presentation.hourly
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.softcat.weatherapp.domain.entity.Weather
+import com.softcat.domain.entity.Weather
 
 interface HourlyWeatherStore:
     Store<HourlyWeatherStore.Intent, HourlyWeatherStore.State, HourlyWeatherStore.Label> {

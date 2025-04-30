@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.softcat.weatherapp.domain.useCases.GetCurrentCityNameUseCase
+import com.softcat.domain.useCases.GetCurrentCityNameUseCase
 import kotlinx.coroutines.launch
 
 @Composable

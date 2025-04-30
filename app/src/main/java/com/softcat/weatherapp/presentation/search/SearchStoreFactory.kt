@@ -4,9 +4,9 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.useCases.AddToFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.SearchCityUseCase
+import com.softcat.domain.entity.City
+import com.softcat.domain.useCases.AddToFavouriteUseCase
+import com.softcat.domain.useCases.SearchCityUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

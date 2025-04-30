@@ -24,7 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.softcat.weatherapp.domain.useCases.GetFavouriteCitiesUseCase
+import com.softcat.domain.useCases.GetFavouriteCitiesUseCase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 

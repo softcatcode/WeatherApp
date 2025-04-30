@@ -24,7 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.softcat.weatherapp.domain.useCases.GetLastCityFromDatastoreUseCase
+import com.softcat.domain.useCases.GetLastCityFromDatastoreUseCase
 import kotlinx.coroutines.launch
 
 @Composable

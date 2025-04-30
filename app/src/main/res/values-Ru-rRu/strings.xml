@@ -21,18 +21,6 @@
     <string name="saturday_label">СБ</string>
     <string name="sunday_label">ВС</string>
 
-    <string name="thunderstorm">гроза</string>
-    <string name="drizzle">моросит</string>
-    <string name="rain">дождь</string>
-    <string name="shower">ливень</string>
-    <string name="mist">туман</string>
-    <string name="sun">солнце</string>
-    <string name="moon">луна</string>
-    <string name="clouds">облачно</string>
-    <string name="heavy_clouds">пасмурно</string>
-    <string name="snow">снег</string>
-    <string name="any">любая</string>
-
     <string name="weather_type">Описание</string>
     <string name="wind_speed_parameter">Скорость ветра</string>
     <string name="humidity_parameter">Влажность</string>

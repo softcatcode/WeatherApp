@@ -6,11 +6,11 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.useCases.GetCurrentCityNameUseCase
-import com.softcat.weatherapp.domain.useCases.GetCurrentWeatherUseCase
-import com.softcat.weatherapp.domain.useCases.GetFavouriteCitiesUseCase
-import com.softcat.weatherapp.domain.useCases.SaveToDatastoreUseCase
+import com.softcat.domain.entity.City
+import com.softcat.domain.useCases.GetCurrentCityNameUseCase
+import com.softcat.domain.useCases.GetCurrentWeatherUseCase
+import com.softcat.domain.useCases.GetFavouriteCitiesUseCase
+import com.softcat.domain.useCases.SaveToDatastoreUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

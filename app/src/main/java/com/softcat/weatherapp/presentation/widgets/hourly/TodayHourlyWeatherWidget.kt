@@ -6,12 +6,12 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
+import com.softcat.domain.entity.Weather
+import com.softcat.domain.useCases.GetLastCityFromDatastoreUseCase
+import com.softcat.domain.useCases.GetTodayForecastUseCase
+import com.softcat.domain.useCases.SearchCityUseCase
 import com.softcat.weatherapp.WeatherApplication
 import com.softcat.weatherapp.data.implementations.DatastoreRepositoryImpl
-import com.softcat.weatherapp.domain.useCases.GetTodayForecastUseCase
-import com.softcat.weatherapp.domain.useCases.SearchCityUseCase
-import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.useCases.GetLastCityFromDatastoreUseCase
 
 class TodayHourlyWeatherWidget(
     private val getForecastUseCase: GetTodayForecastUseCase,

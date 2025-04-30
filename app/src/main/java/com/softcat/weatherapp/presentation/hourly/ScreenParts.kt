@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -48,13 +47,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.softcat.domain.entity.Weather
 import com.softcat.weatherapp.R
-import com.softcat.weatherapp.domain.entity.Weather
 import com.softcat.weatherapp.presentation.extensions.formattedTime
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import com.softcat.weatherapp.presentation.ui.theme.Pink80
 import com.softcat.weatherapp.presentation.ui.theme.Purple80
 import com.softcat.weatherapp.presentation.utils.defaultWeather
+import androidx.compose.foundation.lazy.items
 
 @Preview
 @Composable

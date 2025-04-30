@@ -5,10 +5,10 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.WeatherParameters
-import com.softcat.weatherapp.domain.entity.WeatherType
-import com.softcat.weatherapp.domain.useCases.SelectYearDaysUseCase
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.WeatherParameters
+import com.softcat.domain.entity.WeatherType
+import com.softcat.domain.useCases.SelectYearDaysUseCase
 import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject

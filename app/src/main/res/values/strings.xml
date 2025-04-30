@@ -20,18 +20,6 @@
     <string name="friday_label">FRI</string>
     <string name="saturday_label">SAT</string>
     <string name="sunday_label">SUN</string>
-
-    <string name="thunderstorm">thunderstorm</string>
-    <string name="drizzle">drizzle</string>
-    <string name="rain">rain</string>
-    <string name="shower">shower</string>
-    <string name="mist">mist</string>
-    <string name="sun">sun</string>
-    <string name="moon">moon</string>
-    <string name="clouds">clouds</string>
-    <string name="heavy_clouds">heavy clouds</string>
-    <string name="snow">snow</string>
-    <string name="any">any</string>
     <string name="ok" translatable="false">OK</string>
 
     <string name="weather_type">Description</string>

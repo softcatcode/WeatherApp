@@ -1,8 +1,8 @@
 package com.softcat.weatherapp.data.implementations
 
+import com.softcat.domain.interfaces.SearchRepository
 import com.softcat.weatherapp.data.mapper.toEntities
 import com.softcat.weatherapp.data.network.api.ApiService
-import com.softcat.weatherapp.domain.interfaces.SearchRepository
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(

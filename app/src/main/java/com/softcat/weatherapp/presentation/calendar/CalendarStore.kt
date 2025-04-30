@@ -1,9 +1,9 @@
 package com.softcat.weatherapp.presentation.calendar
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.WeatherParameters
-import com.softcat.weatherapp.domain.entity.WeatherType
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.WeatherParameters
+import com.softcat.domain.entity.WeatherType
 
 interface CalendarStore: Store<CalendarStore.Intent, CalendarStore.State, CalendarStore.Label> {
 

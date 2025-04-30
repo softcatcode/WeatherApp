@@ -4,17 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.softcat.domain.useCases.AddToFavouriteUseCase
+import com.softcat.domain.useCases.GetCurrentCityNameUseCase
+import com.softcat.domain.useCases.GetFavouriteCitiesUseCase
+import com.softcat.domain.useCases.GetForecastUseCase
+import com.softcat.domain.useCases.GetLastCityFromDatastoreUseCase
+import com.softcat.domain.useCases.GetTodayForecastUseCase
+import com.softcat.domain.useCases.ObserveIsFavouriteUseCase
+import com.softcat.domain.useCases.RemoveFromFavouriteUseCase
+import com.softcat.domain.useCases.SaveToDatastoreUseCase
+import com.softcat.domain.useCases.SearchCityUseCase
 import com.softcat.weatherapp.WeatherApplication
-import com.softcat.weatherapp.domain.useCases.AddToFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.GetCurrentCityNameUseCase
-import com.softcat.weatherapp.domain.useCases.GetFavouriteCitiesUseCase
-import com.softcat.weatherapp.domain.useCases.GetForecastUseCase
-import com.softcat.weatherapp.domain.useCases.GetLastCityFromDatastoreUseCase
-import com.softcat.weatherapp.domain.useCases.GetTodayForecastUseCase
-import com.softcat.weatherapp.domain.useCases.ObserveIsFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.RemoveFromFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.SaveToDatastoreUseCase
-import com.softcat.weatherapp.domain.useCases.SearchCityUseCase
 import com.softcat.weatherapp.presentation.techInterface.TechInterfaceScreen
 import javax.inject.Inject
 

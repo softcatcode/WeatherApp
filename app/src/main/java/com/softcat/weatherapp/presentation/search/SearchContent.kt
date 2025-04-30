@@ -39,8 +39,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.softcat.domain.entity.City
 import com.softcat.weatherapp.R
-import com.softcat.weatherapp.domain.entity.City
 
 @Composable
 private fun CityCard(city: City, onClick: (City) -> Unit) {

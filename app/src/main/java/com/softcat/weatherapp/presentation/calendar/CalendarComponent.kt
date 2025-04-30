@@ -1,6 +1,6 @@
 package com.softcat.weatherapp.presentation.calendar
 
-import com.softcat.weatherapp.domain.entity.WeatherType
+import com.softcat.domain.entity.WeatherType
 import kotlinx.coroutines.flow.StateFlow
 
 interface CalendarComponent {

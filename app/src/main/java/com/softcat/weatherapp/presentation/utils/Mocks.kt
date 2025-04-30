@@ -1,8 +1,8 @@
 package com.softcat.weatherapp.presentation.utils
 
-import com.softcat.weatherapp.domain.entity.AstrologicalParameters
-import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.entity.WeatherType
+import com.softcat.domain.entity.AstrologicalParameters
+import com.softcat.domain.entity.Weather
+import com.softcat.domain.entity.WeatherType
 import java.util.Calendar
 
 val defaultWeather = Weather(

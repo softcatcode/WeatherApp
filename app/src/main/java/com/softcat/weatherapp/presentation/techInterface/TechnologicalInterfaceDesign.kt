@@ -29,16 +29,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import com.softcat.weatherapp.domain.useCases.AddToFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.GetFavouriteCitiesUseCase
-import com.softcat.weatherapp.domain.useCases.GetForecastUseCase
-import com.softcat.weatherapp.domain.useCases.GetLastCityFromDatastoreUseCase
-import com.softcat.weatherapp.domain.useCases.GetTodayForecastUseCase
-import com.softcat.weatherapp.domain.useCases.ObserveIsFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.RemoveFromFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.SaveToDatastoreUseCase
-import com.softcat.weatherapp.domain.useCases.SearchCityUseCase
-import com.softcat.weatherapp.domain.useCases.GetCurrentCityNameUseCase as GetCurrentCityNameUseCase1
+import com.softcat.domain.useCases.AddToFavouriteUseCase
+import com.softcat.domain.useCases.GetCurrentCityNameUseCase
+import com.softcat.domain.useCases.GetFavouriteCitiesUseCase
+import com.softcat.domain.useCases.GetForecastUseCase
+import com.softcat.domain.useCases.GetLastCityFromDatastoreUseCase
+import com.softcat.domain.useCases.GetTodayForecastUseCase
+import com.softcat.domain.useCases.ObserveIsFavouriteUseCase
+import com.softcat.domain.useCases.RemoveFromFavouriteUseCase
+import com.softcat.domain.useCases.SaveToDatastoreUseCase
+import com.softcat.domain.useCases.SearchCityUseCase
 
 @Composable
 fun UseCases(
@@ -73,7 +73,7 @@ fun UseCases(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TechInterfaceScreen(
-    getCurrentCityNameUseCase: GetCurrentCityNameUseCase1,
+    getCurrentCityNameUseCase: GetCurrentCityNameUseCase,
     getTodayForecastUseCase: GetTodayForecastUseCase,
     getForecastUseCase: GetForecastUseCase,
     getLastCityFromDatastoreUseCase: GetLastCityFromDatastoreUseCase,
@@ -111,7 +111,7 @@ fun TechInterfaceScreen(
             contentAlignment = Alignment.Center
         ) {
             when (useCaseName.value) {
-                GetCurrentCityNameUseCase1::class.simpleName -> GetCurrentCityNameUseCaseInterface(getCurrentCityNameUseCase)
+                GetCurrentCityNameUseCase::class.simpleName -> GetCurrentCityNameUseCaseInterface(getCurrentCityNameUseCase)
                 GetTodayForecastUseCase::class.simpleName -> GetTodayForecastUseCaseInterface(getTodayForecastUseCase)
                 GetForecastUseCase::class.simpleName -> GetForecastUseCaseInterface(getForecastUseCase)
                 GetLastCityFromDatastoreUseCase::class.simpleName -> GetLastCityFromDatastoreUseCaseInterface(getLastCityFromDatastoreUseCase)

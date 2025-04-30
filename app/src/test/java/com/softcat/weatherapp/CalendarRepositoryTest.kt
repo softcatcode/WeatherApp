@@ -1,13 +1,13 @@
 package com.softcat.weatherapp
 
 import com.google.gson.Gson
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.WeatherParameters
+import com.softcat.domain.entity.weatherTypeOf
+import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.weatherapp.data.implementations.CalendarRepositoryImpl
 import com.softcat.weatherapp.data.network.api.ApiService
 import com.softcat.weatherapp.data.network.dto.WeatherForecastDto
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.WeatherParameters
-import com.softcat.weatherapp.domain.entity.weatherTypeOf
-import com.softcat.weatherapp.domain.interfaces.CalendarRepository
 import com.softcat.weatherapp.jsonMocks.weatherForecastJson
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue

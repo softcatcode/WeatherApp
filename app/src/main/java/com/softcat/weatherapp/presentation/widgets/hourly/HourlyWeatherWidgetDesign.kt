@@ -29,7 +29,7 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextDefaults.defaultTextStyle
 import androidx.glance.unit.ColorProvider
-import com.softcat.weatherapp.domain.entity.Weather
+import com.softcat.domain.entity.Weather
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
 import com.softcat.weatherapp.presentation.utils.defaultWeather
 import kotlin.math.min

@@ -1,9 +1,9 @@
 package com.softcat.weatherapp
 
+import com.softcat.domain.entity.City
+import com.softcat.domain.interfaces.SearchRepository
 import com.softcat.weatherapp.data.implementations.SearchRepositoryImpl
 import com.softcat.weatherapp.data.network.dto.CityDto
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.interfaces.SearchRepository
 import com.softcat.weatherapp.objectMocks.apiServiceMock
 import com.softcat.weatherapp.objectMocks.searchResultDto
 import com.softcat.weatherapp.objectMocks.setupApiServiceMock
@@ -21,7 +21,7 @@ class SearchRepositoryTest {
 
     private fun checkCityConversion(result: List<City>, dtoList: List<CityDto>) {
         assert(result.size == dtoList.size)
-        for (i in 0 until result.size) {
+        for (i in result.indices) {
             assert(result[i].id == dtoList[i].id)
             assert(result[i].name == dtoList[i].name)
             assert(result[i].country == dtoList[i].country)

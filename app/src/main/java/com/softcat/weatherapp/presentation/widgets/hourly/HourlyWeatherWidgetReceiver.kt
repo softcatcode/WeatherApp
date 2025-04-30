@@ -1,14 +1,12 @@
 package com.softcat.weatherapp.presentation.widgets.hourly
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import com.softcat.domain.useCases.GetTodayForecastUseCase
+import com.softcat.domain.useCases.SearchCityUseCase
 import com.softcat.weatherapp.data.implementations.SearchRepositoryImpl
 import com.softcat.weatherapp.data.implementations.WeatherRepositoryImpl
 import com.softcat.weatherapp.data.network.api.ApiFactory
-import com.softcat.weatherapp.domain.useCases.GetTodayForecastUseCase
-import com.softcat.weatherapp.domain.useCases.SearchCityUseCase
 
 class HourlyWeatherWidgetReceiver: GlanceAppWidgetReceiver() {
 

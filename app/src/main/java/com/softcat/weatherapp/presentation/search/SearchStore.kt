@@ -1,7 +1,7 @@
 package com.softcat.weatherapp.presentation.search
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.softcat.weatherapp.domain.entity.City
+import com.softcat.domain.entity.City
 
 interface SearchStore: Store<SearchStore.Intent, SearchStore.State, SearchStore.Label> {
 

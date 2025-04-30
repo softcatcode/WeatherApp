@@ -1,12 +1,12 @@
 package com.softcat.weatherapp.data.implementations
 
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.Weather
+import com.softcat.domain.entity.WeatherParameters
+import com.softcat.domain.entity.WeatherType
+import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.weatherapp.data.mapper.toEntity
 import com.softcat.weatherapp.data.network.api.ApiService
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.entity.WeatherParameters
-import com.softcat.weatherapp.domain.entity.WeatherType
-import com.softcat.weatherapp.domain.interfaces.CalendarRepository
 import java.util.Calendar
 import javax.inject.Inject
 

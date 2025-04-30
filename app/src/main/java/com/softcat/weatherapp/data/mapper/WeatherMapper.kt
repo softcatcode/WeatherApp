@@ -1,13 +1,13 @@
 package com.softcat.weatherapp.data.mapper
 
+import com.softcat.domain.entity.AstrologicalParameters
+import com.softcat.domain.entity.Forecast
+import com.softcat.domain.entity.Weather
+import com.softcat.domain.entity.weatherTypeOf
 import com.softcat.weatherapp.data.network.dto.AstrologicalParametersDto
 import com.softcat.weatherapp.data.network.dto.WeatherCurrentDto
 import com.softcat.weatherapp.data.network.dto.WeatherDto
 import com.softcat.weatherapp.data.network.dto.WeatherForecastDto
-import com.softcat.weatherapp.domain.entity.AstrologicalParameters
-import com.softcat.weatherapp.domain.entity.Forecast
-import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.entity.weatherTypeOf
 import java.util.Calendar
 import java.util.Date
 
