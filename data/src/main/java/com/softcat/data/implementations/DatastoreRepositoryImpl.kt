@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.softcat.domain.interfaces.DatastoreRepository
 import kotlinx.coroutines.flow.first
+import timber.log.Timber
 import javax.inject.Inject
 
 class DatastoreRepositoryImpl @Inject constructor(
@@ -13,15 +14,19 @@ class DatastoreRepositoryImpl @Inject constructor(
 ): DatastoreRepository {
 
     override suspend fun saveCityToDatastore(cityName: String) {
+        Timber.i("${this::class.simpleName}.saveCityToDatastore($cityName)")
         dataStore.edit { preferences ->
             val datastoreKey = stringPreferencesKey(CITY_NAME_KEY)
             preferences[datastoreKey] = cityName
+            Timber.i("SUCCESS: ($datastoreKey -> $cityName) saved to internal storage")
         }
     }
 
     override suspend fun getLastCityFromDatastore(): String? {
         val datastoreKey = stringPreferencesKey(CITY_NAME_KEY)
-        return dataStore.data.first()[datastoreKey]
+        val result = dataStore.data.first()[datastoreKey]
+        Timber.i("SUCCESS: $result fetched from internal storage")
+        return result
     }
 
     companion object {

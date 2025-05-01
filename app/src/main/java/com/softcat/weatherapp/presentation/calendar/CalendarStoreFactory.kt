@@ -10,6 +10,7 @@ import com.softcat.domain.entity.WeatherParameters
 import com.softcat.domain.entity.WeatherType
 import com.softcat.domain.useCases.SelectYearDaysUseCase
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
 
@@ -86,6 +87,7 @@ class CalendarStoreFactory @Inject constructor(
         <CalendarStore.Intent, Action, CalendarStore.State, Msg, CalendarStore.Label>() {
 
         override fun executeAction(action: Action, getState: () -> CalendarStore.State) {
+            Timber.i("${this::class.simpleName} ACTION $action is caught.")
             when (action) {
                 is Action.CalendarUpdated -> dispatch(Msg.HighlightDays(action.highlightedDays))
                 is Action.Error -> dispatch(Msg.Error(action.error))
@@ -96,6 +98,7 @@ class CalendarStoreFactory @Inject constructor(
             intent: CalendarStore.Intent,
             getState: () -> CalendarStore.State
         ) {
+            Timber.i("${this::class.simpleName} INTENT $intent is caught.")
             when (intent) {
                 is CalendarStore.Intent.ChangeHumidity ->
                     dispatch(Msg.ChangeHumidity(intent.humidity))
@@ -140,30 +143,34 @@ class CalendarStoreFactory @Inject constructor(
     }
 
     private object ReducerImpl: Reducer<CalendarStore.State, Msg> {
-        override fun CalendarStore.State.reduce(msg: Msg): CalendarStore.State = when (msg) {
-            Msg.LoadingStarted ->
-                copy(calendarState = CalendarStore.State.CalendarState.Loading)
-            is Msg.ChangeHumidity ->
-                copy(weatherParams = weatherParams.updateHumidity(msg.humidity))
-            is Msg.ChangeMaxTemp ->
-                copy(weatherParams = weatherParams.updateMaxTemperature(msg.maxTemp))
-            is Msg.ChangeMinTemp ->
-                copy(weatherParams = weatherParams.updateMinTemperature(msg.minTemp))
-            is Msg.ChangePrecipitations ->
-                copy(weatherParams = weatherParams.updatePrecipitations(msg.precipitations))
-            is Msg.ChangeSnowVolume ->
-                copy(weatherParams = weatherParams.updateSnowVolume(msg.snowVolume))
-            is Msg.ChangeWindSpeed ->
-                copy(weatherParams = weatherParams.updateWindSpeed(msg.windSpeed))
-            is Msg.ChangeWeatherType ->
-                copy(weatherParams = weatherParams.copy(weatherType = msg.weatherType))
-            is Msg.SelectYear ->
-                copy(year = msg.year)
-            is Msg.HighlightDays -> {
-                copy(calendarState = CalendarStore.State.CalendarState.Loaded(msg.days))
+        override fun CalendarStore.State.reduce(msg: Msg): CalendarStore.State {
+            val result = when (msg) {
+                Msg.LoadingStarted ->
+                    copy(calendarState = CalendarStore.State.CalendarState.Loading)
+                is Msg.ChangeHumidity ->
+                    copy(weatherParams = weatherParams.updateHumidity(msg.humidity))
+                is Msg.ChangeMaxTemp ->
+                    copy(weatherParams = weatherParams.updateMaxTemperature(msg.maxTemp))
+                is Msg.ChangeMinTemp ->
+                    copy(weatherParams = weatherParams.updateMinTemperature(msg.minTemp))
+                is Msg.ChangePrecipitations ->
+                    copy(weatherParams = weatherParams.updatePrecipitations(msg.precipitations))
+                is Msg.ChangeSnowVolume ->
+                    copy(weatherParams = weatherParams.updateSnowVolume(msg.snowVolume))
+                is Msg.ChangeWindSpeed ->
+                    copy(weatherParams = weatherParams.updateWindSpeed(msg.windSpeed))
+                is Msg.ChangeWeatherType ->
+                    copy(weatherParams = weatherParams.copy(weatherType = msg.weatherType))
+                is Msg.SelectYear ->
+                    copy(year = msg.year)
+                is Msg.HighlightDays -> {
+                    copy(calendarState = CalendarStore.State.CalendarState.Loaded(msg.days))
+                }
+                is Msg.Error ->
+                    copy(calendarState = CalendarStore.State.CalendarState.Error(msg.error))
             }
-            is Msg.Error ->
-                copy(calendarState = CalendarStore.State.CalendarState.Error(msg.error))
+            Timber.i("${this::class.simpleName} NEW_STATE: $result.")
+            return result
         }
     }
 }

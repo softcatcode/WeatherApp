@@ -12,6 +12,7 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.Task
 import com.softcat.domain.interfaces.LocationRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 class LocationRepositoryImpl @Inject constructor(
@@ -30,11 +31,13 @@ class LocationRepositoryImpl @Inject constructor(
         ) == PackageManager.PERMISSION_GRANTED
 
         if (!permissionCheck) {
+            Timber.i("Location permissions denied, getLocation terminated.")
             return
         }
 
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Timber.i("GPS provider is disabled, getLocation terminated.")
             return
         }
 
@@ -44,6 +47,7 @@ class LocationRepositoryImpl @Inject constructor(
             CancellationTokenSource().token
         )
         getLocationTaskResult.addOnCompleteListener {
+            Timber.i("Fused location client replied: ${it.result}.")
             onLocationLoaded(it.result)
         }
     }
@@ -51,12 +55,15 @@ class LocationRepositoryImpl @Inject constructor(
     override fun getCurrentCity(
         context: Context,
         onCityNameLoaded: (String) -> Unit
-    ) = getLocation(context) { location ->
-        val latitude = location.latitude
-        val longitude = location.longitude
-        geocoder.getFromLocation(latitude, longitude, 1) { addressList ->
-            val cityName = addressList.getOrNull(0)?.adminArea.orEmpty()
-            onCityNameLoaded(cityName)
+    ) {
+        Timber.i("${this::class.simpleName}.getCurrentCity($context, $onCityNameLoaded)")
+        getLocation(context) { location ->
+            val latitude = location.latitude
+            val longitude = location.longitude
+            geocoder.getFromLocation(latitude, longitude, 1) { addressList ->
+                val cityName = addressList.getOrNull(0)?.adminArea.orEmpty()
+                onCityNameLoaded(cityName)
+            }
         }
     }
 }

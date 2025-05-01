@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.domain.entity.Weather
+import timber.log.Timber
 import javax.inject.Inject
 
 class HourlyWeatherStoreFactory @Inject constructor(
@@ -22,16 +23,19 @@ class HourlyWeatherStoreFactory @Inject constructor(
                 reducer = ReducerImpl
             ) {}
 
-    private interface Action {}
+    private interface Action
 
-    private interface Msg {}
+    private interface Msg
 
     private inner class ExecutorImpl: CoroutineExecutor<HourlyWeatherStore.Intent, Action, HourlyWeatherStore.State, Msg, HourlyWeatherStore.Label>() {
         override fun executeIntent(
             intent: HourlyWeatherStore.Intent,
             getState: () -> HourlyWeatherStore.State
-        ) = when (intent) {
-            HourlyWeatherStore.Intent.BackClick -> publish(HourlyWeatherStore.Label.BackClick)
+        ) {
+            Timber.i("${this::class.simpleName} INTENT $intent is caught.")
+            when (intent) {
+                HourlyWeatherStore.Intent.BackClick -> publish(HourlyWeatherStore.Label.BackClick)
+            }
         }
     }
 

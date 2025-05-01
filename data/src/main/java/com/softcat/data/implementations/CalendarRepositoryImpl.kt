@@ -7,6 +7,7 @@ import com.softcat.domain.entity.WeatherType
 import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.data.mapper.toEntity
 import com.softcat.data.network.api.ApiService
+import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -19,6 +20,7 @@ class CalendarRepositoryImpl @Inject constructor(
         city: City,
         selectedYear: Int
     ): Result<List<Set<Int>>> {
+        Timber.i("${this::class.simpleName}.selectYearDays($params, $city, $selectedYear)")
         val nextWeatherList: List<Weather>
         val prevWeatherList: List<Weather>
         try {
@@ -59,6 +61,7 @@ class CalendarRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getWeatherForecast(daysCount: Int, cityId: Int): List<Weather> {
+        Timber.i("${this::class.simpleName}.getWeatherForecast($daysCount, $cityId)")
         return apiService.loadForecast(
             query = WeatherRepositoryImpl.cityIdToQuery(cityId),
             dayCount = daysCount
@@ -66,6 +69,7 @@ class CalendarRepositoryImpl @Inject constructor(
     }
 
     private suspend fun getPreviousWeather(currentYear: Int, cityId: Int): List<Weather> {
+        Timber.i("${this::class.simpleName}.getPreviousWeather($currentYear, $cityId)")
         return apiService.loadWeatherHistory(
             query = WeatherRepositoryImpl.cityIdToQuery(cityId),
             startDate = "$currentYear-01-01",

@@ -14,6 +14,7 @@ import com.softcat.domain.useCases.SaveToDatastoreUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class FavouritesStoreFactory @Inject constructor(
@@ -71,49 +72,53 @@ class FavouritesStoreFactory @Inject constructor(
     }
 
     private object ReducerImpl: Reducer<FavouritesStore.State, Msg> {
-        override fun FavouritesStore.State.reduce(msg: Msg) = when (msg) {
-            is Msg.CityIsLoading -> {
-                copy(
-                    cityItems = cityItems.map {
-                        if (it.city.id == msg.cityId) {
-                            it.copy(weatherState = FavouritesStore.State.WeatherState.Loading)
-                        } else it
-                    }
-                )
-            }
-            is Msg.FavouriteCitiesLoaded -> {
-                copy(
-                    cityItems = msg.cities.map {
-                        FavouritesStore.State.CityItem(
-                            city = it,
-                            weatherState = FavouritesStore.State.WeatherState.Initial
-                        )
-                    }
-                )
-            }
-            is Msg.WeatherLoaded -> {
-                copy(
-                    cityItems = cityItems.map {
-                        if (it.city.id == msg.cityId) {
-                            it.copy(
-                                weatherState = FavouritesStore.State.WeatherState.Content(
-                                    tempC = msg.tempC,
-                                    iconUrl = msg.iconUrl
-                                )
+        override fun FavouritesStore.State.reduce(msg: Msg): FavouritesStore.State {
+            val result =when (msg) {
+                is Msg.CityIsLoading -> {
+                    copy(
+                        cityItems = cityItems.map {
+                            if (it.city.id == msg.cityId) {
+                                it.copy(weatherState = FavouritesStore.State.WeatherState.Loading)
+                            } else it
+                        }
+                    )
+                }
+                is Msg.FavouriteCitiesLoaded -> {
+                    copy(
+                        cityItems = msg.cities.map {
+                            FavouritesStore.State.CityItem(
+                                city = it,
+                                weatherState = FavouritesStore.State.WeatherState.Initial
                             )
-                        } else it
-                    }
-                )
+                        }
+                    )
+                }
+                is Msg.WeatherLoaded -> {
+                    copy(
+                        cityItems = cityItems.map {
+                            if (it.city.id == msg.cityId) {
+                                it.copy(
+                                    weatherState = FavouritesStore.State.WeatherState.Content(
+                                        tempC = msg.tempC,
+                                        iconUrl = msg.iconUrl
+                                    )
+                                )
+                            } else it
+                        }
+                    )
+                }
+                is Msg.WeatherLoadingError -> {
+                    copy(
+                        cityItems = cityItems.map {
+                            if (it.city.id == msg.cityId) {
+                                it.copy(weatherState = FavouritesStore.State.WeatherState.Error)
+                            } else it
+                        }
+                    )
+                }
             }
-            is Msg.WeatherLoadingError -> {
-                copy(
-                    cityItems = cityItems.map {
-                        if (it.city.id == msg.cityId) {
-                            it.copy(weatherState = FavouritesStore.State.WeatherState.Error)
-                        } else it
-                    }
-                )
-            }
+            Timber.i("${this::class.simpleName} NEW_STATE: $result.")
+            return result
         }
     }
 
@@ -142,7 +147,8 @@ class FavouritesStoreFactory @Inject constructor(
             }
         }
 
-        override fun executeAction(action: Action, getState: () -> FavouritesStore.State) =
+        override fun executeAction(action: Action, getState: () -> FavouritesStore.State) {
+            Timber.i("${this::class.simpleName} ACTION $action is caught.")
             when(action) {
                 is Action.FavouriteCitiesLoaded -> {
                     val cities = action.cities
@@ -150,24 +156,27 @@ class FavouritesStoreFactory @Inject constructor(
                     loadCities(action.cities)
                 }
             }
+        }
 
         override fun executeIntent(
             intent: FavouritesStore.Intent,
             getState: () -> FavouritesStore.State
-        ) = when (intent) {
-            FavouritesStore.Intent.AddFavouritesClicked -> {
-                publish(FavouritesStore.Label.AddFavouritesClicked)
-            }
-            is FavouritesStore.Intent.CityItemClicked -> {
-                publish(FavouritesStore.Label.CityItemClicked(intent.city))
-            }
-            FavouritesStore.Intent.SearchClicked -> {
-                publish(FavouritesStore.Label.SearchClicked)
-            }
-            is FavouritesStore.Intent.ReloadCities -> {
-                loadCities(intent.cities)
+        ) {
+            Timber.i("${this::class.simpleName} INTENT $intent is caught.")
+            when (intent) {
+                FavouritesStore.Intent.AddFavouritesClicked -> {
+                    publish(FavouritesStore.Label.AddFavouritesClicked)
+                }
+                is FavouritesStore.Intent.CityItemClicked -> {
+                    publish(FavouritesStore.Label.CityItemClicked(intent.city))
+                }
+                FavouritesStore.Intent.SearchClicked -> {
+                    publish(FavouritesStore.Label.SearchClicked)
+                }
+                is FavouritesStore.Intent.ReloadCities -> {
+                    loadCities(intent.cities)
+                }
             }
         }
     }
-
 }

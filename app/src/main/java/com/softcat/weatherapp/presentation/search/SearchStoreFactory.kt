@@ -10,6 +10,7 @@ import com.softcat.domain.useCases.SearchCityUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class SearchStoreFactory @Inject constructor(
@@ -51,6 +52,7 @@ class SearchStoreFactory @Inject constructor(
         private var searchJob: Job? = null
 
         override fun executeIntent(intent: SearchStore.Intent, getState: () -> SearchStore.State) {
+            Timber.i("${this::class.simpleName} INTENT $intent is caught.")
             when (intent) {
                 SearchStore.Intent.BackClick -> publish(SearchStore.Label.BackClick)
 
@@ -91,17 +93,20 @@ class SearchStoreFactory @Inject constructor(
     }
 
     private object ReducerImpl: Reducer<SearchStore.State, Msg> {
-        override fun SearchStore.State.reduce(msg: Msg) = when (msg) {
+        override fun SearchStore.State.reduce(msg: Msg): SearchStore.State {
+            val result = when (msg) {
+                is Msg.ChangeSearchQuery -> copy(searchQuery = msg.query)
 
-            is Msg.ChangeSearchQuery -> copy(searchQuery = msg.query)
+                Msg.LoadingSearchResult -> copy(searchState = SearchStore.State.SearchState.Loading)
 
-            Msg.LoadingSearchResult -> copy(searchState = SearchStore.State.SearchState.Loading)
+                Msg.SearchResultError -> copy(searchState = SearchStore.State.SearchState.Error)
 
-            Msg.SearchResultError -> copy(searchState = SearchStore.State.SearchState.Error)
-
-            is Msg.SearchResultLoaded -> copy(
-                searchState = SearchStore.State.SearchState.Success(msg.cities)
-            )
+                is Msg.SearchResultLoaded -> copy(
+                    searchState = SearchStore.State.SearchState.Success(msg.cities)
+                )
+            }
+            Timber.i("${this::class.simpleName} NEW_STATE: $result.")
+            return result
         }
     }
 }

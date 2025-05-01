@@ -107,12 +107,13 @@ dependencies {
 
     implementation(libs.icons)
     implementation(libs.glide.compose)
+    implementation(libs.datastore)
+    implementation(libs.timber)
 
     // widgets' utils
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.appwidget)
 
-    implementation(libs.datastore)
     testImplementation(libs.mockito)
     androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.mockito)

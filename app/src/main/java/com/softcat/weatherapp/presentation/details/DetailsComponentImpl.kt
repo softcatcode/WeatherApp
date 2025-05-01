@@ -13,6 +13,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class DetailsComponentImpl @AssistedInject constructor(
     storeFactory: DetailsStoreFactory,
@@ -32,13 +33,16 @@ class DetailsComponentImpl @AssistedInject constructor(
         }
     }
 
-    private fun labelCollector(label: DetailsStore.Label) = when (label) {
-        DetailsStore.Label.BackClicked -> onBackClickCallback()
-        DetailsStore.Label.OpenCityCalendarClicked -> openCityCalendarCallback()
-        is DetailsStore.Label.OpenHourlyWeatherClicked -> {
-            val state = model.value.forecastState as? DetailsStore.State.ForecastState.Loaded
-            val hourlyWeather = state?.forecast?.hourly?.getOrNull(label.dayIndex).orEmpty()
-            openHourlyWeatherCallback(hourlyWeather)
+    private fun labelCollector(label: DetailsStore.Label) {
+        Timber.i("${this::class.simpleName}: label $label collected.")
+        when (label) {
+            DetailsStore.Label.BackClicked -> onBackClickCallback()
+            DetailsStore.Label.OpenCityCalendarClicked -> openCityCalendarCallback()
+            is DetailsStore.Label.OpenHourlyWeatherClicked -> {
+                val state = model.value.forecastState as? DetailsStore.State.ForecastState.Loaded
+                val hourlyWeather = state?.forecast?.hourly?.getOrNull(label.dayIndex).orEmpty()
+                openHourlyWeatherCallback(hourlyWeather)
+            }
         }
     }
 
@@ -46,18 +50,22 @@ class DetailsComponentImpl @AssistedInject constructor(
     override val model: StateFlow<DetailsStore.State> = store.stateFlow
 
     override fun changeFavouriteStatus() {
+        Timber.i("${this::class.simpleName}.changeFavouriteStatus()")
         store.accept(DetailsStore.Intent.ChangeFavouriteStatusClicked)
     }
 
     override fun back() {
+        Timber.i("${this::class.simpleName}.back()")
         store.accept(DetailsStore.Intent.BackClicked)
     }
 
     override fun openCityCalendar() {
+        Timber.i("${this::class.simpleName}.openCityCalendar()")
         store.accept(DetailsStore.Intent.OpenCityCalendarClicked)
     }
 
     override fun openHourlyWeather(dayIndex: Int) {
+        Timber.i("${this::class.simpleName}.openHourlyWeather()")
         store.accept(DetailsStore.Intent.OpenHourlyWeatherClicked(dayIndex))
     }
 
