@@ -1,8 +1,8 @@
 package com.softcat.weatherapp.presentation.details
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.Forecast
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.Forecast
 
 interface DetailsStore: Store<DetailsStore.Intent, DetailsStore.State, DetailsStore.Label> {
 

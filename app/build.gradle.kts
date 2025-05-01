@@ -7,13 +7,14 @@ plugins {
 }
 
 android {
+
     namespace = "com.softcat.weatherapp"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.softcat.weatherapp"
         minSdk = 33
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -21,10 +22,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        val apiKey = property("weatherApiKey")?.toString() ?:
-            error("No weather api key defined in gradle.properties.")
-        buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
@@ -34,24 +31,26 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildToolsVersion = "35.0.1"
 }
 
 dependencies {
@@ -66,11 +65,23 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.material)
     implementation(libs.play.services.location)
-    testImplementation(libs.junit)
+    implementation(libs.androidx.rules)
+    implementation(project(":domain"))
+    implementation(project(":data"))
+
+    testImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.play.services.location)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.datastore)
+    androidTestImplementation(libs.dagger.core)
+    androidTestImplementation(libs.room.core)
+    testImplementation(project(":app"))
+    androidTestImplementation(project(":app"))
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -96,10 +107,14 @@ dependencies {
 
     implementation(libs.icons)
     implementation(libs.glide.compose)
+    implementation(libs.datastore)
+    implementation(libs.timber)
 
     // widgets' utils
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.appwidget)
 
-    implementation(libs.datastore)
+    testImplementation(libs.mockito)
+    androidTestImplementation(libs.mockito.android)
+    androidTestImplementation(libs.mockito)
 }

@@ -53,11 +53,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.softcat.domain.entity.Forecast
+import com.softcat.domain.entity.Weather
+import com.softcat.domain.entity.WeatherParameters.Companion.MAX_TEMPERATURE
+import com.softcat.domain.entity.WeatherParameters.Companion.MIN_TEMPERATURE
 import com.softcat.weatherapp.R
-import com.softcat.weatherapp.domain.entity.Forecast
-import com.softcat.weatherapp.domain.entity.Weather
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_TEMPERATURE
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_TEMPERATURE
 import com.softcat.weatherapp.presentation.extensions.formattedFullDate
 import com.softcat.weatherapp.presentation.extensions.formattedShortWeekDay
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
@@ -301,7 +301,7 @@ private fun getBackgroundGradient(state: DetailsStore.State): Brush {
     val forecastState = state.forecastState
     return if (forecastState is DetailsStore.State.ForecastState.Loaded) {
         val t = forecastState.forecast.weather.tempC
-        val r = 1f / (MAX_TEMPERATURE - MIN_TEMPERATURE) * 0.8f * (t - MIN_TEMPERATURE)
+        val r: Float = 1f / (MAX_TEMPERATURE - MIN_TEMPERATURE) * 0.8f * (t - MIN_TEMPERATURE)
         val b = 1f - r
         val firstColor = Color(r, 0f, b)
         val secondColor = Color(r, 0.4f, b)

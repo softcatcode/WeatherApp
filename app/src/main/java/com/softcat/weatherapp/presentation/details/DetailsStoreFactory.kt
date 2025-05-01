@@ -5,13 +5,14 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.Forecast
-import com.softcat.weatherapp.domain.useCases.AddToFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.GetForecastUseCase
-import com.softcat.weatherapp.domain.useCases.ObserveIsFavouriteUseCase
-import com.softcat.weatherapp.domain.useCases.RemoveFromFavouriteUseCase
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.Forecast
+import com.softcat.domain.useCases.AddToFavouriteUseCase
+import com.softcat.domain.useCases.GetForecastUseCase
+import com.softcat.domain.useCases.ObserveIsFavouriteUseCase
+import com.softcat.domain.useCases.RemoveFromFavouriteUseCase
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class DetailsStoreFactory @Inject constructor(
@@ -84,15 +85,18 @@ class DetailsStoreFactory @Inject constructor(
     private inner class ExecutorImpl:
         CoroutineExecutor<DetailsStore.Intent, Action, DetailsStore.State, Msg, DetailsStore.Label>() {
 
-        override fun executeAction(action: Action, getState: () -> DetailsStore.State) =
+        override fun executeAction(action: Action, getState: () -> DetailsStore.State) {
+            Timber.i("${this::class.simpleName} ACTION $action is caught.")
             when (action) {
                 is Action.FavouriteStatusChanged -> dispatch(Msg.FavouriteStatusChanged(action.isFavourite))
                 is Action.ForecastLoaded -> dispatch(Msg.ForecastLoaded(action.forecast))
                 is Action.ForecastLoadingError -> dispatch(Msg.LoadingError(action.error))
                 Action.ForecastLoadingStarted -> dispatch(Msg.LoadingStarted)
             }
+        }
 
         override fun executeIntent(intent: DetailsStore.Intent, getState: () -> DetailsStore.State) {
+            Timber.i("${this::class.simpleName} INTENT $intent is caught.")
             when (intent) {
                 DetailsStore.Intent.BackClicked -> {
                     publish(DetailsStore.Label.BackClicked)
@@ -120,15 +124,19 @@ class DetailsStoreFactory @Inject constructor(
     }
 
     private object ReducerImpl: Reducer<DetailsStore.State, Msg> {
-        override fun DetailsStore.State.reduce(msg: Msg): DetailsStore.State = when (msg) {
 
-            is Msg.FavouriteStatusChanged -> copy(isFavourite = msg.isFavourite)
+        override fun DetailsStore.State.reduce(msg: Msg): DetailsStore.State {
+            val result = when (msg) {
+                is Msg.FavouriteStatusChanged -> copy(isFavourite = msg.isFavourite)
 
-            is Msg.ForecastLoaded -> copy(forecastState = DetailsStore.State.ForecastState.Loaded(msg.forecast))
+                is Msg.ForecastLoaded -> copy(forecastState = DetailsStore.State.ForecastState.Loaded(msg.forecast))
 
-            is Msg.LoadingError -> copy(forecastState = DetailsStore.State.ForecastState.Error(msg.error))
+                is Msg.LoadingError -> copy(forecastState = DetailsStore.State.ForecastState.Error(msg.error))
 
-            Msg.LoadingStarted -> copy(forecastState = DetailsStore.State.ForecastState.Loading)
+                Msg.LoadingStarted -> copy(forecastState = DetailsStore.State.ForecastState.Loading)
+            }
+            Timber.i("${this::class.simpleName} NEW_STATE: $result.")
+            return result
         }
     }
 }

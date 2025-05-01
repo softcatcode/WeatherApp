@@ -17,16 +17,16 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.softcat.domain.entity.WeatherParameters.Companion.MAX_HUMIDITY
+import com.softcat.domain.entity.WeatherParameters.Companion.MAX_PRECIPITATIONS
+import com.softcat.domain.entity.WeatherParameters.Companion.MAX_SNOW_VOLUME
+import com.softcat.domain.entity.WeatherParameters.Companion.MAX_WIND_SPEED
+import com.softcat.domain.entity.WeatherParameters.Companion.MIN_HUMIDITY
+import com.softcat.domain.entity.WeatherParameters.Companion.MIN_PRECIPITATIONS
+import com.softcat.domain.entity.WeatherParameters.Companion.MIN_SNOW_VOLUME
+import com.softcat.domain.entity.WeatherParameters.Companion.MIN_WIND_SPEED
+import com.softcat.domain.entity.WeatherType
 import com.softcat.weatherapp.R
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_HUMIDITY
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_PRECIPITATIONS
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_SNOW_VOLUME
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MAX_WIND_SPEED
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_HUMIDITY
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_PRECIPITATIONS
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_SNOW_VOLUME
-import com.softcat.weatherapp.domain.entity.WeatherParameters.Companion.MIN_WIND_SPEED
-import com.softcat.weatherapp.domain.entity.WeatherType
 
 private fun LazyListScope.temperatureSelector(
     currentWeatherType: WeatherType,
@@ -43,7 +43,7 @@ private fun LazyListScope.temperatureSelector(
                 .height(100.dp),
         ) {
             WeatherTypeSelector(
-                expandingColumnModifier = Modifier
+                modifier = Modifier
                     .weight(1f)
                     .height(250.dp),
                 elementModifier = Modifier

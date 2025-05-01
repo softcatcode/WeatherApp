@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.softcat.weatherapp.domain.entity.City
+import com.softcat.domain.entity.City
 import com.softcat.weatherapp.presentation.extensions.componentScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -12,6 +12,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class FavouritesComponentImpl @AssistedInject constructor(
     storeFactory: FavouritesStoreFactory,
@@ -30,28 +31,35 @@ class FavouritesComponentImpl @AssistedInject constructor(
         }
     }
 
-    private fun labelCollector(label: FavouritesStore.Label) = when (label) {
-        FavouritesStore.Label.AddFavouritesClicked -> onAddToFavouritesClickCallback()
-        is FavouritesStore.Label.CityItemClicked -> onCityItemClickedCallback(label.city)
-        FavouritesStore.Label.SearchClicked -> onSearchClickCallback()
+    private fun labelCollector(label: FavouritesStore.Label) {
+        Timber.i("${this::class.simpleName}: label $label collected.")
+        when (label) {
+            FavouritesStore.Label.AddFavouritesClicked -> onAddToFavouritesClickCallback()
+            is FavouritesStore.Label.CityItemClicked -> onCityItemClickedCallback(label.city)
+            FavouritesStore.Label.SearchClicked -> onSearchClickCallback()
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override val model: StateFlow<FavouritesStore.State> = store.stateFlow
 
     override fun onSearchClick() {
+        Timber.i("${this::class.simpleName}.onSearchClick()")
         store.accept(FavouritesStore.Intent.SearchClicked)
     }
 
     override fun onAddToFavouritesClick() {
+        Timber.i("${this::class.simpleName}.onAddToFavouritesClick()")
         store.accept(FavouritesStore.Intent.AddFavouritesClicked)
     }
 
     override fun onCityItemClick(city: City) {
+        Timber.i("${this::class.simpleName}.onCityItemClick()")
         store.accept(FavouritesStore.Intent.CityItemClicked(city))
     }
 
     override fun reloadCities() {
+        Timber.i("${this::class.simpleName}.reloadCities()")
         val cities = model.value.cityItems.map { it.city }
         store.accept(FavouritesStore.Intent.ReloadCities(cities))
     }

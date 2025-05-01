@@ -4,24 +4,18 @@ import android.icu.util.Calendar
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
-import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.WeatherParameters
-import com.softcat.weatherapp.domain.entity.WeatherType
-import com.softcat.weatherapp.domain.useCases.GetErrorFlowUseCase
-import com.softcat.weatherapp.domain.useCases.GetHighlightedDaysUseCase
-import com.softcat.weatherapp.domain.useCases.ResetHighlightedDaysUseCase
-import com.softcat.weatherapp.domain.useCases.SelectYearDaysUseCase
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.WeatherParameters
+import com.softcat.domain.entity.WeatherType
+import com.softcat.domain.useCases.SelectYearDaysUseCase
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.Locale
 import javax.inject.Inject
 
 class CalendarStoreFactory @Inject constructor(
-    private val getHighlightedDaysUseCase: GetHighlightedDaysUseCase,
     private val selectYearDaysUseCase: SelectYearDaysUseCase,
-    private val resetHighlightedDaysUseCase: ResetHighlightedDaysUseCase,
-    private val errorFlowUseCase: GetErrorFlowUseCase,
     val storeFactory: StoreFactory
 ) {
     fun create(city: City): CalendarStore =
@@ -34,7 +28,6 @@ class CalendarStoreFactory @Inject constructor(
                 calendarState = CalendarStore.State.CalendarState.Initial,
                 city = city
             ),
-            bootstrapper = BootstrapperImpl(),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
@@ -90,25 +83,11 @@ class CalendarStoreFactory @Inject constructor(
         ): Msg
     }
 
-    private inner class BootstrapperImpl: CoroutineBootstrapper<Action>() {
-        override fun invoke() {
-            scope.launch {
-                resetHighlightedDaysUseCase()
-                getHighlightedDaysUseCase().collect {
-                    dispatch(Action.CalendarUpdated(highlightedDays = it))
-                }
-            }
-            scope.launch {
-                errorFlowUseCase.calendarErrors().collect {
-                    dispatch(Action.Error(it))
-                }
-            }
-        }
-    }
-
     private inner class ExecutorImpl: CoroutineExecutor
         <CalendarStore.Intent, Action, CalendarStore.State, Msg, CalendarStore.Label>() {
+
         override fun executeAction(action: Action, getState: () -> CalendarStore.State) {
+            Timber.i("${this::class.simpleName} ACTION $action is caught.")
             when (action) {
                 is Action.CalendarUpdated -> dispatch(Msg.HighlightDays(action.highlightedDays))
                 is Action.Error -> dispatch(Msg.Error(action.error))
@@ -119,6 +98,7 @@ class CalendarStoreFactory @Inject constructor(
             intent: CalendarStore.Intent,
             getState: () -> CalendarStore.State
         ) {
+            Timber.i("${this::class.simpleName} INTENT $intent is caught.")
             when (intent) {
                 is CalendarStore.Intent.ChangeHumidity ->
                     dispatch(Msg.ChangeHumidity(intent.humidity))
@@ -149,7 +129,13 @@ class CalendarStoreFactory @Inject constructor(
                     dispatch(Msg.LoadingStarted)
                     val state = getState()
                     scope.launch {
-                        selectYearDaysUseCase(state.weatherParams, state.city, state.year)
+                        selectYearDaysUseCase(
+                            state.weatherParams, state.city, state.year
+                        ).onSuccess { data ->
+                            dispatch(Msg.HighlightDays(data))
+                        }.onFailure { throwable ->
+                            dispatch(Msg.Error(throwable))
+                        }
                     }
                 }
             }
@@ -157,30 +143,34 @@ class CalendarStoreFactory @Inject constructor(
     }
 
     private object ReducerImpl: Reducer<CalendarStore.State, Msg> {
-        override fun CalendarStore.State.reduce(msg: Msg): CalendarStore.State = when (msg) {
-            Msg.LoadingStarted ->
-                copy(calendarState = CalendarStore.State.CalendarState.Loading)
-            is Msg.ChangeHumidity ->
-                copy(weatherParams = weatherParams.updateHumidity(msg.humidity))
-            is Msg.ChangeMaxTemp ->
-                copy(weatherParams = weatherParams.updateMaxTemperature(msg.maxTemp))
-            is Msg.ChangeMinTemp ->
-                copy(weatherParams = weatherParams.updateMinTemperature(msg.minTemp))
-            is Msg.ChangePrecipitations ->
-                copy(weatherParams = weatherParams.updatePrecipitations(msg.precipitations))
-            is Msg.ChangeSnowVolume ->
-                copy(weatherParams = weatherParams.updateSnowVolume(msg.snowVolume))
-            is Msg.ChangeWindSpeed ->
-                copy(weatherParams = weatherParams.updateWindSpeed(msg.windSpeed))
-            is Msg.ChangeWeatherType ->
-                copy(weatherParams = weatherParams.copy(weatherType = msg.weatherType))
-            is Msg.SelectYear ->
-                copy(year = msg.year)
-            is Msg.HighlightDays -> {
-                copy(calendarState = CalendarStore.State.CalendarState.Loaded(msg.days))
+        override fun CalendarStore.State.reduce(msg: Msg): CalendarStore.State {
+            val result = when (msg) {
+                Msg.LoadingStarted ->
+                    copy(calendarState = CalendarStore.State.CalendarState.Loading)
+                is Msg.ChangeHumidity ->
+                    copy(weatherParams = weatherParams.updateHumidity(msg.humidity))
+                is Msg.ChangeMaxTemp ->
+                    copy(weatherParams = weatherParams.updateMaxTemperature(msg.maxTemp))
+                is Msg.ChangeMinTemp ->
+                    copy(weatherParams = weatherParams.updateMinTemperature(msg.minTemp))
+                is Msg.ChangePrecipitations ->
+                    copy(weatherParams = weatherParams.updatePrecipitations(msg.precipitations))
+                is Msg.ChangeSnowVolume ->
+                    copy(weatherParams = weatherParams.updateSnowVolume(msg.snowVolume))
+                is Msg.ChangeWindSpeed ->
+                    copy(weatherParams = weatherParams.updateWindSpeed(msg.windSpeed))
+                is Msg.ChangeWeatherType ->
+                    copy(weatherParams = weatherParams.copy(weatherType = msg.weatherType))
+                is Msg.SelectYear ->
+                    copy(year = msg.year)
+                is Msg.HighlightDays -> {
+                    copy(calendarState = CalendarStore.State.CalendarState.Loaded(msg.days))
+                }
+                is Msg.Error ->
+                    copy(calendarState = CalendarStore.State.CalendarState.Error(msg.error))
             }
-            is Msg.Error ->
-                copy(calendarState = CalendarStore.State.CalendarState.Error(msg.error))
+            Timber.i("${this::class.simpleName} NEW_STATE: $result.")
+            return result
         }
     }
 }

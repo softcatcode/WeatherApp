@@ -8,8 +8,8 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.entity.Weather
+import com.softcat.domain.entity.City
+import com.softcat.domain.entity.Weather
 import com.softcat.weatherapp.presentation.calendar.CalendarComponentImpl
 import com.softcat.weatherapp.presentation.details.DetailsComponentImpl
 import com.softcat.weatherapp.presentation.favourite.FavouritesComponentImpl
@@ -20,6 +20,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.parcelize.Parcelize
+import timber.log.Timber
 
 class RootComponentImpl @AssistedInject constructor(
     private val detailsComponentFactory: DetailsComponentImpl.Factory,
@@ -39,8 +40,9 @@ class RootComponentImpl @AssistedInject constructor(
         childFactory = ::child
     )
 
-    private fun child(config: Config, componentContext: ComponentContext): RootComponent.Child =
-        when (config) {
+    private fun child(config: Config, componentContext: ComponentContext): RootComponent.Child {
+        Timber.i("${this::class.simpleName}.child($config, $componentContext)")
+        val result = when (config) {
             is Config.Details -> {
                 val component = detailsComponentFactory.create(
                     city = config.city,
@@ -93,6 +95,9 @@ class RootComponentImpl @AssistedInject constructor(
                 RootComponent.Child.HourlyWeather(component)
             }
         }
+        Timber.i("Result child: $result.")
+        return result
+    }
 
     sealed interface Config: Parcelable {
         @Parcelize

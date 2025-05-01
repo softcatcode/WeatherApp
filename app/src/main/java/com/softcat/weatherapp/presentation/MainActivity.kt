@@ -1,18 +1,18 @@
 package com.softcat.weatherapp.presentation
 
 import android.Manifest
-import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.datastore.preferences.preferencesDataStore
 import com.arkivanov.decompose.defaultComponentContext
+import com.softcat.weatherapp.LogsTree
 import com.softcat.weatherapp.WeatherApplication
 import com.softcat.weatherapp.presentation.root.RootComponentImpl
 import com.softcat.weatherapp.presentation.root.RootContent
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
+        Timber.plant(LogsTree)
         requestPermissions()
         setContent {
             RootContent(component = rootComponentFactory.create(defaultComponentContext()))
@@ -38,17 +39,25 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.ACCESS_FINE_LOCATION,
             false
         )
+        if (!firstPermission)
+            Timber.w("Permission ACCESS_FINE_LOCATION is denied.")
+
         val secondPermission = permissions.getOrDefault(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             false
         )
+        if (!secondPermission)
+            Timber.w("Permission ACCESS_COARSE_LOCATION is denied.")
+
         if (!firstPermission || !secondPermission) {
             Toast.makeText(this, "permissions are denied", Toast.LENGTH_SHORT).show()
             requestPermissions()
-        }
+        } else
+            Timber.i("Permissions are granted: $permissions.")
     }
 
     private fun requestPermissions() {
+        Timber.i("Permissions are requested.")
         locationPermissionRequest.launch(
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
