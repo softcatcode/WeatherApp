@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.softcat.domain"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 33
