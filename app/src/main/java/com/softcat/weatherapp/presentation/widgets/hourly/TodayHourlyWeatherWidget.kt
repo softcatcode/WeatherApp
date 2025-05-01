@@ -11,7 +11,6 @@ import com.softcat.domain.useCases.GetLastCityFromDatastoreUseCase
 import com.softcat.domain.useCases.GetTodayForecastUseCase
 import com.softcat.domain.useCases.SearchCityUseCase
 import com.softcat.weatherapp.WeatherApplication
-import com.softcat.weatherapp.data.implementations.DatastoreRepositoryImpl
 
 class TodayHourlyWeatherWidget(
     private val getForecastUseCase: GetTodayForecastUseCase,
@@ -29,7 +28,8 @@ class TodayHourlyWeatherWidget(
     }
 
     private suspend fun getHourlyWeather(): List<Weather> {
-        val datastoreRepository = DatastoreRepositoryImpl(dataStore)
+        val datastoreRepository =
+            com.softcat.data.implementations.DatastoreRepositoryImpl(dataStore)
         val getLastCityNameUseCase = GetLastCityFromDatastoreUseCase(datastoreRepository)
         val cityName = getLastCityNameUseCase() ?: return emptyList()
         val cityId = searchUseCase(cityName).firstOrNull()?.id ?: return emptyList()

@@ -2,7 +2,7 @@ package com.softcat.weatherapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.softcat.weatherapp.data.implementations.DatastoreRepositoryImpl
+import com.softcat.data.implementations.DatastoreRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith

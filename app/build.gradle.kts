@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.parcelize)
     alias(libs.plugins.ksp)
-    id("jacoco")
 }
 
 android {
@@ -23,10 +22,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        val apiKey = property("weatherApiKey")?.toString() ?:
-            error("No weather api key defined in gradle.properties.")
-        buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
@@ -39,41 +34,21 @@ android {
             enableAndroidTestCoverage = true
             enableUnitTestCoverage = true
         }
-        debug {
-            isMinifyEnabled = false
-            enableAndroidTestCoverage = true
-            enableUnitTestCoverage = true
-        }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-    testOptions {
-        unitTests {
-            //unitTests.isReturnDefaultValues = true
-            isIncludeAndroidResources = true
-        }
-        reportDir = "/customJacocoReportDir"
-        testCoverage {
-            jacocoVersion = "0.8.13"
-        }
-
-    }
-    testCoverage {
-        jacocoVersion = "0.8.13"
     }
 }
 
@@ -91,6 +66,7 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.androidx.rules)
     implementation(project(":domain"))
+    implementation(project(":data"))
 
     testImplementation(libs.androidx.junit)
     androidTestImplementation(libs.junit)
@@ -102,7 +78,7 @@ dependencies {
     androidTestImplementation(libs.datastore)
     androidTestImplementation(libs.dagger.core)
     androidTestImplementation(libs.room.core)
-    androidTestImplementation(project(":app"))
+    testImplementation(project(":app"))
     androidTestImplementation(project(":app"))
 
     debugImplementation(libs.androidx.ui.tooling)

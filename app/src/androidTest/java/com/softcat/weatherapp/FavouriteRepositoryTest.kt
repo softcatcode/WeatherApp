@@ -2,9 +2,9 @@ package com.softcat.weatherapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.softcat.weatherapp.data.implementations.FavouriteRepositoryImpl
-import com.softcat.weatherapp.domain.entity.City
-import com.softcat.weatherapp.domain.interfaces.FavouriteRepository
+import com.softcat.data.implementations.FavouriteRepositoryImpl
+import com.softcat.domain.entity.City
+import com.softcat.domain.interfaces.FavouriteRepository
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.first
