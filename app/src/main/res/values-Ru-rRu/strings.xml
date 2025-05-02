@@ -50,4 +50,12 @@
 
     <string name="meters_per_second">м/с</string>
     <string name="millimeters">мм</string>
+
+    <string name="login">имя пользователя</string>
+    <string name="password">пароль</string>
+    <string name="password_repeat">повторите пароль</string>
+    <string name="sign_in">Регистрация</string>
+    <string name="log_in">Войти</string>
+    <string name="or">ИЛИ</string>
+    <string name="auth_title">Авторизация</string>
 </resources>

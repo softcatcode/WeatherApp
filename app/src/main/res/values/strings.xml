@@ -51,4 +51,12 @@
 
     <string name="meters_per_second">m/h</string>
     <string name="millimeters">mm</string>
+
+    <string name="login">user name</string>
+    <string name="password">password</string>
+    <string name="password_repeat">repeat password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="log_in">Log in</string>
+    <string name="or">OR</string>
+    <string name="auth_title">Authorization</string>
 </resources>
