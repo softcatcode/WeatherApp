@@ -15,3 +15,9 @@ val Orange = Color(0xFFFF7F57)
 // Colors for calendar
 val CalendarPink = Color(0xFFB133A4)
 val CalendarPurple = Color(0xFF4E1A97)
+
+// Colors for authorization
+val LightBlue = Color(0xFF1C62EE)
+val DarkBlue = Color(0xFF232664)
+val OutlineColorFocused = Color(0xFF3F528D)
+val OutlineColorUnfocused = Color(0xFF48494D)
