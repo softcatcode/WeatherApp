@@ -2,15 +2,17 @@ package com.softcat.weatherapp.di.modules
 
 import android.content.Context
 import android.location.Geocoder
+import com.softcat.data.implementations.AuthorizationRepositoryImpl
 import com.softcat.data.implementations.CalendarRepositoryImpl
 import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.data.implementations.LocationRepositoryImpl
 import com.softcat.data.implementations.SearchRepositoryImpl
 import com.softcat.data.implementations.WeatherRepositoryImpl
-import com.softcat.data.local.db.FavouritesDatabase
+import com.softcat.data.local.db.WeatherDatabase
 import com.softcat.data.network.api.ApiFactory
 import com.softcat.data.network.api.ApiService
+import com.softcat.domain.interfaces.AuthorizationRepository
 import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.domain.interfaces.DatastoreRepository
 import com.softcat.domain.interfaces.FavouriteRepository
@@ -50,6 +52,10 @@ interface DataModule {
     @Binds
     fun bindLocationRepository(impl: LocationRepositoryImpl): LocationRepository
 
+    @ApplicationScope
+    @Binds
+    fun bindAuthorizationRepository(impl: AuthorizationRepositoryImpl): AuthorizationRepository
+
 
     companion object {
 
@@ -59,11 +65,15 @@ interface DataModule {
 
         @ApplicationScope
         @Provides
-        fun provideFavouriteDatabase(context: Context) = FavouritesDatabase.getInstance(context)
+        fun provideFavouriteDatabase(context: Context) = WeatherDatabase.getInstance(context)
 
         @ApplicationScope
         @Provides
-        fun provideFavouriteCitiesDao(db: FavouritesDatabase) = db.getCitiesDao()
+        fun provideFavouriteCitiesDao(db: WeatherDatabase) = db.getCitiesDao()
+
+        @ApplicationScope
+        @Provides
+        fun provideUsersDao(db: WeatherDatabase) = db.getUsersDao()
 
         @ApplicationScope
         @Provides
