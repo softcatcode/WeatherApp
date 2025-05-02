@@ -2,6 +2,7 @@ package com.softcat.weatherapp.presentation.root
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.softcat.weatherapp.presentation.authorization.AuthorizationComponent
 import com.softcat.weatherapp.presentation.calendar.CalendarComponent
 import com.softcat.weatherapp.presentation.details.DetailsComponent
 import com.softcat.weatherapp.presentation.favourite.FavouritesComponent
@@ -22,5 +23,7 @@ interface RootComponent {
         data class Calendar(val component: CalendarComponent): Child
 
         data class HourlyWeather(val component: HourlyWeatherComponent): Child
+
+        data class Authorization(val component: AuthorizationComponent): Child
     }
 }

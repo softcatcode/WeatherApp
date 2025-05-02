@@ -2,6 +2,7 @@ package com.softcat.weatherapp.presentation.root
 
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
+import com.softcat.weatherapp.presentation.authorization.AuthorizationScreen
 import com.softcat.weatherapp.presentation.calendar.CalendarContent
 import com.softcat.weatherapp.presentation.details.DetailsContent
 import com.softcat.weatherapp.presentation.favourite.FavouritesContent
@@ -19,6 +20,7 @@ fun RootContent(component: RootComponent) {
                 is RootComponent.Child.SearchCity -> SearchContent(instance.component)
                 is RootComponent.Child.Calendar -> CalendarContent(instance.component)
                 is RootComponent.Child.HourlyWeather -> HourlyWeatherContent(instance.component)
+                is RootComponent.Child.Authorization -> AuthorizationScreen(instance.component)
             }
         }
     }

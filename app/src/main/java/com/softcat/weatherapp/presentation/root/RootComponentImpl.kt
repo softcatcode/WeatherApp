@@ -10,6 +10,7 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.softcat.domain.entity.City
 import com.softcat.domain.entity.Weather
+import com.softcat.weatherapp.presentation.authorization.AuthorizationComponentImpl
 import com.softcat.weatherapp.presentation.calendar.CalendarComponentImpl
 import com.softcat.weatherapp.presentation.details.DetailsComponentImpl
 import com.softcat.weatherapp.presentation.favourite.FavouritesComponentImpl
@@ -28,6 +29,7 @@ class RootComponentImpl @AssistedInject constructor(
     private val searchComponentFactory: SearchComponentImpl.Factory,
     private val calendarComponentFactory: CalendarComponentImpl.Factory,
     private val hourlyWeatherComponentFactory: HourlyWeatherComponentImpl.Factory,
+    private val authComponentFactory: AuthorizationComponentImpl.Factory,
     @Assisted("componentContext") componentContext: ComponentContext
 ): RootComponent, ComponentContext by componentContext {
 
@@ -35,7 +37,7 @@ class RootComponentImpl @AssistedInject constructor(
 
     override val stack: Value<ChildStack<*, RootComponent.Child>> = childStack(
         source = navigation,
-        initialConfiguration = Config.Favourite,
+        initialConfiguration = Config.Authorization,
         handleBackButton = true,
         childFactory = ::child
     )
@@ -94,6 +96,16 @@ class RootComponentImpl @AssistedInject constructor(
                 )
                 RootComponent.Child.HourlyWeather(component)
             }
+
+            Config.Authorization -> {
+                val component = authComponentFactory.create(
+                    componentContext = componentContext,
+                    onBackClick = { navigation.pop() },
+                    onSignIn = { navigation.push(Config.Favourite) },
+                    onLogIn = { navigation.push(Config.Favourite) }
+                )
+                RootComponent.Child.Authorization(component)
+            }
         }
         Timber.i("Result child: $result.")
         return result
@@ -114,6 +126,9 @@ class RootComponentImpl @AssistedInject constructor(
 
         @Parcelize
         data class HourlyWeather(val hoursWeather: List<Weather>): Config
+
+        @Parcelize
+        data object Authorization: Config
     }
 
     @AssistedFactory
