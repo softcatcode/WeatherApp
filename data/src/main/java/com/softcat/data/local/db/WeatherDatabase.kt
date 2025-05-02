@@ -5,23 +5,26 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.softcat.data.local.model.CityDbModel
+import com.softcat.data.local.model.UserDbModel
 
-@Database(entities = [CityDbModel::class], version = 1, exportSchema = false)
-abstract class FavouritesDatabase: RoomDatabase() {
+@Database(entities = [CityDbModel::class, UserDbModel::class], version = 1, exportSchema = false)
+abstract class WeatherDatabase: RoomDatabase() {
 
     abstract fun getCitiesDao(): FavouriteCitiesDao
 
+    abstract fun getUsersDao(): UsersDao
+
     companion object {
 
-        private const val NAME = "FavouritesDatabase"
+        private val NAME = this::class.simpleName
         private val LOCK = Any()
-        private var INSTANCE: FavouritesDatabase? = null
+        private var INSTANCE: WeatherDatabase? = null
 
-        fun getInstance(context: Context): FavouritesDatabase {
+        fun getInstance(context: Context): WeatherDatabase {
             INSTANCE?.let { return it }
             synchronized(LOCK) {
                 INSTANCE?.let { return it }
-                val db = Room.databaseBuilder(context, FavouritesDatabase::class.java, NAME).build()
+                val db = Room.databaseBuilder(context, WeatherDatabase::class.java, NAME).build()
                 INSTANCE = db
                 return db
             }
