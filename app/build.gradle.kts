@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.parcelize)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -68,6 +69,7 @@ dependencies {
     implementation(libs.androidx.rules)
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(libs.firebase.auth)
 
     testImplementation(libs.androidx.junit)
     androidTestImplementation(libs.junit)
