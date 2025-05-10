@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material3.Scaffold
@@ -34,6 +35,20 @@ fun LoginField(
         onValueChange = onValueChange,
         trailingIcon = Icons.Filled.AccountCircle,
         hint = stringResource(R.string.login)
+    )
+}
+
+@Preview
+@Composable
+fun EmailField(
+    value: String = "",
+    onValueChange: (String) -> Unit = {}
+) {
+    AuthTextField(
+        value = value,
+        onValueChange = onValueChange,
+        trailingIcon = Icons.Filled.Email,
+        hint = stringResource(R.string.email)
     )
 }
 
@@ -72,9 +87,11 @@ fun RepeatPasswordField(
 fun SignInInputs(
     modifier: Modifier = Modifier,
     login: String = "Daniil",
+    email: String = "d5.machilskiy@gmail.com",
     password: String = "482550",
     repeatedPsw: String = "482550",
     onLoginChanged: (String) -> Unit = {},
+    onEmailChanged: (String) -> Unit = {},
     onPasswordChanged: (String) -> Unit = {},
     onRepeatPswChanged: (String) -> Unit = {},
     onSignInClicked: () -> Unit = {},
@@ -92,13 +109,17 @@ fun SignInInputs(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight(0.65f),
+                .fillMaxHeight(0.7f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
             LoginField(
                 value = login,
                 onValueChange = onLoginChanged
+            )
+            EmailField(
+                value = email,
+                onValueChange = onEmailChanged
             )
             PasswordField(
                 value = password,
@@ -185,7 +206,6 @@ fun LogInInputs(
                 color = DarkBlue
             )
         }
-
     }
 }
 
@@ -219,15 +239,18 @@ fun AuthorizationScreen(component: AuthorizationComponent) {
                     SignInInputs(
                         modifier = Modifier.padding(horizontal = 8.dp),
                         login = state.login,
+                        email = state.type.email,
                         password = state.password,
                         repeatedPsw = state.type.repeatPassword,
                         onLoginChanged = { component.changeLogin(it) },
+                        onEmailChanged = { component.changeEmail(it) },
                         onPasswordChanged = { component.changePassword(it) },
                         onSwitchToLogIn = { component.switchToLogIn() },
                         onRepeatPswChanged = { component.changeRepeatedPassword(it) },
                         onSignInClicked = {
                             component.register(
                                 state.login,
+                                state.type.email,
                                 state.password,
                                 state.type.repeatPassword
                             )

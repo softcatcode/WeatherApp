@@ -33,6 +33,7 @@ class AuthorizationStoreFactory @Inject constructor(
         data class ChangePassword(val newValue: String): Msg
         data class ChangeRepeatedPassword(val newValue: String): Msg
         data class ChangeLogin(val newValue: String): Msg
+        data class ChangeEmail(val newValue: String): Msg
 
         data object SwitchToSignIn: Msg
         data object SwitchToLogIn: Msg
@@ -60,6 +61,8 @@ class AuthorizationStoreFactory @Inject constructor(
                     publish(AuthorizationStore.Label.BackClick)
                 is AuthorizationStore.Intent.ChangeLogin ->
                     dispatch(Msg.ChangeLogin(intent.newValue))
+                is AuthorizationStore.Intent.ChangeEmail ->
+                    dispatch(Msg.ChangeEmail(intent.newValue))
                 is AuthorizationStore.Intent.ChangePassword ->
                     dispatch(Msg.ChangePassword(intent.newValue))
                 is AuthorizationStore.Intent.ChangeRepeatedPsw ->
@@ -67,7 +70,7 @@ class AuthorizationStoreFactory @Inject constructor(
                 is AuthorizationStore.Intent.LogIn ->
                     logIn(intent.login, intent.password)
                 is AuthorizationStore.Intent.SignIn ->
-                    signIn(intent.login, intent.password, intent.repeatedPsw)
+                    signIn(intent)
                 AuthorizationStore.Intent.SwitchToLogIn ->
                     dispatch(Msg.SwitchToLogIn)
                 AuthorizationStore.Intent.SwitchToSignIn ->
@@ -92,7 +95,11 @@ class AuthorizationStoreFactory @Inject constructor(
             }
         }
 
-        private fun signIn(login: String, psw: String, repeatedPsw: String) {
+        private fun signIn(intent: AuthorizationStore.Intent.SignIn) {
+            val psw = intent.password
+            val repeatedPsw = intent.repeatedPsw
+            val email = intent.email
+            val name = intent.login
             dispatch(Msg.LoadingStarted)
             if (repeatedPsw != psw) {
                 dispatch(Msg.LoadingFinished)
@@ -100,11 +107,11 @@ class AuthorizationStoreFactory @Inject constructor(
                 return
             }
             scope.launch(Dispatchers.IO) {
-                val result = authUseCase.signIn(login, psw)
+                val result = authUseCase.signIn(name, email, psw)
                 withContext(Dispatchers.Main) {
                     dispatch(Msg.LoadingFinished)
                     result.onSuccess {
-                        Timber.i("Signed in by $login")
+                        Timber.i("Signed in by $name")
                         publish(AuthorizationStore.Label.SignedIn(it))
                     }.onFailure {
                         Timber.i("Sign in rejected.")
@@ -121,7 +128,13 @@ class AuthorizationStoreFactory @Inject constructor(
                 is Msg.ChangeLogin -> copy(login = msg.newValue, error = null)
                 is Msg.ChangePassword -> copy(password = msg.newValue, error = null)
                 is Msg.ChangeRepeatedPassword -> copy(
-                    type = AuthorizationStore.State.ScreenType.SignIn(msg.newValue),
+                    type = (type as AuthorizationStore.State.ScreenType.SignIn)
+                        .copy(repeatPassword = msg.newValue),
+                    error = null
+                )
+                is Msg.ChangeEmail -> copy(
+                    type = (type as AuthorizationStore.State.ScreenType.SignIn)
+                        .copy(email = msg.newValue),
                     error = null
                 )
                 Msg.SwitchToLogIn -> copy(
@@ -129,7 +142,7 @@ class AuthorizationStoreFactory @Inject constructor(
                     error = null
                 )
                 Msg.SwitchToSignIn -> copy(
-                    type = AuthorizationStore.State.ScreenType.SignIn(""),
+                    type = AuthorizationStore.State.ScreenType.SignIn("", ""),
                     error = null
                 )
                 is Msg.Error -> copy(error = msg.error)

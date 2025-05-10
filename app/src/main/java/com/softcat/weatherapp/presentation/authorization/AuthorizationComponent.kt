@@ -10,6 +10,8 @@ interface AuthorizationComponent {
 
     fun changeLogin(newValue: String)
 
+    fun changeEmail(newValue: String)
+
     fun changePassword(newValue: String)
 
     fun changeRepeatedPassword(newValue: String)
@@ -18,6 +20,7 @@ interface AuthorizationComponent {
 
     fun register(
         login: String,
+        email: String,
         psw: String,
         repeatedPsw: String
     )

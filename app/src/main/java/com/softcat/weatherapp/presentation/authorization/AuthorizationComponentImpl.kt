@@ -53,6 +53,11 @@ class AuthorizationComponentImpl @AssistedInject constructor(
         store.accept(AuthorizationStore.Intent.ChangeLogin(newValue))
     }
 
+    override fun changeEmail(newValue: String) {
+        Timber.i("${this::class.simpleName}.changeEmail()")
+        store.accept(AuthorizationStore.Intent.ChangeEmail(newValue))
+    }
+
     override fun changePassword(newValue: String) {
         Timber.i("${this::class.simpleName}.changePassword()")
         store.accept(AuthorizationStore.Intent.ChangePassword(newValue))
@@ -87,9 +92,9 @@ class AuthorizationComponentImpl @AssistedInject constructor(
         return sb.toString()
     }
 
-    override fun register(login: String, psw: String, repeatedPsw: String) {
+    override fun register(login: String, email: String, psw: String, repeatedPsw: String) {
         Timber.i("${this::class.simpleName}.register()")
-        store.accept(AuthorizationStore.Intent.SignIn(formatName(login), psw, repeatedPsw))
+        store.accept(AuthorizationStore.Intent.SignIn(formatName(login), email, psw, repeatedPsw))
     }
 
     override fun switchToSignIn() {
