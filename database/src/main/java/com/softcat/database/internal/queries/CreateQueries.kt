@@ -5,7 +5,7 @@ import com.softcat.database.internal.DatabaseRules.COUNTRIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.DATABASE_NAME
 
 internal object CreateQueries {
-    const val CREATE_DATABASE = "create database if not exists $DATABASE_NAME;"
+    // const val CREATE_DATABASE = "create database if not exists $DATABASE_NAME;"
 
     const val CREATE_COUNTRIES = """
         create table if not exists $COUNTRIES_TABLE_NAME(
