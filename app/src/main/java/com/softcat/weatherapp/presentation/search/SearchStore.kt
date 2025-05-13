@@ -2,6 +2,7 @@ package com.softcat.weatherapp.presentation.search
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 
 interface SearchStore: Store<SearchStore.Intent, SearchStore.State, SearchStore.Label> {
 
@@ -22,9 +23,9 @@ interface SearchStore: Store<SearchStore.Intent, SearchStore.State, SearchStore.
     }
 
     data class State(
+        val user: User,
         val searchQuery: String,
         val searchState: SearchState
-
     ) {
         sealed interface SearchState {
             data object Initial: SearchState

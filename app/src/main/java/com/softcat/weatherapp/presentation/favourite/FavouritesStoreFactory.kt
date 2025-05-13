@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 import com.softcat.domain.useCases.GetCurrentCityNameUseCase
 import com.softcat.domain.useCases.GetCurrentWeatherUseCase
 import com.softcat.domain.useCases.GetFavouriteCitiesUseCase
@@ -26,14 +27,17 @@ class FavouritesStoreFactory @Inject constructor(
     private val context: Context,
 ) {
 
-    fun create(): FavouritesStore =
+    fun create(user: User): FavouritesStore =
         object:
             FavouritesStore,
             Store<FavouritesStore.Intent, FavouritesStore.State, FavouritesStore.Label>
         by storeFactory.create(
             name = this::class.simpleName,
-            initialState = FavouritesStore.State(cityItems = listOf()),
-            bootstrapper = BootstrapperImpl(),
+            initialState = FavouritesStore.State(
+                user = user,
+                cityItems = listOf()
+            ),
+            bootstrapper = BootstrapperImpl(user),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
@@ -56,7 +60,9 @@ class FavouritesStoreFactory @Inject constructor(
         data class FavouriteCitiesLoaded(val cities: List<City>): Action
     }
 
-    private inner class BootstrapperImpl: CoroutineBootstrapper<Action>() {
+    private inner class BootstrapperImpl(
+        private val user: User
+    ): CoroutineBootstrapper<Action>() {
         override fun invoke() {
             scope.launch {
                 getCurrentCityNameUseCase(context) { cityName ->
@@ -64,7 +70,7 @@ class FavouritesStoreFactory @Inject constructor(
                         saveCityToDatastoreUseCase(cityName)
                     }
                 }
-                getFavouriteCitiesUseCase().collect {
+                getFavouriteCitiesUseCase(user.id).collect {
                     dispatch(Action.FavouriteCitiesLoaded(it))
                 }
             }

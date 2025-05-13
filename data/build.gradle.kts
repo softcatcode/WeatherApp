@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -47,12 +48,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.timber)
     implementation(project(":domain"))
+    implementation(project(":database"))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    implementation(libs.room.core)
-    ksp(libs.room.compiler)
 
     implementation(libs.dagger.core)
     ksp(libs.dagger.compiler)

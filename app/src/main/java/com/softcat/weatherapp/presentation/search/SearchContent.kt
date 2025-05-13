@@ -110,7 +110,10 @@ fun SearchContent(component: SearchComponent) {
                         tint = Color.Black
                     )
                 },
-                colors = SearchBarDefaults.inputFieldColors(),
+                colors = SearchBarDefaults.inputFieldColors(
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                ),
                 interactionSource = null,
             )
         },

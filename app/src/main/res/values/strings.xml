@@ -53,6 +53,7 @@
     <string name="millimeters">mm</string>
 
     <string name="login">user name</string>
+    <string name="email" translatable="false">email</string>
     <string name="password">password</string>
     <string name="password_repeat">repeat password</string>
     <string name="sign_in">Sign in</string>

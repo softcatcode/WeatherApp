@@ -9,9 +9,18 @@ import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.data.implementations.LocationRepositoryImpl
 import com.softcat.data.implementations.SearchRepositoryImpl
 import com.softcat.data.implementations.WeatherRepositoryImpl
-import com.softcat.data.local.db.WeatherDatabase
 import com.softcat.data.network.api.ApiFactory
 import com.softcat.data.network.api.ApiService
+import com.softcat.database.commands.factory.CommandFactory
+import com.softcat.database.commands.factory.CommandFactoryInterface
+import com.softcat.database.managers.remote.user.UsersManager
+import com.softcat.database.managers.remote.user.UsersManagerImpl
+import com.softcat.database.facade.DatabaseFacade
+import com.softcat.database.facade.DatabaseFacadeImpl
+import com.softcat.database.managers.local.region.RegionManager
+import com.softcat.database.managers.local.region.RegionManagerImpl
+import com.softcat.database.managers.remote.favourites.FavouritesManager
+import com.softcat.database.managers.remote.favourites.FavouritesManagerImpl
 import com.softcat.domain.interfaces.AuthorizationRepository
 import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.domain.interfaces.DatastoreRepository
@@ -56,24 +65,31 @@ interface DataModule {
     @Binds
     fun bindAuthorizationRepository(impl: AuthorizationRepositoryImpl): AuthorizationRepository
 
+    @ApplicationScope
+    @Binds
+    fun bindDbFacadeImpl(impl: DatabaseFacadeImpl): DatabaseFacade
+
+    @ApplicationScope
+    @Binds
+    fun bindUsersManager(impl: UsersManagerImpl): UsersManager
+
+    @ApplicationScope
+    @Binds
+    fun bindFavouritesManager(impl: FavouritesManagerImpl): FavouritesManager
+
+    @ApplicationScope
+    @Binds
+    fun bindRegionManager(impl: RegionManagerImpl): RegionManager
+
+    @ApplicationScope
+    @Binds
+    fun bindDatabaseCommandFactory(impl: CommandFactory): CommandFactoryInterface
 
     companion object {
 
         @ApplicationScope
         @Provides
         fun provideApiService(): ApiService = ApiFactory.apiService
-
-        @ApplicationScope
-        @Provides
-        fun provideFavouriteDatabase(context: Context) = WeatherDatabase.getInstance(context)
-
-        @ApplicationScope
-        @Provides
-        fun provideFavouriteCitiesDao(db: WeatherDatabase) = db.getCitiesDao()
-
-        @ApplicationScope
-        @Provides
-        fun provideUsersDao(db: WeatherDatabase) = db.getUsersDao()
 
         @ApplicationScope
         @Provides

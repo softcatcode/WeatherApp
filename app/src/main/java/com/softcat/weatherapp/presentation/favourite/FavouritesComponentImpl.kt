@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 import com.softcat.weatherapp.presentation.extensions.componentScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -16,13 +17,14 @@ import timber.log.Timber
 
 class FavouritesComponentImpl @AssistedInject constructor(
     storeFactory: FavouritesStoreFactory,
+    @Assisted("user") private val user: User,
     @Assisted("componentContext") componentContext: ComponentContext,
-    @Assisted("onCityItemClickedCallback") private val onCityItemClickedCallback: (City) -> Unit,
+    @Assisted("onCityItemClickedCallback") private val onCityItemClickedCallback: (User, City) -> Unit,
     @Assisted("onAddToFavouritesClickCallback") private val onAddToFavouritesClickCallback: () -> Unit,
     @Assisted("onSearchClickCallback") private val onSearchClickCallback: () -> Unit
 ): FavouritesComponent, ComponentContext by componentContext {
 
-    private val store: FavouritesStore = instanceKeeper.getStore { storeFactory.create() }
+    private val store: FavouritesStore = instanceKeeper.getStore { storeFactory.create(user) }
     private val scope = componentScope()
 
     init {
@@ -35,7 +37,7 @@ class FavouritesComponentImpl @AssistedInject constructor(
         Timber.i("${this::class.simpleName}: label $label collected.")
         when (label) {
             FavouritesStore.Label.AddFavouritesClicked -> onAddToFavouritesClickCallback()
-            is FavouritesStore.Label.CityItemClicked -> onCityItemClickedCallback(label.city)
+            is FavouritesStore.Label.CityItemClicked -> onCityItemClickedCallback(user, label.city)
             FavouritesStore.Label.SearchClicked -> onSearchClickCallback()
         }
     }
@@ -67,8 +69,9 @@ class FavouritesComponentImpl @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
+            @Assisted("user") user: User,
             @Assisted("componentContext") componentContext: ComponentContext,
-            @Assisted("onCityItemClickedCallback") onCityItemClickedCallback: (City) -> Unit,
+            @Assisted("onCityItemClickedCallback") onCityItemClickedCallback: (User, City) -> Unit,
             @Assisted("onAddToFavouritesClickCallback") onAddToFavouritesClickCallback: () -> Unit,
             @Assisted("onSearchClickCallback") onSearchClickCallback: () -> Unit
         ): FavouritesComponentImpl

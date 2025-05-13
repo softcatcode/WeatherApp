@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.domain.entity.City
 import com.softcat.domain.entity.Forecast
+import com.softcat.domain.entity.User
 import com.softcat.domain.useCases.AddToFavouriteUseCase
 import com.softcat.domain.useCases.GetForecastUseCase
 import com.softcat.domain.useCases.ObserveIsFavouriteUseCase
@@ -23,16 +24,17 @@ class DetailsStoreFactory @Inject constructor(
     private val removeFromFavouritesUseCase: RemoveFromFavouriteUseCase,
 ) {
 
-    fun create(city: City): DetailsStore =
+    fun create(user: User, city: City): DetailsStore =
         object: DetailsStore, Store<DetailsStore.Intent, DetailsStore.State, DetailsStore.Label>
         by storeFactory.create(
             name = this::class.simpleName,
             initialState = DetailsStore.State(
+                user = user,
                 city = city,
                 isFavourite = false,
                 forecastState = DetailsStore.State.ForecastState.Initial
             ),
-            bootstrapper = BootstrapperImpl(city),
+            bootstrapper = BootstrapperImpl(user, city),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
@@ -60,11 +62,12 @@ class DetailsStoreFactory @Inject constructor(
     }
 
     private inner class BootstrapperImpl(
-        private val city: City
+        private val user: User,
+        private val city: City,
     ): CoroutineBootstrapper<Action>() {
         override fun invoke() {
             scope.launch {
-                observeIsFavouriteUseCase(city.id).collect {
+                observeIsFavouriteUseCase(user.id, city.id).collect {
                     dispatch(Action.FavouriteStatusChanged(it))
                 }
             }
@@ -106,9 +109,9 @@ class DetailsStoreFactory @Inject constructor(
                     scope.launch {
                         val state = getState()
                         if (state.isFavourite)
-                            removeFromFavouritesUseCase(state.city.id)
+                            removeFromFavouritesUseCase(state.user.id, state.city.id)
                         else
-                            addToFavouritesUseCase(state.city)
+                            addToFavouritesUseCase(state.user.id, state.city)
                     }
                 }
 

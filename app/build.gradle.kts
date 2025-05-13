@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.parcelize)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -68,6 +69,8 @@ dependencies {
     implementation(libs.androidx.rules)
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":database"))
+    implementation(libs.firebase.auth)
 
     testImplementation(libs.androidx.junit)
     androidTestImplementation(libs.junit)
@@ -78,7 +81,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.datastore)
     androidTestImplementation(libs.dagger.core)
-    androidTestImplementation(libs.room.core)
     testImplementation(project(":app"))
     androidTestImplementation(project(":app"))
 
@@ -93,10 +95,6 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gsonConverter)
     implementation(libs.okhttp)
-
-    // database with room
-    implementation(libs.room.core)
-    ksp(libs.room.compiler)
 
     // MVI utils
     implementation(libs.mvikotlin.core)

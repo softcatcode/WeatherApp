@@ -2,6 +2,7 @@ package com.softcat.weatherapp.presentation.favourite
 
 import com.arkivanov.mvikotlin.core.store.Store
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 
 interface FavouritesStore: Store<FavouritesStore.Intent, FavouritesStore.State, FavouritesStore.Label> {
 
@@ -19,6 +20,7 @@ interface FavouritesStore: Store<FavouritesStore.Intent, FavouritesStore.State, 
     }
 
     data class State(
+        val user: User,
         val cityItems: List<CityItem>
     ) {
 

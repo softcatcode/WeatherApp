@@ -1,0 +1,73 @@
+package com.softcat.database.facade
+
+import com.softcat.database.commands.factory.CommandFactoryInterface
+import com.softcat.database.exceptions.NoCommandResultException
+import com.softcat.database.model.CityDbModel
+import com.softcat.database.model.CountryDbModel
+import com.softcat.database.model.UserDbModel
+import javax.inject.Inject
+
+class DatabaseFacadeImpl @Inject constructor(
+    private val factory: CommandFactoryInterface
+): DatabaseFacade {
+
+    override suspend fun createUser(login: String, email: String, password: String): Result<UserDbModel> {
+        val cmd = factory.createUserCommand(login, email, password)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun verifyUser(name: String, password: String): Result<UserDbModel> {
+        val cmd = factory.verifyUserCommand(name, password)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun addToFavourites(userId: Int, cityId: Int): Result<Unit> {
+        val cmd = factory.addToFavouriteCommand(userId, cityId)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun saveCountry(country: CountryDbModel): Result<Int> {
+        val cmd = factory.addCountryCommand(country)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun saveCity(city: CityDbModel): Result<Unit> {
+        val cmd = factory.addCityCommand(city)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun removeFromFavourites(userId: Int, cityId: Int): Result<Unit> {
+        val cmd = factory.removeFromFavouriteCommand(userId, cityId)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun getFavouriteCities(userId: Int): Result<List<CityDbModel>> {
+        val cmd = factory.getFavouriteCitiesCommand(userId)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun getCountries(): Result<List<CountryDbModel>> {
+        val cmd = factory.getCountriesCommand()
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun updateCountries(countries: List<CountryDbModel>): Result<List<Int>> {
+        val cmd = factory.updateCountriesCommand(countries)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun isFavourite(userId: Int, cityId: Int): Result<Boolean> {
+        val cmd = factory.isFavouriteCommand(userId, cityId)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+}

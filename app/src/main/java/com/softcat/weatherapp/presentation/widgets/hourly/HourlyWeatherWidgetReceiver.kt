@@ -13,13 +13,12 @@ class HourlyWeatherWidgetReceiver: GlanceAppWidgetReceiver() {
     // dependencies
     private val apiService = ApiFactory.apiService
     private val weatherRepository = WeatherRepositoryImpl(apiService)
-    private val searchRepository = SearchRepositoryImpl(apiService)
+    //private val searchRepository = SearchRepositoryImpl(apiService)
     private val getForecastUseCase = GetTodayForecastUseCase(weatherRepository)
-    private val searchUseCase = SearchCityUseCase(searchRepository)
+    //private val searchUseCase = SearchCityUseCase(searchRepository)
 
 
     override val glanceAppWidget: GlanceAppWidget = TodayHourlyWeatherWidget(
         getForecastUseCase,
-        searchUseCase
     )
 }

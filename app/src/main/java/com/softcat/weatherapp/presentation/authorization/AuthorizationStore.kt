@@ -21,6 +21,7 @@ interface AuthorizationStore: Store<
             data object LogIn: ScreenType
 
             data class SignIn(
+                val email: String,
                 val repeatPassword: String
             ): ScreenType
         }
@@ -31,6 +32,8 @@ interface AuthorizationStore: Store<
 
         data class SignedIn(val user: User): Label
         data class LoggedIn(val user: User): Label
+
+        data class UserAlreadyAuthorized(val user: User): Label
     }
 
     sealed interface Intent {
@@ -40,6 +43,7 @@ interface AuthorizationStore: Store<
         data object SwitchToLogIn: Intent
 
         data class ChangeLogin(val newValue: String): Intent
+        data class ChangeEmail(val newValue: String): Intent
         data class ChangePassword(val newValue: String): Intent
         data class ChangeRepeatedPsw(val newValue: String): Intent
 
@@ -50,6 +54,7 @@ interface AuthorizationStore: Store<
 
         data class SignIn(
             val login: String,
+            val email: String,
             val password: String,
             val repeatedPsw: String
         ): Intent

@@ -9,8 +9,8 @@ import javax.inject.Inject
 class GetFavouriteCitiesUseCase @Inject constructor(
     private val repository: FavouriteRepository
 ) {
-    operator fun invoke(): Flow<List<City>> {
+    operator fun invoke(userId: Int): Flow<List<City>> {
         Timber.i("${this::class.simpleName} invoked")
-        return repository.getFavouriteCities()
+        return repository.getFavouriteCities(userId)
     }
 }
