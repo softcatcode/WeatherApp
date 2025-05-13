@@ -3,7 +3,9 @@ package com.softcat.weatherapp.presentation.authorization
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.softcat.domain.entity.User
 import com.softcat.domain.useCases.AuthorizationUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,8 +28,25 @@ class AuthorizationStoreFactory @Inject constructor(
             type = AuthorizationStore.State.ScreenType.LogIn
         ),
         executorFactory = ::Executor,
-        reducer = ReducerImpl
+        reducer = ReducerImpl,
+        bootstrapper = BootstrapperImpl()
     ) {}
+
+    private inner class BootstrapperImpl: CoroutineBootstrapper<Action>() {
+        override fun invoke() {
+            scope.launch {
+                authUseCase.getLastUser()?.let {
+                    authUseCase.logIn(it.name, it.password).onSuccess {
+                        dispatch(Action.UserAlreadyAuthorized(it))
+                    }
+                }
+            }
+        }
+    }
+
+    private sealed interface Action {
+        data class UserAlreadyAuthorized(val user: User): Action
+    }
 
     sealed interface Msg {
         data class ChangePassword(val newValue: String): Msg
@@ -46,7 +65,7 @@ class AuthorizationStoreFactory @Inject constructor(
 
     private inner class Executor: CoroutineExecutor<
         AuthorizationStore.Intent,
-        Nothing,
+        Action,
         AuthorizationStore.State,
         Msg,
         AuthorizationStore.Label
@@ -78,6 +97,14 @@ class AuthorizationStoreFactory @Inject constructor(
             }
         }
 
+        override fun executeAction(action: Action, getState: () -> AuthorizationStore.State) {
+            Timber.i("${this::class.simpleName} ACTION $action is caught.")
+            when (action) {
+                is Action.UserAlreadyAuthorized ->
+                    publish(AuthorizationStore.Label.UserAlreadyAuthorized(action.user))
+            }
+        }
+
         private fun logIn(login: String, psw: String) {
             dispatch(Msg.LoadingStarted)
             scope.launch(Dispatchers.IO) {
@@ -86,6 +113,7 @@ class AuthorizationStoreFactory @Inject constructor(
                     dispatch(Msg.LoadingFinished)
                     result.onSuccess {
                         Timber.i("Logged in by $login")
+                        authUseCase.rememberUser(it)
                         publish(AuthorizationStore.Label.LoggedIn(it))
                     }.onFailure {
                         Timber.i("Log in rejected.")
@@ -112,6 +140,7 @@ class AuthorizationStoreFactory @Inject constructor(
                     dispatch(Msg.LoadingFinished)
                     result.onSuccess {
                         Timber.i("Signed in by $name")
+                        authUseCase.rememberUser(it)
                         publish(AuthorizationStore.Label.SignedIn(it))
                     }.onFailure {
                         Timber.i("Sign in rejected.")

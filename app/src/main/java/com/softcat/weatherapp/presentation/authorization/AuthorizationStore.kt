@@ -32,6 +32,8 @@ interface AuthorizationStore: Store<
 
         data class SignedIn(val user: User): Label
         data class LoggedIn(val user: User): Label
+
+        data class UserAlreadyAuthorized(val user: User): Label
     }
 
     sealed interface Intent {

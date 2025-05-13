@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 import com.softcat.weatherapp.presentation.extensions.componentScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -16,14 +17,15 @@ import timber.log.Timber
 
 class SearchComponentImpl @AssistedInject constructor(
     storeFactory: SearchStoreFactory,
+    @Assisted("user") private val user: User,
     @Assisted("componentContext") componentContext: ComponentContext,
     @Assisted("openReason") openReason: SearchOpenReason,
     @Assisted("onBackClickCallback") private val onBackClickCallback: () -> Unit,
-    @Assisted("onOpenForecastCallback") private val onOpenForecastCallback: (City) -> Unit,
+    @Assisted("onOpenForecastCallback") private val onOpenForecastCallback: (User, City) -> Unit,
     @Assisted("onSavedToFavouritesCallback") private val onSavedToFavouritesCallback: () -> Unit
 ): SearchComponent, ComponentContext by componentContext {
 
-    private val store = instanceKeeper.getStore { storeFactory.create(openReason) }
+    private val store = instanceKeeper.getStore { storeFactory.create(user, openReason) }
     private val scope = componentScope()
 
     init {
@@ -36,7 +38,7 @@ class SearchComponentImpl @AssistedInject constructor(
         Timber.i("${this::class.simpleName}: label $label collected.")
         when (label) {
             SearchStore.Label.BackClick -> onBackClickCallback()
-            is SearchStore.Label.OpenForecast -> onOpenForecastCallback(label.city)
+            is SearchStore.Label.OpenForecast -> onOpenForecastCallback(user, label.city)
             SearchStore.Label.SavedToFavourites -> onSavedToFavouritesCallback()
         }
     }
@@ -62,10 +64,11 @@ class SearchComponentImpl @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
+            @Assisted("user") user: User,
             @Assisted("componentContext") componentContext: ComponentContext,
             @Assisted("openReason") openReason: SearchOpenReason,
             @Assisted("onBackClickCallback") onBackClickCallback: () -> Unit,
-            @Assisted("onOpenForecastCallback") onOpenForecastCallback: (City) -> Unit,
+            @Assisted("onOpenForecastCallback") onOpenForecastCallback: (User, City) -> Unit,
             @Assisted("onSavedToFavouritesCallback") onSavedToFavouritesCallback: () -> Unit
         ): SearchComponentImpl
     }

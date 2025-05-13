@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavouriteRepository {
 
-    fun getFavouriteCities(): Flow<List<City>>
+    fun getFavouriteCities(userId: Int): Flow<List<City>>
 
-    fun observeIsFavourite(cityId: Int): Flow<Boolean>
+    fun observeIsFavourite(userId: Int, cityId: Int): Flow<Boolean>
 
-    suspend fun addToFavourite(city: City)
+    suspend fun addToFavourite(userId: Int, city: City)
 
-    suspend fun removeFromFavourite(cityId: Int)
+    suspend fun removeFromFavourite(userId: Int, cityId: Int)
 }

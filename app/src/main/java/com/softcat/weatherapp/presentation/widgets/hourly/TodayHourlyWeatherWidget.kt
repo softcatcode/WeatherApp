@@ -14,7 +14,6 @@ import com.softcat.weatherapp.WeatherApplication
 
 class TodayHourlyWeatherWidget(
     private val getForecastUseCase: GetTodayForecastUseCase,
-    private val searchUseCase: SearchCityUseCase
 ): GlanceAppWidget() {
 
     private lateinit var dataStore: DataStore<Preferences>
@@ -32,7 +31,8 @@ class TodayHourlyWeatherWidget(
             com.softcat.data.implementations.DatastoreRepositoryImpl(dataStore)
         val getLastCityNameUseCase = GetLastCityFromDatastoreUseCase(datastoreRepository)
         val cityName = getLastCityNameUseCase() ?: return emptyList()
-        val cityId = searchUseCase(cityName).firstOrNull()?.id ?: return emptyList()
-        return getForecastUseCase(cityId)
+        TODO("Get city by name from database and get forecast for it.")
+//        val cityId = searchUseCase(cityName).firstOrNull()?.id ?: return emptyList()
+//        return getForecastUseCase(cityId)
     }
 }

@@ -331,7 +331,7 @@ private fun TemperatureInputField(
             onValueChange = onValueChange,
             singleLine = true,
             textStyle = TextStyle.Default.copy(
-                fontSize = 36.sp,
+                fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 fontFamily = exo2FontFamily,
                 color = MaterialTheme.colorScheme.onBackground

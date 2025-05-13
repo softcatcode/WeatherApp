@@ -7,7 +7,6 @@ import com.softcat.weatherapp.di.annotations.ApplicationScope
 import com.softcat.weatherapp.di.modules.DataModule
 import com.softcat.weatherapp.di.modules.PresentationModule
 import com.softcat.weatherapp.presentation.MainActivity
-import com.softcat.weatherapp.presentation.TechnologicalInterfaceActivity
 import dagger.BindsInstance
 import dagger.Component
 
@@ -16,8 +15,6 @@ import dagger.Component
 interface ApplicationComponent {
 
     fun inject(activity: MainActivity)
-
-    fun inject(activity: TechnologicalInterfaceActivity)
 
     @Component.Factory
     interface Factory {

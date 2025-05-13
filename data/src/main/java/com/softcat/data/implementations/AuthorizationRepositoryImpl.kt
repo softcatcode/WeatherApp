@@ -1,34 +1,36 @@
 package com.softcat.data.implementations
 
-import com.softcat.data.local.AuthorizationFailedException
-import com.softcat.data.local.UserExistsException
-import com.softcat.data.local.db.UsersDao
-import com.softcat.data.mapper.toEntity
-import com.softcat.data.mapper.userDbModel
+import com.softcat.database.exceptions.UnknownException
+import com.softcat.database.exceptions.UserVerificationException
+import com.softcat.database.mapper.toEntity
+import com.softcat.database.facade.DatabaseFacade
 import com.softcat.domain.entity.User
 import com.softcat.domain.interfaces.AuthorizationRepository
 import javax.inject.Inject
 
 class AuthorizationRepositoryImpl @Inject constructor(
-    private val userDao: UsersDao
+    private val database: DatabaseFacade
 ): AuthorizationRepository {
 
-    override fun enter(login: String, password: String): Result<User> {
-        val users = userDao.authorize(login, password)
-        val user = users.firstOrNull()?.toEntity()
-        return if (user == null)
-            Result.failure(AuthorizationFailedException(login, password))
-        else
-            Result.success(user)
+    override suspend fun enter(login: String, password: String): Result<User> {
+        val result = database.verifyUser(login, password)
+        result.onSuccess {
+            val user = it.toEntity()
+            return Result.success(user)
+        }.onFailure {
+            return Result.failure(it)
+        }
+        return Result.failure(UserVerificationException(login))
     }
 
     override suspend fun register(login: String, email: String, password: String): Result<User> {
-        val names = userDao.getUserNames()
-        if (login !in names) {
-            val model = userDbModel(login, password)
-            userDao.register(model)
-            return enter(login, password)
+        val result = database.createUser(login, email, password)
+        result.onSuccess {
+            val user = it.toEntity()
+            return Result.success(user)
+        }.onFailure {
+            return Result.failure(it)
         }
-        return Result.failure(UserExistsException(login))
+        return Result.failure(UnknownException("register function unexpectedly failed"))
     }
 }

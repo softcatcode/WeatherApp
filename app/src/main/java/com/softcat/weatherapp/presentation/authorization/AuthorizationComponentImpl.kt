@@ -40,6 +40,7 @@ class AuthorizationComponentImpl @AssistedInject constructor(
             AuthorizationStore.Label.BackClick -> onBackClick()
             is AuthorizationStore.Label.LoggedIn -> onLogIn(label.user)
             is AuthorizationStore.Label.SignedIn -> onSignIn(label.user)
+            is AuthorizationStore.Label.UserAlreadyAuthorized -> onLogIn(label.user)
         }
     }
 

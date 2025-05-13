@@ -1,8 +1,8 @@
 package com.softcat.data.implementations
 
+import com.softcat.data.mapper.toEntity
 import com.softcat.domain.entity.Weather
 import com.softcat.domain.interfaces.WeatherRepository
-import com.softcat.data.mapper.toEntity
 import com.softcat.data.network.api.ApiService
 import com.softcat.domain.entity.Forecast
 import timber.log.Timber

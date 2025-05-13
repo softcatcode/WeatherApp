@@ -1,11 +1,11 @@
 package com.softcat.data.implementations
 
+import com.softcat.data.mapper.toEntity
 import com.softcat.domain.entity.City
 import com.softcat.domain.entity.Weather
 import com.softcat.domain.entity.WeatherParameters
 import com.softcat.domain.entity.WeatherType
 import com.softcat.domain.interfaces.CalendarRepository
-import com.softcat.data.mapper.toEntity
 import com.softcat.data.network.api.ApiService
 import timber.log.Timber
 import java.util.Calendar

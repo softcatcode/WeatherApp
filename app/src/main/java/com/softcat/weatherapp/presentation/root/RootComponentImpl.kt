@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 import com.softcat.domain.entity.Weather
 import com.softcat.weatherapp.presentation.authorization.AuthorizationComponentImpl
 import com.softcat.weatherapp.presentation.calendar.CalendarComponentImpl
@@ -47,6 +48,7 @@ class RootComponentImpl @AssistedInject constructor(
         val result = when (config) {
             is Config.Details -> {
                 val component = detailsComponentFactory.create(
+                    user = config.user,
                     city = config.city,
                     componentContext = componentContext,
                     onBackClickCallback = { navigation.pop() },
@@ -61,20 +63,30 @@ class RootComponentImpl @AssistedInject constructor(
             is Config.Search -> {
                 val component = searchComponentFactory.create(
                     componentContext = componentContext,
+                    user = config.user,
                     openReason = config.openReason,
                     onBackClickCallback = { navigation.pop() },
-                    onOpenForecastCallback = { navigation.push(Config.Details(it)) },
+                    onOpenForecastCallback = { user, city ->
+                        navigation.push(Config.Details(user, city))
+                    },
                     onSavedToFavouritesCallback = { navigation.pop() }
                 )
                 RootComponent.Child.SearchCity(component)
             }
 
-            Config.Favourite -> {
+            is Config.Favourite -> {
                 val component = favouritesComponentFactory.create(
+                    user = config.user,
                     componentContext = componentContext,
-                    onAddToFavouritesClickCallback = { navigation.push(Config.Search(SearchOpenReason.AddToFavourites)) },
-                    onSearchClickCallback = { navigation.push(Config.Search(SearchOpenReason.RegularSearch)) },
-                    onCityItemClickedCallback = { navigation.push(Config.Details(it)) }
+                    onAddToFavouritesClickCallback = {
+                        navigation.push(Config.Search(config.user, SearchOpenReason.AddToFavourites))
+                    },
+                    onSearchClickCallback = {
+                        navigation.push(Config.Search(config.user, SearchOpenReason.RegularSearch))
+                    },
+                    onCityItemClickedCallback = { user, city ->
+                        navigation.push(Config.Details(user, city))
+                    }
                 )
                 RootComponent.Child.Favourites(component)
             }
@@ -101,8 +113,8 @@ class RootComponentImpl @AssistedInject constructor(
                 val component = authComponentFactory.create(
                     componentContext = componentContext,
                     onBackClick = { navigation.pop() },
-                    onSignIn = { navigation.push(Config.Favourite) },
-                    onLogIn = { navigation.push(Config.Favourite) }
+                    onSignIn = { navigation.push(Config.Favourite(it)) },
+                    onLogIn = { navigation.push(Config.Favourite(it)) }
                 )
                 RootComponent.Child.Authorization(component)
             }
@@ -113,13 +125,16 @@ class RootComponentImpl @AssistedInject constructor(
 
     sealed interface Config: Parcelable {
         @Parcelize
-        data object Favourite: Config
+        data class Favourite(val user: User): Config
 
         @Parcelize
-        data class Search(val openReason: SearchOpenReason): Config
+        data class Search(
+            val user: User,
+            val openReason: SearchOpenReason
+        ): Config
 
         @Parcelize
-        data class Details(val city: City): Config
+        data class Details(val user: User, val city: City): Config
 
         @Parcelize
         data class Calendar(val city: City): Config

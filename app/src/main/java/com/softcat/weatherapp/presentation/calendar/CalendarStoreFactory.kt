@@ -25,14 +25,14 @@ class CalendarStoreFactory @Inject constructor(
             initialState = CalendarStore.State(
                 year = Calendar.getInstance(Locale.getDefault())[Calendar.YEAR],
                 weatherParams = WeatherParameters(),
-                calendarState = CalendarStore.State.CalendarState.Initial,
+                calendarState = CalendarStore.State.CalendarState.Loaded(emptyList()),
                 city = city
             ),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
         ) {}
 
-    sealed interface Action {
+    private sealed interface Action {
         data class CalendarUpdated(
             val highlightedDays: List<Set<Int>>
         ): Action

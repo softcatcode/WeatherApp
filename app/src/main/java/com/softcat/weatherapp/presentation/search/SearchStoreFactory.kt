@@ -5,13 +5,17 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 import com.softcat.domain.useCases.AddToFavouriteUseCase
 import com.softcat.domain.useCases.SearchCityUseCase
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 class SearchStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,
@@ -19,7 +23,9 @@ class SearchStoreFactory @Inject constructor(
     private val addToFavouriteUseCase: AddToFavouriteUseCase
 
 ) {
-    fun create(openReason: SearchOpenReason): SearchStore =
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+
+    fun create(user: User, openReason: SearchOpenReason): SearchStore =
         object:
             SearchStore,
             Store<SearchStore.Intent, SearchStore.State, SearchStore.Label>
@@ -27,6 +33,7 @@ class SearchStoreFactory @Inject constructor(
             storeFactory.create(
                 name = this::class.simpleName,
                 initialState = SearchStore.State(
+                    user = user,
                     searchQuery = "",
                     searchState = SearchStore.State.SearchState.Initial
                 ),
@@ -68,8 +75,8 @@ class SearchStoreFactory @Inject constructor(
                         }
 
                         SearchOpenReason.AddToFavourites -> {
-                            scope.launch(Dispatchers.Main.immediate) {
-                                addToFavouriteUseCase(intent.city)
+                            coroutineScope.launch {
+                                addToFavouriteUseCase(getState().user.id, intent.city)
                             }
                             publish(SearchStore.Label.SavedToFavourites)
                         }

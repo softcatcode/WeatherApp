@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 import com.softcat.domain.entity.Weather
 import com.softcat.weatherapp.presentation.extensions.componentScope
 import dagger.assisted.Assisted
@@ -18,13 +19,14 @@ import timber.log.Timber
 class DetailsComponentImpl @AssistedInject constructor(
     storeFactory: DetailsStoreFactory,
     @Assisted("componentContext") componentContext: ComponentContext,
+    @Assisted("user") private val user: User,
     @Assisted("city") private val city: City,
     @Assisted("onBackClickCallback") private val onBackClickCallback: () -> Unit,
     @Assisted("openCityCalendarCallback") private val openCityCalendarCallback: () -> Unit,
     @Assisted("openHourlyWeatherCallback") private val openHourlyWeatherCallback: (List<Weather>) -> Unit
 ): DetailsComponent, ComponentContext by componentContext {
 
-    private val store: DetailsStore = instanceKeeper.getStore { storeFactory.create(city) }
+    private val store: DetailsStore = instanceKeeper.getStore { storeFactory.create(user, city) }
     private val scope = componentScope()
 
     init {
@@ -73,6 +75,7 @@ class DetailsComponentImpl @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted("componentContext") componentContext: ComponentContext,
+            @Assisted("user") user: User,
             @Assisted("city") city: City,
             @Assisted("onBackClickCallback") onBackClickCallback: () -> Unit,
             @Assisted("openCityCalendarCallback") openCityCalendarCallback: () -> Unit,
