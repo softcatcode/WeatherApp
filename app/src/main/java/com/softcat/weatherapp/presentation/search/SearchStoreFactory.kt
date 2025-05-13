@@ -8,14 +8,12 @@ import com.softcat.domain.entity.City
 import com.softcat.domain.entity.User
 import com.softcat.domain.useCases.AddToFavouriteUseCase
 import com.softcat.domain.useCases.SearchCityUseCase
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 class SearchStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,

@@ -3,8 +3,6 @@ package com.softcat.weatherapp.presentation.widgets.hourly
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import com.softcat.domain.useCases.GetTodayForecastUseCase
-import com.softcat.domain.useCases.SearchCityUseCase
-import com.softcat.data.implementations.SearchRepositoryImpl
 import com.softcat.data.implementations.WeatherRepositoryImpl
 import com.softcat.data.network.api.ApiFactory
 
