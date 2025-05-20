@@ -49,8 +49,9 @@
 
     <string name="calendar_hint">Specify days with certain weather</string>
 
-    <string name="meters_per_second">m/h</string>
+    <string name="meters_per_second">m/s</string>
     <string name="millimeters">mm</string>
+    <string name="centimeters">cm</string>
 
     <string name="login">user name</string>
     <string name="email" translatable="false">email</string>

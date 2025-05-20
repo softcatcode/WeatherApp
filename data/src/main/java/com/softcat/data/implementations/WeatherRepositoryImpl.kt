@@ -1,9 +1,9 @@
 package com.softcat.data.implementations
 
 import com.softcat.data.mapper.toEntity
-import com.softcat.domain.entity.Weather
 import com.softcat.domain.interfaces.WeatherRepository
 import com.softcat.data.network.api.ApiService
+import com.softcat.domain.entity.CurrentWeather
 import com.softcat.domain.entity.Forecast
 import timber.log.Timber
 import javax.inject.Inject
@@ -11,7 +11,7 @@ import javax.inject.Inject
 class WeatherRepositoryImpl @Inject constructor(
     private val apiService: ApiService
 ): WeatherRepository {
-    override suspend fun getWeather(cityId: Int): Weather {
+    override suspend fun getWeather(cityId: Int): CurrentWeather {
         Timber.i("${this::class.simpleName}.getWeather($cityId)")
         return apiService.loadCurrentWeather(cityIdToQuery(cityId)).toEntity()
     }
@@ -21,7 +21,7 @@ class WeatherRepositoryImpl @Inject constructor(
         return apiService.loadForecast(cityIdToQuery(cityId)).toEntity()
     }
 
-    override suspend fun getTodayLocalForecast(cityId: Int): List<Weather> {
+    override suspend fun getTodayLocalForecast(cityId: Int): List<CurrentWeather> {
         Timber.i("${this::class.simpleName}.getTodayLocalForecast($cityId)")
         return apiService.loadForecast(cityIdToQuery(cityId), 1).toEntity().hourly.first()
     }

@@ -78,28 +78,28 @@ class CalendarComponentImpl @AssistedInject constructor(
         )
     }
 
-    override fun changeWindSpeed(newValue: ClosedFloatingPointRange<Float>) {
+    override fun changeWindSpeed(newValue: IntRange) {
         Timber.i("${this::class.simpleName}.changeWindSpeed($newValue)")
         store.accept(
             CalendarStore.Intent.ChangeWindSpeed(newValue)
         )
     }
 
-    override fun changeHumidity(newValue: ClosedFloatingPointRange<Float>) {
+    override fun changeHumidity(newValue: IntRange) {
         Timber.i("${this::class.simpleName}.changeHumidity($newValue)")
         store.accept(
             CalendarStore.Intent.ChangeHumidity(newValue)
         )
     }
 
-    override fun changePrecipitations(newValue: ClosedFloatingPointRange<Float>) {
+    override fun changePrecipitations(newValue: IntRange) {
         Timber.i("${this::class.simpleName}.changePrecipitations($newValue)")
         store.accept(
             CalendarStore.Intent.ChangePrecipitations(newValue)
         )
     }
 
-    override fun changeSnowVolume(newValue: ClosedFloatingPointRange<Float>) {
+    override fun changeSnowVolume(newValue: IntRange) {
         Timber.i("${this::class.simpleName}.changeSnowVolume($newValue)")
         store.accept(
             CalendarStore.Intent.ChangeSnowVolume(newValue)

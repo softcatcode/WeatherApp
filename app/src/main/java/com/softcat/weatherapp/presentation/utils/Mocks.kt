@@ -1,26 +1,19 @@
 package com.softcat.weatherapp.presentation.utils
 
-import com.softcat.domain.entity.AstrologicalParameters
-import com.softcat.domain.entity.Weather
-import com.softcat.domain.entity.WeatherType
-import java.util.Calendar
+import com.softcat.domain.entity.CurrentWeather
 
-val defaultWeather = Weather(
-    type = WeatherType.Clouds,
+val defaultWeather = CurrentWeather(
     tempC = 20f,
-    feelsLike = 23f,
+    feelsLike = 23,
     conditionText = "Overcast Clouds with a bit of sun",
     conditionUrl = "//cdn.weatherapi.com/weather/64x64/night/113.png",
-    date = Calendar.getInstance(),
-    formattedDate = "2024-09-29",
-    humidity = 20f,
-    windSpeed = 3f,
-    snowVolume = 0f,
-    precipitations = 2f,
-    astrologicalParams = AstrologicalParameters(
-        sunriseTime = "06:12 AM",
-        sunsetTime = "21:32 PM",
-        moonriseTime = "22:01 AM",
-        moonsetTime = "05:05 AM",
-    )
+    humidity = 20,
+    windSpeed = 3,
+    precipitations = 2,
+    conditionCode = 1006,
+    vision = 10f,
+    timeEpoch = 516279846,
+    isDay = true,
+    cloud = 70,
+    snow = 0,
 )

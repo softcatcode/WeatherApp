@@ -1,7 +1,7 @@
 package com.softcat.weatherapp.presentation.hourly
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.softcat.domain.entity.Weather
+import com.softcat.domain.entity.CurrentWeather
 
 interface HourlyWeatherStore:
     Store<HourlyWeatherStore.Intent, HourlyWeatherStore.State, HourlyWeatherStore.Label> {
@@ -12,7 +12,7 @@ interface HourlyWeatherStore:
     sealed interface State {
         data object Initial: State
 
-        data class Forecast(val hoursWeather: List<Weather>): State
+        data class Forecast(val hoursWeather: List<CurrentWeather>): State
     }
 
     sealed interface Label {

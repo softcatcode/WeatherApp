@@ -20,6 +20,9 @@ class DbHelper @Inject constructor(
         with (db) {
             execSQL(CreateQueries.CREATE_COUNTRIES)
             execSQL(CreateQueries.CREATE_CITIES)
+            execSQL(CreateQueries.CREATE_WEATHER_TYPES)
+            execSQL(CreateQueries.CREATE_WEATHER)
+            execSQL(CreateQueries.CREATE_CURRENT_WEATHER)
         }
     }
 

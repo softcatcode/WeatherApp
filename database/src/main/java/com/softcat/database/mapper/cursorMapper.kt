@@ -1,4 +1,4 @@
-package com.softcat.database.internal
+package com.softcat.database.mapper
 
 import android.database.Cursor
 import com.softcat.database.model.CityDbModel

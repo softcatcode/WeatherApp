@@ -52,19 +52,19 @@ interface CalendarStore: Store<CalendarStore.Intent, CalendarStore.State, Calend
         ): Intent
 
         data class ChangeHumidity(
-            val humidity: ClosedFloatingPointRange<Float>
+            val humidity: IntRange
         ): Intent
 
         data class ChangePrecipitations(
-            val precipitations: ClosedFloatingPointRange<Float>
+            val precipitations: IntRange
         ): Intent
 
         data class ChangeWindSpeed(
-            val windSpeed: ClosedFloatingPointRange<Float>
+            val windSpeed: IntRange
         ): Intent
 
         data class ChangeSnowVolume(
-            val snowVolume: ClosedFloatingPointRange<Float>
+            val snowVolume: IntRange
         ): Intent
     }
 

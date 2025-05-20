@@ -3,6 +3,8 @@ package com.softcat.database.internal.sqlExecutor
 import android.database.Cursor
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
+import com.softcat.database.model.WeatherDbModel
+import com.softcat.database.model.WeatherTypeDbModel
 
 interface SQLiteInterface {
     fun getCities(): Cursor
@@ -18,4 +20,8 @@ interface SQLiteInterface {
     fun deleteCity(id: Int)
 
     fun insertCity(model: CityDbModel)
+
+    fun insertWeatherType(model: WeatherTypeDbModel)
+
+    fun insertWeather(model: WeatherDbModel)
 }

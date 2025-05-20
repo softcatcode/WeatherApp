@@ -47,12 +47,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.softcat.data.mapper.toCalendar
 import com.softcat.domain.entity.Forecast
 import com.softcat.domain.entity.Weather
 import com.softcat.domain.entity.WeatherParameters.Companion.MAX_TEMPERATURE
@@ -64,7 +64,6 @@ import com.softcat.weatherapp.presentation.extensions.toTemperatureString
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
 import com.softcat.weatherapp.presentation.utils.ErrorDialog
-import com.softcat.weatherapp.presentation.utils.defaultWeather
 
 @Composable
 private fun Initial() {
@@ -125,7 +124,7 @@ private fun Loaded(
             )
         }
         Text(
-            text = forecast.weather.date.formattedFullDate(),
+            text = forecast.weather.timeEpoch.toCalendar().formattedFullDate(),
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(Modifier.weight(1f))
@@ -204,9 +203,8 @@ private fun AnimatedUpcomingWeatherContainer(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-@Preview
 private fun SmallWeatherCard(
-    weather: Weather = defaultWeather,
+    weather: Weather,
     onClick: () -> Unit = {},
     isForCurrentDay: Boolean = false
 ) {
@@ -233,7 +231,7 @@ private fun SmallWeatherCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = weather.tempC.toTemperatureString(),
+                text = weather.avgTemp.toTemperatureString(),
                 color = Color.Black
             )
             GlideImage(

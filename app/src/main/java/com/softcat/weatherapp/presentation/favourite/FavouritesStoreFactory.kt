@@ -15,6 +15,7 @@ import com.softcat.domain.useCases.SaveToDatastoreUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -64,14 +65,16 @@ class FavouritesStoreFactory @Inject constructor(
         private val user: User
     ): CoroutineBootstrapper<Action>() {
         override fun invoke() {
-            scope.launch {
+            scope.launch(Dispatchers.Default) {
                 getCurrentCityNameUseCase(context) { cityName ->
                     CoroutineScope(Dispatchers.IO).launch {
                         saveCityToDatastoreUseCase(cityName)
                     }
                 }
-                getFavouriteCitiesUseCase(user.id).collect {
-                    dispatch(Action.FavouriteCitiesLoaded(it))
+                withContext(Dispatchers.Main) {
+                    getFavouriteCitiesUseCase(user.id).collect {
+                        dispatch(Action.FavouriteCitiesLoaded(it))
+                    }
                 }
             }
         }
@@ -181,6 +184,10 @@ class FavouritesStoreFactory @Inject constructor(
                 }
                 is FavouritesStore.Intent.ReloadCities -> {
                     loadCities(intent.cities)
+                }
+
+                FavouritesStore.Intent.SettingsClicked -> {
+                    publish(FavouritesStore.Label.SettingsClicked)
                 }
             }
         }

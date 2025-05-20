@@ -4,7 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.softcat.domain.entity.Weather
+import com.softcat.domain.entity.CurrentWeather
 import com.softcat.weatherapp.presentation.extensions.componentScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -17,7 +17,7 @@ import timber.log.Timber
 class HourlyWeatherComponentImpl @AssistedInject constructor(
     storeFactory: HourlyWeatherStoreFactory,
     @Assisted("componentContext") componentContext: ComponentContext,
-    @Assisted("hoursWeather") private val hoursWeather: List<Weather>,
+    @Assisted("hoursWeather") private val hoursWeather: List<CurrentWeather>,
     @Assisted("onBackClick") private val onBackClick: () -> Unit
 ): HourlyWeatherComponent, ComponentContext by componentContext {
 
@@ -51,7 +51,7 @@ class HourlyWeatherComponentImpl @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted("componentContext") componentContext: ComponentContext,
-            @Assisted("hoursWeather") hoursWeather: List<Weather>,
+            @Assisted("hoursWeather") hoursWeather: List<CurrentWeather>,
             @Assisted("onBackClick") onBackClick: () -> Unit
         ): HourlyWeatherComponentImpl
     }

@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.CurrentWeather
 import com.softcat.domain.entity.User
 import com.softcat.domain.entity.Weather
 import com.softcat.weatherapp.presentation.extensions.componentScope
@@ -23,7 +24,7 @@ class DetailsComponentImpl @AssistedInject constructor(
     @Assisted("city") private val city: City,
     @Assisted("onBackClickCallback") private val onBackClickCallback: () -> Unit,
     @Assisted("openCityCalendarCallback") private val openCityCalendarCallback: () -> Unit,
-    @Assisted("openHourlyWeatherCallback") private val openHourlyWeatherCallback: (List<Weather>) -> Unit
+    @Assisted("openHourlyWeatherCallback") private val openHourlyWeatherCallback: (List<CurrentWeather>) -> Unit
 ): DetailsComponent, ComponentContext by componentContext {
 
     private val store: DetailsStore = instanceKeeper.getStore { storeFactory.create(user, city) }
@@ -79,7 +80,7 @@ class DetailsComponentImpl @AssistedInject constructor(
             @Assisted("city") city: City,
             @Assisted("onBackClickCallback") onBackClickCallback: () -> Unit,
             @Assisted("openCityCalendarCallback") openCityCalendarCallback: () -> Unit,
-            @Assisted("openHourlyWeatherCallback") openHourlyWeatherCallback: (List<Weather>) -> Unit
+            @Assisted("openHourlyWeatherCallback") openHourlyWeatherCallback: (List<CurrentWeather>) -> Unit
         ): DetailsComponentImpl
     }
 }

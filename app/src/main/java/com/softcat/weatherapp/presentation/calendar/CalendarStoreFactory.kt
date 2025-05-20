@@ -67,19 +67,19 @@ class CalendarStoreFactory @Inject constructor(
         ): Msg
 
         data class ChangeHumidity(
-            val humidity: ClosedFloatingPointRange<Float>
+            val humidity: IntRange
         ): Msg
 
         data class ChangePrecipitations(
-            val precipitations: ClosedFloatingPointRange<Float>
+            val precipitations: IntRange
         ): Msg
 
         data class ChangeWindSpeed(
-            val windSpeed: ClosedFloatingPointRange<Float>
+            val windSpeed: IntRange
         ): Msg
 
         data class ChangeSnowVolume(
-            val snowVolume: ClosedFloatingPointRange<Float>
+            val snowVolume: IntRange
         ): Msg
     }
 

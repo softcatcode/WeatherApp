@@ -7,8 +7,11 @@ import com.softcat.database.internal.queries.DeleteQueries.DELETE_COUNTRY
 import com.softcat.database.internal.queries.GetDataQueries
 import com.softcat.database.internal.queries.InsertQueries.INSERT_CITY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_COUNTRY
+import com.softcat.database.internal.queries.InsertQueries.INSERT_WEATHER_TYPE
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
+import com.softcat.database.model.WeatherDbModel
+import com.softcat.database.model.WeatherTypeDbModel
 import javax.inject.Inject
 
 class SQLiteExecutor @Inject constructor(
@@ -46,5 +49,14 @@ class SQLiteExecutor @Inject constructor(
             INSERT_CITY.format(id, name, countryId, latitude, longitude)
         }
         dbHelper.writableDatabase.execSQL(query)
+    }
+
+    override fun insertWeatherType(model: WeatherTypeDbModel) {
+        val query = INSERT_WEATHER_TYPE.format(model.code, model.dayDescription, model.nightDescription)
+        dbHelper.writableDatabase.execSQL(query)
+    }
+
+    override fun insertWeather(model: WeatherDbModel) {
+        TODO("Not yet implemented")
     }
 }

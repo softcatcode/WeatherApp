@@ -8,7 +8,7 @@ import com.softcat.data.jsonMocks.weatherForecastJson
 import com.softcat.data.jsonMocks.weatherHistoryJson
 import com.softcat.data.network.api.ApiService
 import com.softcat.data.network.dto.CityDto
-import com.softcat.data.network.dto.WeatherCurrentDto
+import com.softcat.data.network.dto.CurrentWeatherResponse
 import com.softcat.data.network.dto.WeatherForecastDto
 import kotlinx.coroutines.runBlocking
 import org.mockito.ArgumentMatchers.anyString
@@ -19,7 +19,7 @@ import org.mockito.kotlin.whenever
 val apiServiceMock = mock(ApiService::class.java)
 
 private val gson = Gson()
-val currentWeatherDto = gson.fromJson(currentWeatherJson, WeatherCurrentDto::class.java)
+val currentWeatherDto = gson.fromJson(currentWeatherJson, CurrentWeatherResponse::class.java)
 val weatherForecastDto = gson.fromJson(weatherForecastJson, WeatherForecastDto::class.java)
 val weatherHistoryDto = gson.fromJson(weatherHistoryJson, WeatherForecastDto::class.java)
 val searchResultDto = gson.fromJson(searchResultJson, JsonArray::class.java).map {

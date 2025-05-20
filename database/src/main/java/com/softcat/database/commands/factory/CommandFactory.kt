@@ -10,6 +10,8 @@ import com.softcat.database.commands.IsFavouriteCommand
 import com.softcat.database.commands.RemoveFromFavouritesCommand
 import com.softcat.database.commands.UpdateCountriesCommand
 import com.softcat.database.commands.VerifyUserCommand
+import com.softcat.database.managers.ManagerFactory
+import com.softcat.database.managers.ManagerFactoryInterface
 import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.remote.favourites.FavouritesManager
 import com.softcat.database.managers.remote.user.UsersManager
@@ -20,7 +22,7 @@ import javax.inject.Inject
 class CommandFactory @Inject constructor(
     private val usersManager: UsersManager,
     private val favouritesManager: FavouritesManager,
-    private val regionManager: RegionManager
+    private val managerFactory: ManagerFactoryInterface
 ): CommandFactoryInterface {
 
     override fun createUserCommand(name: String, email: String, password: String): CreateUserCommand {
@@ -36,18 +38,18 @@ class CommandFactory @Inject constructor(
         return GetFavouriteCitiesCommand(
             userId,
             favouritesManager,
-            regionManager
+            managerFactory
         )
     }
 
-    override fun addCountryCommand(country: CountryDbModel) = AddCountryCommand(country, regionManager)
+    override fun addCountryCommand(country: CountryDbModel) = AddCountryCommand(country, managerFactory)
 
-    override fun addCityCommand(city: CityDbModel) = AddCityCommand(city, regionManager)
+    override fun addCityCommand(city: CityDbModel) = AddCityCommand(city, managerFactory)
 
-    override fun getCountriesCommand() = GetCountriesCommand(regionManager)
+    override fun getCountriesCommand() = GetCountriesCommand(managerFactory)
 
     override fun updateCountriesCommand(countries: List<CountryDbModel>): UpdateCountriesCommand {
-        return UpdateCountriesCommand(countries, regionManager)
+        return UpdateCountriesCommand(countries, managerFactory)
     }
 
     override fun verifyUserCommand(name: String, password: String): VerifyUserCommand {

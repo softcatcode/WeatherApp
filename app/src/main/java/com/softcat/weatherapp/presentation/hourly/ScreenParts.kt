@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.softcat.domain.entity.Weather
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.extensions.formattedTime
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
@@ -55,19 +54,22 @@ import com.softcat.weatherapp.presentation.ui.theme.Pink80
 import com.softcat.weatherapp.presentation.ui.theme.Purple80
 import com.softcat.weatherapp.presentation.utils.defaultWeather
 import androidx.compose.foundation.lazy.items
+import com.softcat.data.mapper.toCalendar
+import com.softcat.domain.entity.CurrentWeather
 
 @Preview
 @Composable
 fun WeatherExtraInfo(
-    weather: Weather = defaultWeather
+    weather: CurrentWeather = defaultWeather
 ) {
+    val cmLabel = stringResource(id = R.string.centimeters)
     val mmLabel = stringResource(id = R.string.millimeters)
     val mpsLabel = stringResource(id = R.string.meters_per_second)
     val parameters = listOf(
-        R.string.wind_speed_parameter to "${weather.windSpeed.toInt()} $mpsLabel",
-        R.string.precipitations_parameter to "${weather.precipitations.toInt()} $mmLabel",
-        R.string.snow_volume_parameter to "${weather.snowVolume.toInt()} $mmLabel",
-        R.string.humidity_parameter to "${weather.humidity.toInt()} %",
+        R.string.wind_speed_parameter to "${weather.windSpeed} $mpsLabel",
+        R.string.precipitations_parameter to "${weather.precipitations} $mmLabel",
+        R.string.snow_volume_parameter to "${weather.snow ?: 0} $cmLabel",
+        R.string.humidity_parameter to "${weather.humidity} %",
     )
     val iconIds = listOf(
         R.drawable.wind_parameter,
@@ -159,7 +161,7 @@ fun TemperatureIndicator(
 fun HourWeatherItem(
     modifier: Modifier = Modifier,
     time: String = "11:00",
-    weather: Weather = defaultWeather
+    weather: CurrentWeather = defaultWeather
 ) {
     var expanded by remember { mutableStateOf(false) }
     Card(
@@ -218,7 +220,7 @@ fun HourWeatherItem(
             TemperatureIndicator(
                 modifier = Modifier.weight(1f),
                 titleStrId = R.string.feels_like,
-                temperatureValue = "${weather.feelsLike.toInt()} °C"
+                temperatureValue = "${weather.feelsLike} °C"
             )
         }
     }
@@ -237,7 +239,7 @@ fun HourWeatherItem(
 @Composable
 fun HourlyWeatherList(
     modifier: Modifier = Modifier,
-    weatherList: List<Weather>
+    weatherList: List<CurrentWeather>
 ) {
     val background = Brush.linearGradient(listOf(Purple80, Pink80))
     LazyColumn(
@@ -247,7 +249,7 @@ fun HourlyWeatherList(
             HourWeatherItem(
                 modifier = Modifier
                     .padding(start = 5.dp, end = 5.dp, top = 5.dp),
-                time = weather.date.formattedTime(),
+                time = weather.timeEpoch.toCalendar().formattedTime(),
                 weather = weather
             )
         }

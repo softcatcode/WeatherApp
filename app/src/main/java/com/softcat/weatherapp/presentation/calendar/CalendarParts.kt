@@ -58,6 +58,7 @@ import com.softcat.domain.entity.toTitleResId
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPink
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
+import kotlin.math.roundToInt
 
 val exo2FontFamily = FontFamily(
     Font(R.font.exo2_regular, FontWeight.Normal),
@@ -204,9 +205,9 @@ fun MonthDays(
     }
 }
 
-private fun ClosedFloatingPointRange<Float>.format(): String {
-    return "${start.toInt()} - ${endInclusive.toInt()}"
-}
+private fun IntRange.format(): String = "$start - $endInclusive"
+private fun IntRange.toFloatRange() = first.toFloat()..last.toFloat()
+private fun ClosedFloatingPointRange<Float>.toIntRange() = start.roundToInt()..endInclusive.roundToInt()
 
 @Preview
 @Composable
@@ -214,10 +215,10 @@ fun WeatherParameter(
     modifier: Modifier = Modifier,
     titleResId: Int = R.string.wind_speed_parameter,
     iconResId: Int = R.drawable.wind_parameter,
-    minValue: Float = -50f,
-    maxValue: Float = 50f,
-    value: ClosedFloatingPointRange<Float> = 0f..30f,
-    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit = {}
+    minValue: Int = -50,
+    maxValue: Int = 50,
+    value: IntRange = 0..30,
+    onValueChange: (IntRange) -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -246,15 +247,15 @@ fun WeatherParameter(
             modifier = Modifier
                 .weight(5f)
                 .padding(20.dp),
-            valueRange = minValue..maxValue,
-            value = value,
+            valueRange = minValue.toFloat()..maxValue.toFloat(),
+            value = value.toFloatRange(),
             colors = SliderDefaults.colors().copy(
                 thumbColor = MaterialTheme.colorScheme.onBackground,
                 disabledThumbColor = MaterialTheme.colorScheme.onBackground,
                 activeTrackColor = MaterialTheme.colorScheme.onBackground,
                 inactiveTrackColor = MaterialTheme.colorScheme.secondary
             ),
-            onValueChange = onValueChange
+            onValueChange = { onValueChange(it.toIntRange()) }
         )
         Text(
             modifier = Modifier.weight(1.5f),
