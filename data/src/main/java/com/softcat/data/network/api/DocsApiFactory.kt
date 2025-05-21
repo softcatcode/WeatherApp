@@ -8,7 +8,7 @@ import retrofit2.create
 
 object DocsApiFactory {
 
-    private const val BASE_URL = "https://api.weatherapi.com/docs/"
+    private const val BASE_URL = "https://www.weatherapi.com/docs/"
 
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(

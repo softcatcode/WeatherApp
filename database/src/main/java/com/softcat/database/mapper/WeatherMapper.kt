@@ -1,6 +1,6 @@
 package com.softcat.database.mapper
 
-import com.softcat.database.model.CurrentWeatherDto
+import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 import com.softcat.domain.entity.AstrologicalParameters
@@ -12,11 +12,12 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-fun WeatherTypeInfo.toDbModel() = WeatherTypeDbModel(
+fun WeatherTypeInfo.toDbModel(bytes: ByteArray?) = WeatherTypeDbModel(
     code = code,
     dayDescription = dayDescription,
     nightDescription = nightDescription,
     url = iconUrl,
+    iconBytes = bytes
 )
 
 fun Weather.toDbModel(cityId: Int) = WeatherDbModel(
@@ -35,19 +36,19 @@ fun Weather.toDbModel(cityId: Int) = WeatherDbModel(
     moonriseTime = astrologicalParams.moonriseTime,
     moonsetTime = astrologicalParams.moonsetTime,
     moonIllumination = astrologicalParams.moonIllumination,
-    isSunUp = astrologicalParams.isSunUp,
-    isMoonUp = astrologicalParams.isMoonUp,
+    isSunUp = if (astrologicalParams.isSunUp) 1 else 0,
+    isMoonUp = if (astrologicalParams.isMoonUp) 1 else 0,
     moonPhase = astrologicalParams.moonPhase,
     rainChance = rainChance,
 )
 
-fun CurrentWeather.toDbModel(cityId: Int) = CurrentWeatherDto(
-    id = CurrentWeatherDto.UNSPECIFIED_ID,
+fun CurrentWeather.toDbModel(cityId: Int) = CurrentWeatherDbModel(
+    id = CurrentWeatherDbModel.UNSPECIFIED_ID,
     cityId = cityId,
     timeEpoch = timeEpoch,
     tempC = tempC,
     feelsLike = feelsLike,
-    isDay = isDay,
+    isDay = if (isDay) 1 else 0,
     type = conditionCode,
     windSpeed = windSpeed,
     precipitations = precipitations,
@@ -62,17 +63,16 @@ fun WeatherTypeDbModel.toEntity() = WeatherTypeInfo(
     dayDescription = dayDescription,
     nightDescription = nightDescription,
     iconUrl = url,
-    icon = bytes?.toByteArray() ?: byteArrayOf(),
 )
 
-fun CurrentWeatherDto.toEntity(weatherType: WeatherTypeDbModel) = CurrentWeather(
+fun CurrentWeatherDbModel.toEntity(weatherType: WeatherTypeDbModel) = CurrentWeather(
     timeEpoch = timeEpoch,
     tempC = tempC,
     feelsLike = feelsLike,
-    isDay = isDay,
+    isDay = isDay == 1,
     conditionCode = weatherType.code,
     conditionUrl = weatherType.url,
-    conditionText = if (isDay) weatherType.dayDescription else weatherType.nightDescription,
+    conditionText = if (isDay == 1) weatherType.dayDescription else weatherType.nightDescription,
     windSpeed = windSpeed,
     precipitations = precipitations,
     snow = snow,
@@ -109,8 +109,8 @@ fun WeatherDbModel.toEntity(weatherType: WeatherTypeDbModel) = Weather(
         moonsetTime = moonsetTime,
         moonPhase = moonPhase,
         moonIllumination = moonIllumination,
-        isSunUp = isSunUp,
-        isMoonUp = isMoonUp
+        isSunUp = isSunUp == 1,
+        isMoonUp = isMoonUp == 1
     ),
     rainChance = rainChance,
 )

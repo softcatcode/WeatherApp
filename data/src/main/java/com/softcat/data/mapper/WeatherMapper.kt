@@ -92,6 +92,5 @@ fun WeatherTypeInfoDto.toEntity(): WeatherTypeInfo {
         dayDescription = languageDto?.dayText ?: "Undefined",
         nightDescription = languageDto?.nightText ?: "Undefined",
         iconUrl = toIconUrl(iconCode),
-        icon = byteArrayOf()
     )
 }

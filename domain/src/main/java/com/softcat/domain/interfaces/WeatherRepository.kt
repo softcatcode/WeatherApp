@@ -10,4 +10,6 @@ interface WeatherRepository {
     suspend fun getForecast(cityId: Int): Forecast
 
     suspend fun getTodayLocalForecast(cityId: Int): List<CurrentWeather>
+
+    suspend fun loadWeatherTypesToDatabase()
 }

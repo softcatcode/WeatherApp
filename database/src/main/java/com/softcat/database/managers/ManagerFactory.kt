@@ -5,7 +5,6 @@ import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.local.region.RegionManagerImpl
 import com.softcat.database.managers.local.region.RegionManagerRemoteImpl
 import com.softcat.domain.useCases.Lab9SettingsUseCase
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ManagerFactory @Inject constructor(

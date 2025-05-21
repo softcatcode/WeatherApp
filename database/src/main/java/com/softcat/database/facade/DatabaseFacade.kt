@@ -2,7 +2,10 @@ package com.softcat.database.facade
 
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
+import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.UserDbModel
+import com.softcat.database.model.WeatherDbModel
+import com.softcat.database.model.WeatherTypeDbModel
 
 interface DatabaseFacade {
 
@@ -25,4 +28,10 @@ interface DatabaseFacade {
     suspend fun updateCountries(countries: List<CountryDbModel>): Result<List<Int>>
 
     suspend fun isFavourite(userId: Int, cityId: Int): Result<Boolean>
+
+    suspend fun initWeatherTypes(weatherTypes: List<WeatherTypeDbModel>): Result<Unit>
+
+    suspend fun saveWeather(model: WeatherDbModel): Result<Unit>
+
+    suspend fun saveCurrentWeather(model: CurrentWeatherDbModel): Result<Unit>
 }

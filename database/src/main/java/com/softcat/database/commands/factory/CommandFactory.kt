@@ -2,27 +2,35 @@ package com.softcat.database.commands.factory
 
 import com.softcat.database.commands.AddCityCommand
 import com.softcat.database.commands.AddCountryCommand
+import com.softcat.database.commands.AddCurrentWeatherCommand
 import com.softcat.database.commands.AddToFavouritesCommand
+import com.softcat.database.commands.AddWeatherCommand
 import com.softcat.database.commands.CreateUserCommand
 import com.softcat.database.commands.GetCountriesCommand
 import com.softcat.database.commands.GetFavouriteCitiesCommand
 import com.softcat.database.commands.IsFavouriteCommand
 import com.softcat.database.commands.RemoveFromFavouritesCommand
 import com.softcat.database.commands.UpdateCountriesCommand
+import com.softcat.database.commands.UpdateWeatherTypesCommand
 import com.softcat.database.commands.VerifyUserCommand
 import com.softcat.database.managers.ManagerFactory
 import com.softcat.database.managers.ManagerFactoryInterface
 import com.softcat.database.managers.local.region.RegionManager
+import com.softcat.database.managers.local.weather.WeatherManager
 import com.softcat.database.managers.remote.favourites.FavouritesManager
 import com.softcat.database.managers.remote.user.UsersManager
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
+import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.WeatherDbModel
+import com.softcat.database.model.WeatherTypeDbModel
 import javax.inject.Inject
 
 class CommandFactory @Inject constructor(
     private val usersManager: UsersManager,
     private val favouritesManager: FavouritesManager,
-    private val managerFactory: ManagerFactoryInterface
+    private val managerFactory: ManagerFactoryInterface,
+    private val weatherManager: WeatherManager,
 ): CommandFactoryInterface {
 
     override fun createUserCommand(name: String, email: String, password: String): CreateUserCommand {
@@ -66,5 +74,17 @@ class CommandFactory @Inject constructor(
 
     override fun isFavouriteCommand(userId: Int, cityId: Int): IsFavouriteCommand {
         return IsFavouriteCommand(userId, cityId, favouritesManager)
+    }
+
+    override fun addWeatherCommand(model: WeatherDbModel): AddWeatherCommand {
+        return AddWeatherCommand(model, weatherManager)
+    }
+
+    override fun addCurrentWeatherCommand(model: CurrentWeatherDbModel): AddCurrentWeatherCommand {
+        return AddCurrentWeatherCommand(model, weatherManager)
+    }
+
+    override fun updateWeatherTypesCommand(types: List<WeatherTypeDbModel>): UpdateWeatherTypesCommand {
+        return UpdateWeatherTypesCommand(types, weatherManager)
     }
 }

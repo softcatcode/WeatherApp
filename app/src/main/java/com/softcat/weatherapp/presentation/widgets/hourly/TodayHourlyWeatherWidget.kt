@@ -12,7 +12,7 @@ import com.softcat.domain.useCases.GetTodayForecastUseCase
 import com.softcat.weatherapp.WeatherApplication
 
 class TodayHourlyWeatherWidget(
-    private val getForecastUseCase: GetTodayForecastUseCase,
+    //private val getForecastUseCase: GetTodayForecastUseCase,
 ): GlanceAppWidget() {
 
     private lateinit var dataStore: DataStore<Preferences>

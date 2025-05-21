@@ -30,6 +30,9 @@ class DbHelper @Inject constructor(
         with (db) {
             execSQL(DeleteQueries.DROP_CITIES)
             execSQL(DeleteQueries.DROP_COUNTRIES)
+            execSQL(DeleteQueries.DROP_WEATHER_TYPES)
+            execSQL(DeleteQueries.DROP_CURRENT_WEATHER)
+            execSQL(DeleteQueries.DROP_WEATHER)
         }
     }
 

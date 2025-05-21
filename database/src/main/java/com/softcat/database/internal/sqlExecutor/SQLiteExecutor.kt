@@ -1,17 +1,25 @@
 package com.softcat.database.internal.sqlExecutor
 
+import android.content.ContentValues
 import android.database.Cursor
+import com.softcat.database.internal.DatabaseRules
 import com.softcat.database.internal.DbHelper
+import com.softcat.database.internal.queries.CreateQueries
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_CITY
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_COUNTRY
+import com.softcat.database.internal.queries.DeleteQueries.DELETE_CURRENT_WEATHER
+import com.softcat.database.internal.queries.DeleteQueries.DELETE_WEATHER
 import com.softcat.database.internal.queries.GetDataQueries
 import com.softcat.database.internal.queries.InsertQueries.INSERT_CITY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_COUNTRY
-import com.softcat.database.internal.queries.InsertQueries.INSERT_WEATHER_TYPE
+import com.softcat.database.internal.queries.InsertQueries.INSERT_CURRENT_WEATHER
+import com.softcat.database.internal.queries.InsertQueries.INSERT_WEATHER
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
+import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
+import java.util.Locale
 import javax.inject.Inject
 
 class SQLiteExecutor @Inject constructor(
@@ -46,17 +54,60 @@ class SQLiteExecutor @Inject constructor(
 
     override fun insertCity(model: CityDbModel) {
         val query = with (model) {
-            INSERT_CITY.format(id, name, countryId, latitude, longitude)
+            INSERT_CITY.format(Locale.US, id, name, countryId, latitude, longitude)
         }
         dbHelper.writableDatabase.execSQL(query)
     }
 
     override fun insertWeatherType(model: WeatherTypeDbModel) {
-        val query = INSERT_WEATHER_TYPE.format(model.code, model.dayDescription, model.nightDescription)
-        dbHelper.writableDatabase.execSQL(query)
+        val values = with (model) {
+            ContentValues().apply {
+                put("code", code)
+                put("dayDescription", dayDescription)
+                put("nightDescription", nightDescription)
+                put("url", url)
+                put("icon", iconBytes)
+            }
+        }
+        dbHelper.writableDatabase.insert(
+            DatabaseRules.WEATHER_TYPE_TABLE_NAME,
+            null,
+            values
+        )
     }
 
     override fun insertWeather(model: WeatherDbModel) {
-        TODO("Not yet implemented")
+        val query = with (model) {
+            INSERT_WEATHER.format(
+                Locale.US,
+                timeEpoch, cityId, type, avgTemp, humidity,
+                windSpeed, snowVolume, precipitations, vision,
+                sunriseTime, sunsetTime, moonriseTime, moonsetTime,
+                moonIllumination, isSunUp, isMoonUp, moonPhase,
+                rainChance,
+            )
+        }
+        dbHelper.writableDatabase.execSQL(query)
+    }
+
+    override fun insertCurrentWeather(model: CurrentWeatherDbModel) {
+        val query = with (model) {
+            INSERT_CURRENT_WEATHER.format(
+                Locale.US,
+                cityId, timeEpoch, tempC, feelsLike, isDay, type,
+                windSpeed, precipitations, snow, humidity, cloud, vision
+            )
+        }
+        dbHelper.writableDatabase.execSQL(query)
+    }
+
+    override fun deleteWeather(cityId: Int, timeEpoch: Long) {
+        val query = DELETE_WEATHER.format(cityId, timeEpoch)
+        dbHelper.writableDatabase.execSQL(query)
+    }
+
+    override fun deleteCurrentWeather(cityId: Int, timeEpoch: Long) {
+        val query = DELETE_CURRENT_WEATHER.format(cityId, timeEpoch)
+        dbHelper.writableDatabase.execSQL(query)
     }
 }

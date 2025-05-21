@@ -5,5 +5,5 @@ import retrofit2.http.GET
 interface DocsApiService {
 
     @GET("conditions.json")
-    suspend fun loadCurrentWeather(): List<WeatherTypeInfoDto>
+    suspend fun loadWeatherConditions(): List<WeatherTypeInfoDto>
 }

@@ -1,12 +1,12 @@
 package com.softcat.database.model
 
-data class CurrentWeatherDto(
+data class CurrentWeatherDbModel(
     val id: Int,
     val cityId: Int,
     val timeEpoch: Long,
     val tempC: Float,
     val feelsLike: Int,
-    val isDay: Boolean,
+    val isDay: Int,
     val type: Int,
     val windSpeed: Int,
     val precipitations: Int,

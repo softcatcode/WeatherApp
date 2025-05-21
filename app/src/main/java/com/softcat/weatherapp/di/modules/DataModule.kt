@@ -12,6 +12,8 @@ import com.softcat.data.implementations.SearchRepositoryImpl
 import com.softcat.data.implementations.WeatherRepositoryImpl
 import com.softcat.data.network.api.ApiFactory
 import com.softcat.data.network.api.ApiService
+import com.softcat.data.network.api.DocsApiFactory
+import com.softcat.data.network.api.DocsApiService
 import com.softcat.database.commands.factory.CommandFactory
 import com.softcat.database.commands.factory.CommandFactoryInterface
 import com.softcat.database.managers.remote.user.UsersManager
@@ -20,9 +22,8 @@ import com.softcat.database.facade.DatabaseFacade
 import com.softcat.database.facade.DatabaseFacadeImpl
 import com.softcat.database.managers.ManagerFactory
 import com.softcat.database.managers.ManagerFactoryInterface
-import com.softcat.database.managers.local.region.RegionManager
-import com.softcat.database.managers.local.region.RegionManagerImpl
-import com.softcat.database.managers.local.region.RegionManagerRemoteImpl
+import com.softcat.database.managers.local.weather.WeatherManager
+import com.softcat.database.managers.local.weather.WeatherManagerImpl
 import com.softcat.database.managers.remote.favourites.FavouritesManager
 import com.softcat.database.managers.remote.favourites.FavouritesManagerImpl
 import com.softcat.domain.interfaces.AuthorizationRepository
@@ -96,11 +97,19 @@ interface DataModule {
     @Binds
     fun bindManagerFactory(impl: ManagerFactory): ManagerFactoryInterface
 
+    @ApplicationScope
+    @Binds
+    fun bindWeatherManagerFactory(impl: WeatherManagerImpl): WeatherManager
+
     companion object {
 
         @ApplicationScope
         @Provides
         fun provideApiService(): ApiService = ApiFactory.apiService
+
+        @ApplicationScope
+        @Provides
+        fun provideDocsApiService(): DocsApiService = DocsApiFactory.apiService
 
         @ApplicationScope
         @Provides

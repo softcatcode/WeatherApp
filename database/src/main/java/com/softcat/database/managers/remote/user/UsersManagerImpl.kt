@@ -23,10 +23,14 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
         Firebase.database.getReference(DatabaseRules.USERS_TABLE_NAME)
     }
 
+    private fun correctUserNames(userList: List<UserDbModel>) = userList.map {
+        it.copy(name = "\"${it.name}\"")
+    }
+
     private suspend fun updateUsers(newUserList: List<UserDbModel>) {
         withTimeout(DatabaseRules.TIMEOUT) {
             var flag = true
-            usersRef.setValue(newUserList).addOnSuccessListener {
+            usersRef.setValue(correctUserNames(newUserList)).addOnSuccessListener {
                 flag = false
             }.addOnFailureListener {
                 throw it

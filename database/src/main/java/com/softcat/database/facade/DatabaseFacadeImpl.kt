@@ -4,7 +4,10 @@ import com.softcat.database.commands.factory.CommandFactoryInterface
 import com.softcat.database.exceptions.NoCommandResultException
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
+import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.UserDbModel
+import com.softcat.database.model.WeatherDbModel
+import com.softcat.database.model.WeatherTypeDbModel
 import javax.inject.Inject
 
 class DatabaseFacadeImpl @Inject constructor(
@@ -67,6 +70,24 @@ class DatabaseFacadeImpl @Inject constructor(
 
     override suspend fun isFavourite(userId: Int, cityId: Int): Result<Boolean> {
         val cmd = factory.isFavouriteCommand(userId, cityId)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun initWeatherTypes(weatherTypes: List<WeatherTypeDbModel>): Result<Unit> {
+        val cmd = factory.updateWeatherTypesCommand(weatherTypes)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun saveWeather(model: WeatherDbModel): Result<Unit> {
+        val cmd = factory.addWeatherCommand(model)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun saveCurrentWeather(model: CurrentWeatherDbModel): Result<Unit> {
+        val cmd = factory.addCurrentWeatherCommand(model)
         cmd.execute()
         return cmd.result ?: Result.failure(NoCommandResultException())
     }
