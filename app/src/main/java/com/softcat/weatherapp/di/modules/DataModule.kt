@@ -4,6 +4,7 @@ import android.content.Context
 import android.location.Geocoder
 import com.softcat.data.implementations.AuthorizationRepositoryImpl
 import com.softcat.data.implementations.CalendarRepositoryImpl
+import com.softcat.data.implementations.DatabaseLoaderRepositoryImpl
 import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.data.implementations.Lab9SettingsRepositoryImpl
@@ -28,6 +29,7 @@ import com.softcat.database.managers.remote.favourites.FavouritesManager
 import com.softcat.database.managers.remote.favourites.FavouritesManagerImpl
 import com.softcat.domain.interfaces.AuthorizationRepository
 import com.softcat.domain.interfaces.CalendarRepository
+import com.softcat.domain.interfaces.DatabaseLoaderRepository
 import com.softcat.domain.interfaces.DatastoreRepository
 import com.softcat.domain.interfaces.FavouriteRepository
 import com.softcat.domain.interfaces.Lab9SettingsRepository
@@ -76,6 +78,10 @@ interface DataModule {
     @ApplicationScope
     @Binds
     fun bindLab9SettingsRepository(impl: Lab9SettingsRepositoryImpl): Lab9SettingsRepository
+
+    @ApplicationScope
+    @Binds
+    fun bindDatabaseLoaderRepository(impl: DatabaseLoaderRepositoryImpl): DatabaseLoaderRepository
 
     @ApplicationScope
     @Binds

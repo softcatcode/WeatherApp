@@ -64,18 +64,20 @@ class CalendarRepositoryImpl @Inject constructor(
 
     private suspend fun getWeatherForecast(daysCount: Int, cityId: Int): List<Weather> {
         Timber.i("${this::class.simpleName}.getWeatherForecast($daysCount, $cityId)")
-        return apiService.loadForecast(
+        val forecast = apiService.loadForecast(
             query = WeatherRepositoryImpl.cityIdToQuery(cityId),
             dayCount = daysCount
-        ).toEntity().upcoming
+        ).toEntity()
+        return forecast.upcoming!!
     }
 
     private suspend fun getPreviousWeather(currentYear: Int, cityId: Int): List<Weather> {
         Timber.i("${this::class.simpleName}.getPreviousWeather($currentYear, $cityId)")
-        return apiService.loadWeatherHistory(
+        val forecast = apiService.loadWeatherHistory(
             query = WeatherRepositoryImpl.cityIdToQuery(cityId),
             startDate = "$currentYear-01-01",
             endDate = "$currentYear-12-31"
-        ).toEntity().upcoming
+        ).toEntity()
+        return forecast.upcoming!!
     }
 }

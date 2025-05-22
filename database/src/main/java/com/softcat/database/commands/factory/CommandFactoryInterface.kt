@@ -7,7 +7,10 @@ import com.softcat.database.commands.AddToFavouritesCommand
 import com.softcat.database.commands.AddWeatherCommand
 import com.softcat.database.commands.CreateUserCommand
 import com.softcat.database.commands.GetCountriesCommand
+import com.softcat.database.commands.GetCurrentWeatherCommand
+import com.softcat.database.commands.GetDayWeatherCommand
 import com.softcat.database.commands.GetFavouriteCitiesCommand
+import com.softcat.database.commands.GetWeatherTypesCommand
 import com.softcat.database.commands.IsFavouriteCommand
 import com.softcat.database.commands.RemoveFromFavouritesCommand
 import com.softcat.database.commands.UpdateCountriesCommand
@@ -45,4 +48,10 @@ interface CommandFactoryInterface {
     fun addCurrentWeatherCommand(model: CurrentWeatherDbModel): AddCurrentWeatherCommand
 
     fun updateWeatherTypesCommand(types: List<WeatherTypeDbModel>): UpdateWeatherTypesCommand
+
+    fun getCurrentWeatherCommand(cityId: Int, dayTimeEpoch: Long): GetCurrentWeatherCommand
+
+    fun getDaysWeatherCommand(cityId: Int, startMillis: Long, endMillis: Long): GetDayWeatherCommand
+
+    fun getWeatherTypesCommand(typeCodes: List<Int>): GetWeatherTypesCommand
 }

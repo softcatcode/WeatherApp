@@ -91,4 +91,29 @@ class DatabaseFacadeImpl @Inject constructor(
         cmd.execute()
         return cmd.result ?: Result.failure(NoCommandResultException())
     }
+
+    override suspend fun getCurrentWeather(
+        cityId: Int,
+        dayTimeEpoch: Long
+    ): Result<List<CurrentWeatherDbModel>> {
+        val cmd = factory.getCurrentWeatherCommand(cityId, dayTimeEpoch)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun getDaysWeather(
+        cityId: Int,
+        startMillis: Long,
+        endMillis: Long
+    ): Result<List<WeatherDbModel>> {
+        val cmd = factory.getDaysWeatherCommand(cityId, startMillis, endMillis)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun getWeatherTypes(typeCodes: List<Int>): Result<List<WeatherTypeDbModel>> {
+        val cmd = factory.getWeatherTypesCommand(typeCodes)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
 }

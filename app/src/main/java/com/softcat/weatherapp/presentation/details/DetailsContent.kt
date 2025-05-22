@@ -106,7 +106,7 @@ private fun Loaded(
     ) {
         Spacer(Modifier.weight(1f))
         Text(
-            text = forecast.weather.conditionText,
+            text = forecast.weather?.conditionText.orEmpty(),
             style = MaterialTheme.typography.titleLarge
         )
         Row(
@@ -114,22 +114,22 @@ private fun Loaded(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = forecast.weather.tempC.toTemperatureString(),
+                text = forecast.weather?.tempC?.toTemperatureString().orEmpty(),
                 style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp)
             )
             GlideImage(
                 modifier = Modifier.size(70.dp),
-                model = forecast.weather.conditionUrl,
+                model = forecast.weather?.conditionUrl,
                 contentDescription = null
             )
         }
         Text(
-            text = forecast.weather.timeEpoch.toCalendar().formattedFullDate(),
+            text = forecast.weather?.timeEpoch?.toCalendar()?.formattedFullDate().orEmpty(),
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(Modifier.weight(1f))
         AnimatedUpcomingWeatherContainer(
-            daysWeather = forecast.upcoming,
+            daysWeather = forecast.upcoming.orEmpty(),
             onWeatherItemClicked = onWeatherItemClicked
         )
         Spacer(Modifier.weight(0.5f))
@@ -298,7 +298,7 @@ private fun TopBar(
 private fun getBackgroundGradient(state: DetailsStore.State): Brush {
     val forecastState = state.forecastState
     return if (forecastState is DetailsStore.State.ForecastState.Loaded) {
-        val t = forecastState.forecast.weather.tempC
+        val t = forecastState.forecast.weather?.tempC ?: 0f
         val r: Float = 1f / (MAX_TEMPERATURE - MIN_TEMPERATURE) * 0.8f * (t - MIN_TEMPERATURE)
         val b = 1f - r
         val firstColor = Color(r, 0f, b)

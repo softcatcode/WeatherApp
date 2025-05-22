@@ -7,15 +7,16 @@ import com.softcat.database.commands.AddToFavouritesCommand
 import com.softcat.database.commands.AddWeatherCommand
 import com.softcat.database.commands.CreateUserCommand
 import com.softcat.database.commands.GetCountriesCommand
+import com.softcat.database.commands.GetCurrentWeatherCommand
+import com.softcat.database.commands.GetDayWeatherCommand
 import com.softcat.database.commands.GetFavouriteCitiesCommand
+import com.softcat.database.commands.GetWeatherTypesCommand
 import com.softcat.database.commands.IsFavouriteCommand
 import com.softcat.database.commands.RemoveFromFavouritesCommand
 import com.softcat.database.commands.UpdateCountriesCommand
 import com.softcat.database.commands.UpdateWeatherTypesCommand
 import com.softcat.database.commands.VerifyUserCommand
-import com.softcat.database.managers.ManagerFactory
 import com.softcat.database.managers.ManagerFactoryInterface
-import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.local.weather.WeatherManager
 import com.softcat.database.managers.remote.favourites.FavouritesManager
 import com.softcat.database.managers.remote.user.UsersManager
@@ -87,4 +88,17 @@ class CommandFactory @Inject constructor(
     override fun updateWeatherTypesCommand(types: List<WeatherTypeDbModel>): UpdateWeatherTypesCommand {
         return UpdateWeatherTypesCommand(types, weatherManager)
     }
+
+    override fun getCurrentWeatherCommand(
+        cityId: Int,
+        dayTimeEpoch: Long
+    ) = GetCurrentWeatherCommand(cityId, dayTimeEpoch, weatherManager)
+
+    override fun getDaysWeatherCommand(
+        cityId: Int,
+        startMillis: Long,
+        endMillis: Long
+    ) = GetDayWeatherCommand(cityId, startMillis, endMillis, weatherManager)
+
+    override fun getWeatherTypesCommand(typeCodes: List<Int>) = GetWeatherTypesCommand(typeCodes, weatherManager)
 }

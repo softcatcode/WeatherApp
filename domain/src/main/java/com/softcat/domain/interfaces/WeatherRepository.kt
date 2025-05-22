@@ -5,11 +5,9 @@ import com.softcat.domain.entity.Forecast
 
 interface WeatherRepository {
 
-    suspend fun getWeather(cityId: Int): CurrentWeather
+    suspend fun getWeather(cityId: Int): Result<CurrentWeather>
 
-    suspend fun getForecast(cityId: Int): Forecast
+    suspend fun getForecast(cityId: Int): Result<Forecast>
 
-    suspend fun getTodayLocalForecast(cityId: Int): List<CurrentWeather>
-
-    suspend fun loadWeatherTypesToDatabase()
+    suspend fun getTodayLocalForecast(cityId: Int): Result<List<CurrentWeather>>
 }

@@ -10,4 +10,10 @@ interface WeatherManager {
     fun addHourlyWeather(model: CurrentWeatherDbModel): Result<Unit>
 
     fun updateWeatherTypes(types: List<WeatherTypeDbModel>): Result<Unit>
+
+    fun getWeatherTypes(typeCodes: List<Int>): Result<List<WeatherTypeDbModel>>
+
+    fun getHourlyForecast(cityId: Int, dayTimeEpoch: Long): Result<List<CurrentWeatherDbModel>>
+
+    fun getDaysWeather(cityId: Int, startTime: Long, endTime: Long): Result<List<WeatherDbModel>>
 }

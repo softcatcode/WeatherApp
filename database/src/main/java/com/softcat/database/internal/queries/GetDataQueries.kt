@@ -4,6 +4,7 @@ import com.softcat.database.internal.DatabaseRules.CITIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.COUNTRIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.CURRENT_WEATHER_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.WEATHER_TABLE_NAME
+import com.softcat.database.internal.DatabaseRules.WEATHER_TYPE_TABLE_NAME
 
 internal object GetDataQueries {
     const val GET_CITIES = "select * from $CITIES_TABLE_NAME where 1;"
@@ -16,11 +17,15 @@ internal object GetDataQueries {
 
     const val GET_WEATHER = """
         select * from $WEATHER_TABLE_NAME
-        where cityId = %d and timeEpoch in %d and %d
+        where cityId = %d and timeEpoch in %d and %d;
     """
 
     const val GET_CURRENT_WEATHER = """
         select * from $CURRENT_WEATHER_TABLE_NAME
-        where cityId = %d and timeEpoch in %d and %d
+        where cityId = %d and %d <= timeEpoch and timeEpoch < %d;
+    """
+
+    const val GET_WEATHER_TYPE = """
+        select * from $WEATHER_TYPE_TABLE_NAME where code = %d;
     """
 }

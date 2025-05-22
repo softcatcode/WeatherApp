@@ -4,12 +4,12 @@ import android.content.ContentValues
 import android.database.Cursor
 import com.softcat.database.internal.DatabaseRules
 import com.softcat.database.internal.DbHelper
-import com.softcat.database.internal.queries.CreateQueries
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_CITY
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_COUNTRY
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_CURRENT_WEATHER
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_WEATHER
 import com.softcat.database.internal.queries.GetDataQueries
+import com.softcat.database.internal.queries.GetDataQueries.GET_WEATHER_TYPE
 import com.softcat.database.internal.queries.InsertQueries.INSERT_CITY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_COUNTRY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_CURRENT_WEATHER
@@ -76,6 +76,11 @@ class SQLiteExecutor @Inject constructor(
         )
     }
 
+    override fun getWeatherType(code: Int): Cursor {
+        val query = GET_WEATHER_TYPE.format(code)
+        return dbHelper.writableDatabase.rawQuery(query, null)
+    }
+
     override fun insertWeather(model: WeatherDbModel) {
         val query = with (model) {
             INSERT_WEATHER.format(
@@ -109,5 +114,15 @@ class SQLiteExecutor @Inject constructor(
     override fun deleteCurrentWeather(cityId: Int, timeEpoch: Long) {
         val query = DELETE_CURRENT_WEATHER.format(cityId, timeEpoch)
         dbHelper.writableDatabase.execSQL(query)
+    }
+
+    override fun getCurrentWeather(cityId: Int, start: Long, end: Long): Cursor {
+        val query = GetDataQueries.GET_CURRENT_WEATHER.format(start, end)
+        return dbHelper.readableDatabase.rawQuery(query, null)
+    }
+
+    override fun getDaysWeather(cityId: Int, start: Long, end: Long): Cursor {
+        val query = GetDataQueries.GET_WEATHER.format(start, end)
+        return dbHelper.readableDatabase.rawQuery(query, null)
     }
 }
