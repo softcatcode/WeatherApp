@@ -185,10 +185,6 @@ class FavouritesStoreFactory @Inject constructor(
                 is FavouritesStore.Intent.ReloadCities -> {
                     loadCities(intent.cities)
                 }
-
-                FavouritesStore.Intent.SettingsClicked -> {
-                    publish(FavouritesStore.Label.SettingsClicked)
-                }
             }
         }
     }

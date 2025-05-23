@@ -7,7 +7,6 @@ import com.softcat.data.implementations.CalendarRepositoryImpl
 import com.softcat.data.implementations.DatabaseLoaderRepositoryImpl
 import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.data.implementations.FavouriteRepositoryImpl
-import com.softcat.data.implementations.Lab9SettingsRepositoryImpl
 import com.softcat.data.implementations.LocationRepositoryImpl
 import com.softcat.data.implementations.SearchRepositoryImpl
 import com.softcat.data.implementations.WeatherRepositoryImpl
@@ -21,8 +20,8 @@ import com.softcat.database.managers.remote.user.UsersManager
 import com.softcat.database.managers.remote.user.UsersManagerImpl
 import com.softcat.database.facade.DatabaseFacade
 import com.softcat.database.facade.DatabaseFacadeImpl
-import com.softcat.database.managers.ManagerFactory
-import com.softcat.database.managers.ManagerFactoryInterface
+import com.softcat.database.managers.local.region.RegionManager
+import com.softcat.database.managers.local.region.RegionManagerImpl
 import com.softcat.database.managers.local.weather.WeatherManager
 import com.softcat.database.managers.local.weather.WeatherManagerImpl
 import com.softcat.database.managers.remote.favourites.FavouritesManager
@@ -32,16 +31,13 @@ import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.domain.interfaces.DatabaseLoaderRepository
 import com.softcat.domain.interfaces.DatastoreRepository
 import com.softcat.domain.interfaces.FavouriteRepository
-import com.softcat.domain.interfaces.Lab9SettingsRepository
 import com.softcat.domain.interfaces.LocationRepository
 import com.softcat.domain.interfaces.SearchRepository
 import com.softcat.domain.interfaces.WeatherRepository
-import com.softcat.domain.useCases.Lab9SettingsUseCase
 import com.softcat.weatherapp.di.annotations.ApplicationScope
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.flow.first
 import java.util.Locale
 
 @Module
@@ -77,10 +73,6 @@ interface DataModule {
 
     @ApplicationScope
     @Binds
-    fun bindLab9SettingsRepository(impl: Lab9SettingsRepositoryImpl): Lab9SettingsRepository
-
-    @ApplicationScope
-    @Binds
     fun bindDatabaseLoaderRepository(impl: DatabaseLoaderRepositoryImpl): DatabaseLoaderRepository
 
     @ApplicationScope
@@ -97,11 +89,11 @@ interface DataModule {
 
     @ApplicationScope
     @Binds
-    fun bindDatabaseCommandFactory(impl: CommandFactory): CommandFactoryInterface
+    fun bindManagerFactory(impl: RegionManagerImpl): RegionManager
 
     @ApplicationScope
     @Binds
-    fun bindManagerFactory(impl: ManagerFactory): ManagerFactoryInterface
+    fun bindDatabaseCommandFactory(impl: CommandFactory): CommandFactoryInterface
 
     @ApplicationScope
     @Binds

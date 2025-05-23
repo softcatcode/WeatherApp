@@ -44,10 +44,8 @@ class RegionManagerImpl @Inject constructor(
 
     override suspend fun updateCountries(countries: List<CountryDbModel>): Result<List<Int>> {
         return try {
-            val models = toCountriesModels(executor.getCountries())
             val result = countries.map { country ->
-                val model = models.find { it.name == country.name }
-                model?.id ?: toInt(executor.insertCountry(country))
+                saveCountry(country).getOrThrow()
             }
             Result.success(result)
         } catch (e: Exception) {
@@ -55,7 +53,8 @@ class RegionManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveCountry(country: CountryDbModel): Result<Int> {
+    @Synchronized
+    override fun saveCountry(country: CountryDbModel): Result<Int> {
         return try {
             val countries = toCountriesModels(executor.getCountries())
             if (countries.find { it.name == country.name } == null) {

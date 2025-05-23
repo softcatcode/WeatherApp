@@ -23,7 +23,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -77,9 +76,6 @@ fun FavouritesContent(component: FavouritesComponent) {
         }
         item {
             AddFavouriteCityCard { component.onAddToFavouritesClick() }
-        }
-        item {
-            SettingsButton { component.onSettingsClick() }
         }
     }
 }
@@ -158,37 +154,6 @@ private fun CityCard(
                 text = cityItem.city.name,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.background
-            )
-        }
-    }
-}
-
-@Composable
-fun SettingsButton(onClick: () -> Unit) {
-    Card(
-        colors = CardDefaults.cardColors().copy(containerColor = Color.Transparent),
-        shape = MaterialTheme.shapes.extraLarge,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
-    ) {
-        Box(
-            modifier = Modifier
-                .sizeIn(minHeight = 196.dp)
-                .fillMaxSize()
-                .padding(24.dp)
-                .clickable { onClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                modifier = Modifier.size(100.dp),
-                imageVector = Icons.Default.Settings,
-                tint = Orange,
-                contentDescription = null
-            )
-            Text(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                text = "Settings",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.Black
             )
         }
     }
