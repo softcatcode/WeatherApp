@@ -1,7 +1,7 @@
 package com.softcat.data.network.api
 
 import com.softcat.data.network.dto.CityDto
-import com.softcat.data.network.dto.WeatherCurrentDto
+import com.softcat.data.network.dto.CurrentWeatherResponse
 import com.softcat.data.network.dto.WeatherForecastDto
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,7 +11,7 @@ interface ApiService {
     @GET("current.json?")
     suspend fun loadCurrentWeather(
         @Query("q") query: String
-    ): WeatherCurrentDto
+    ): CurrentWeatherResponse
 
     @GET("forecast.json?")
     suspend fun loadForecast(

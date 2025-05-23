@@ -7,6 +7,7 @@ import com.softcat.domain.entity.WeatherParameters
 import com.softcat.domain.entity.WeatherType
 import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.data.network.api.ApiService
+import com.softcat.domain.entity.weatherTypeOf
 import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
@@ -39,12 +40,13 @@ class CalendarRepositoryImpl @Inject constructor(
         val monthsDays = List<MutableSet<Int>>(12) { mutableSetOf() }
 
         (nextWeatherList + prevWeatherList).filter { weather ->
-            (params.weatherType == WeatherType.Any || weather.type == params.weatherType) &&
-                    weather.tempC in params.temperature &&
-                    weather.humidity in params.humidity &&
-                    weather.precipitations in params.precipitations &&
-                    weather.windSpeed in params.windSpeed &&
-                    weather.snowVolume in params.snowVolume
+            val type = weatherTypeOf(weather.conditionCode)
+            (params.weatherType == WeatherType.Any || params.weatherType == type) &&
+            weather.avgTemp in params.temperature &&
+            weather.humidity in params.humidity &&
+            weather.precipitations in params.precipitations &&
+            weather.windSpeed in params.windSpeed &&
+            weather.snowVolume in params.snowVolume
         }.forEach { weather ->
             val date = weather.formattedDate
             val year = date.substringBefore('-', "0").toInt()
@@ -62,18 +64,20 @@ class CalendarRepositoryImpl @Inject constructor(
 
     private suspend fun getWeatherForecast(daysCount: Int, cityId: Int): List<Weather> {
         Timber.i("${this::class.simpleName}.getWeatherForecast($daysCount, $cityId)")
-        return apiService.loadForecast(
+        val forecast = apiService.loadForecast(
             query = WeatherRepositoryImpl.cityIdToQuery(cityId),
             dayCount = daysCount
-        ).toEntity().upcoming
+        ).toEntity()
+        return forecast.upcoming!!
     }
 
     private suspend fun getPreviousWeather(currentYear: Int, cityId: Int): List<Weather> {
         Timber.i("${this::class.simpleName}.getPreviousWeather($currentYear, $cityId)")
-        return apiService.loadWeatherHistory(
+        val forecast = apiService.loadWeatherHistory(
             query = WeatherRepositoryImpl.cityIdToQuery(cityId),
             startDate = "$currentYear-01-01",
             endDate = "$currentYear-12-31"
-        ).toEntity().upcoming
+        ).toEntity()
+        return forecast.upcoming!!
     }
 }

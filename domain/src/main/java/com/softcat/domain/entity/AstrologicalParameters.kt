@@ -8,5 +8,9 @@ class AstrologicalParameters(
     val sunriseTime: String,
     val sunsetTime: String,
     val moonriseTime: String,
-    val moonsetTime: String
+    val moonsetTime: String,
+    val moonPhase: String,
+    val moonIllumination: Int,
+    val isSunUp: Boolean,
+    val isMoonUp: Boolean
 ): Parcelable

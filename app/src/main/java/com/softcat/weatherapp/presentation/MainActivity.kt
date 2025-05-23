@@ -8,10 +8,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import com.arkivanov.decompose.defaultComponentContext
+import com.softcat.domain.useCases.LoadWeatherTypesUseCase
 import com.softcat.weatherapp.LogsTree
 import com.softcat.weatherapp.WeatherApplication
 import com.softcat.weatherapp.presentation.root.RootComponentImpl
 import com.softcat.weatherapp.presentation.root.RootContent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -20,9 +24,15 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var rootComponentFactory: RootComponentImpl.Factory
 
+    @Inject
+    lateinit var loadWeatherTypesUseCase: LoadWeatherTypesUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         (applicationContext as WeatherApplication).component.inject(this)
         super.onCreate(savedInstanceState)
+        CoroutineScope(Dispatchers.IO).launch {
+            loadWeatherTypesUseCase()
+        }
 
         enableEdgeToEdge()
         Timber.plant(LogsTree)

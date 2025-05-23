@@ -4,21 +4,24 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.softcat.database.internal.DatabaseRules
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 class FavouritesManagerImpl @Inject constructor(): FavouritesManager {
 
-    private fun favouritesRef(userId: Int) = Firebase.database.getReference(userId.toString())
+    private fun favouritesRef(userId: String) = Firebase.database.getReference(userId)
 
-    private suspend fun updateFavouriteCities(userId: Int, cities: List<Int>) {
-        val reference = Firebase.database.getReference(userId.toString())
+    private suspend fun updateFavouriteCities(userId: String, cities: List<Int>) {
+        val reference = Firebase.database.getReference(userId)
         return withTimeout(DatabaseRules.TIMEOUT) {
             var flag = true
             reference.setValue(cities).addOnSuccessListener {
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
@@ -26,7 +29,7 @@ class FavouritesManagerImpl @Inject constructor(): FavouritesManager {
         }
     }
 
-    override suspend fun addToFavourites(userId: Int, cityId: Int): Result<Unit> {
+    override suspend fun addToFavourites(userId: String, cityId: Int): Result<Unit> {
         val cities: List<Int> = try {
             getFavouriteCitiesFromFirebase(userId)
         } catch (e: Exception) {
@@ -45,7 +48,7 @@ class FavouritesManagerImpl @Inject constructor(): FavouritesManager {
         return Result.success(Unit)
     }
 
-    override suspend fun removeFromFavourites(userId: Int, cityId: Int): Result<Unit> {
+    override suspend fun removeFromFavourites(userId: String, cityId: Int): Result<Unit> {
         val cities: List<Int>
         try {
             cities = getFavouriteCitiesFromFirebase(userId)
@@ -63,7 +66,7 @@ class FavouritesManagerImpl @Inject constructor(): FavouritesManager {
         return Result.success(Unit)
     }
 
-    private suspend fun getFavouriteCitiesFromFirebase(userId: Int): List<Int> {
+    private suspend fun getFavouriteCitiesFromFirebase(userId: String): List<Int> {
         val reference = favouritesRef(userId)
         return withTimeout(DatabaseRules.TIMEOUT) {
             val result = mutableListOf<Int>()
@@ -74,7 +77,9 @@ class FavouritesManagerImpl @Inject constructor(): FavouritesManager {
                 }
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
@@ -83,7 +88,7 @@ class FavouritesManagerImpl @Inject constructor(): FavouritesManager {
         }
     }
 
-    override suspend fun getFavouriteCitiesIds(userId: Int): Result<List<Int>> {
+    override suspend fun getFavouriteCitiesIds(userId: String): Result<List<Int>> {
         try {
             val cities = getFavouriteCitiesFromFirebase(userId)
             return Result.success(cities)
@@ -92,7 +97,7 @@ class FavouritesManagerImpl @Inject constructor(): FavouritesManager {
         }
     }
 
-    override suspend fun isFavourite(userId: Int, cityId: Int): Result<Boolean> {
+    override suspend fun isFavourite(userId: String, cityId: Int): Result<Boolean> {
         val cities: List<Int>
         try {
             cities = getFavouriteCitiesFromFirebase(userId)

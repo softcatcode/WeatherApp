@@ -8,7 +8,7 @@ import javax.inject.Inject
 class ObserveIsFavouriteUseCase @Inject constructor(
     private val repository: FavouriteRepository
 ) {
-    operator fun invoke(userId: Int, cityId: Int): Flow<Boolean> {
+    operator fun invoke(userId: String, cityId: Int): Flow<Boolean> {
         Timber.i("${this::class.simpleName} invoked")
         return repository.observeIsFavourite(userId, cityId)
     }

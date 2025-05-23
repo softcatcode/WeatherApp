@@ -29,10 +29,12 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.text.TextDefaults.defaultTextStyle
 import androidx.glance.unit.ColorProvider
+import com.softcat.domain.entity.CurrentWeather
 import com.softcat.domain.entity.Weather
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
 import com.softcat.weatherapp.presentation.utils.defaultWeather
 import kotlin.math.min
+import androidx.core.net.toUri
 
 private fun upcomingWeatherIndex(items: List<Weather>): Int {
     var i = 0
@@ -87,7 +89,7 @@ private fun WeatherRow(
                 Text(
                     modifier = GlanceModifier
                         .wrapContentSize(),
-                    text = weather.tempC.toTemperatureString(),
+                    text = weather.avgTemp.toTemperatureString(),
                     style = defaultTextStyle.copy(
                         fontSize = 16.sp,
                         color = ColorProvider(Color.Gray),
@@ -98,7 +100,7 @@ private fun WeatherRow(
                     modifier = GlanceModifier
                         .size(40.dp)
                         .background(Color.Red),
-                    provider = ImageProvider(Uri.parse(weather.conditionUrl)),
+                    provider = ImageProvider(weather.conditionUrl.toUri()),
                     contentDescription = null
                 )
             }
@@ -108,10 +110,10 @@ private fun WeatherRow(
 
 @Composable
 fun HourlyWeather(
-    weatherList: List<Weather> = listOf(defaultWeather, defaultWeather, defaultWeather, defaultWeather)
+    weatherList: List<CurrentWeather> = listOf(defaultWeather, defaultWeather, defaultWeather, defaultWeather)
 ) {
     LazyRow {
-        items(weatherList, key = { it.date.timeInMillis }) { weather ->
+        items(weatherList, key = { it.timeEpoch }) { weather ->
             Column(
                 modifier = GlanceModifier.width(50.dp).height(60.dp).padding(all = 2.dp)
             ) {
@@ -125,7 +127,7 @@ fun HourlyWeather(
                 )
                 Image(
                     modifier = GlanceModifier.size(50.dp),
-                    provider = ImageProvider(Uri.parse(weather.conditionUrl)),
+                    provider = ImageProvider(weather.conditionUrl.toUri()),
                     contentDescription = null
                 )
             }

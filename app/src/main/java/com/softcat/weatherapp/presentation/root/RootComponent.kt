@@ -8,6 +8,7 @@ import com.softcat.weatherapp.presentation.details.DetailsComponent
 import com.softcat.weatherapp.presentation.favourite.FavouritesComponent
 import com.softcat.weatherapp.presentation.hourly.HourlyWeatherComponent
 import com.softcat.weatherapp.presentation.search.SearchComponent
+import com.softcat.weatherapp.presentation.settings.SettingsComponent
 
 interface RootComponent {
 
@@ -25,5 +26,7 @@ interface RootComponent {
         data class HourlyWeather(val component: HourlyWeatherComponent): Child
 
         data class Authorization(val component: AuthorizationComponent): Child
+
+        data class Settings(val component: SettingsComponent): Child
     }
 }

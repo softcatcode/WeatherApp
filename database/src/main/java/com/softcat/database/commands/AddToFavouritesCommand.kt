@@ -3,7 +3,7 @@ package com.softcat.database.commands
 import com.softcat.database.managers.remote.favourites.FavouritesManager
 
 class AddToFavouritesCommand(
-    private val userId: Int,
+    private val userId: String,
     private val cityId: Int,
     private val favouritesManager: FavouritesManager
 ): Command {

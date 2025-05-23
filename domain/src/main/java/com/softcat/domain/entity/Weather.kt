@@ -6,16 +6,17 @@ import java.util.Calendar
 
 @Parcelize
 data class Weather(
-    val type: WeatherType,
-    val tempC: Float,
-    val feelsLike: Float,
+    val avgTemp: Float,
+    val conditionCode: Int,
     val conditionText: String,
     val conditionUrl: String,
     val date: Calendar,
     val formattedDate: String,
-    val humidity: Float,
-    val windSpeed: Float,
-    val snowVolume: Float,
-    val precipitations: Float,
-    val astrologicalParams: AstrologicalParameters?
+    val vision: Float,
+    val humidity: Int,
+    val windSpeed: Int,
+    val snowVolume: Int,
+    val precipitations: Int,
+    val astrologicalParams: AstrologicalParameters,
+    val rainChance: Int,
 ): Parcelable

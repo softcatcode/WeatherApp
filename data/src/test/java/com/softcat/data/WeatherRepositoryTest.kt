@@ -2,8 +2,8 @@ package com.softcat.data
 
 import com.softcat.data.implementations.WeatherRepositoryImpl
 import com.softcat.data.mapper.toCalendar
-import com.softcat.data.network.dto.DayDto
-import com.softcat.data.network.dto.WeatherDto
+import com.softcat.data.network.dto.ForecastDayDto
+import com.softcat.data.network.dto.CurrentWeatherDto
 import com.softcat.data.objectMocks.apiServiceMock
 import com.softcat.data.objectMocks.currentWeatherDto
 import com.softcat.data.objectMocks.setupApiServiceMock
@@ -30,7 +30,7 @@ class WeatherRepositoryTest {
         setupApiServiceMock()
     }
 
-    private fun checkWeatherDtoConversion(result: Weather, real: WeatherDto) {
+    private fun checkWeatherDtoConversion(result: Weather, real: CurrentWeatherDto) {
         with (real) {
             assert(result.conditionText == condition.description)
             checkUrlConversion(result.conditionUrl, condition.iconUrl)
@@ -44,7 +44,7 @@ class WeatherRepositoryTest {
         }
     }
 
-    private fun checkHourlyWeatherConversion(result: List<Weather>, real: List<WeatherDto>) {
+    private fun checkHourlyWeatherConversion(result: List<Weather>, real: List<CurrentWeatherDto>) {
         assert(result.size == real.size)
         for (i in 0 until result.size) {
             checkWeatherDtoConversion(result[i], real[i])
@@ -57,8 +57,8 @@ class WeatherRepositoryTest {
         assert(tmp == initial)
     }
 
-    private fun checkDayDtoConversion(weather: Weather, dayDto: DayDto) {
-        with (dayDto.weather) {
+    private fun checkDayDtoConversion(weather: Weather, forecastDayDto: ForecastDayDto) {
+        with (forecastDayDto.weather) {
             assert(weather.tempC == tempC)
             assert(weather.feelsLike == feelsLike)
             assert(weather.windSpeed == windSpeed)
@@ -69,9 +69,9 @@ class WeatherRepositoryTest {
             assert(weather.conditionText == condition.description)
             assert(weather.type == weatherTypeOf(condition.code))
         }
-        assert(weather.formattedDate == dayDto.formattedDate)
-        assert(weather.date == dayDto.date.toCalendar())
-        with (dayDto.astrologicalParams) {
+        assert(weather.formattedDate == forecastDayDto.formattedDate)
+        assert(weather.date == forecastDayDto.date.toCalendar())
+        with (forecastDayDto.astrologicalParams) {
             assert(weather.astrologicalParams?.sunsetTime == sunsetTime)
             assert(weather.astrologicalParams?.sunriseTime == sunriseTime)
             assert(weather.astrologicalParams?.moonsetTime == moonsetTime)

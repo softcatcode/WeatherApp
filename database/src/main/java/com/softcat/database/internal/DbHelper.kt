@@ -20,6 +20,9 @@ class DbHelper @Inject constructor(
         with (db) {
             execSQL(CreateQueries.CREATE_COUNTRIES)
             execSQL(CreateQueries.CREATE_CITIES)
+            execSQL(CreateQueries.CREATE_WEATHER_TYPES)
+            execSQL(CreateQueries.CREATE_WEATHER)
+            execSQL(CreateQueries.CREATE_CURRENT_WEATHER)
         }
     }
 
@@ -27,6 +30,9 @@ class DbHelper @Inject constructor(
         with (db) {
             execSQL(DeleteQueries.DROP_CITIES)
             execSQL(DeleteQueries.DROP_COUNTRIES)
+            execSQL(DeleteQueries.DROP_WEATHER_TYPES)
+            execSQL(DeleteQueries.DROP_CURRENT_WEATHER)
+            execSQL(DeleteQueries.DROP_WEATHER)
         }
     }
 
@@ -40,7 +46,6 @@ class DbHelper @Inject constructor(
             dropTables(it)
             createTables(it)
         }
-        db?.execSQL(DeleteQueries.DROP_DATABASE)
         onCreate(db)
     }
 }

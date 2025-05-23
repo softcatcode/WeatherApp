@@ -47,12 +47,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.softcat.data.mapper.toCalendar
 import com.softcat.domain.entity.Forecast
 import com.softcat.domain.entity.Weather
 import com.softcat.domain.entity.WeatherParameters.Companion.MAX_TEMPERATURE
@@ -64,7 +64,6 @@ import com.softcat.weatherapp.presentation.extensions.toTemperatureString
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
 import com.softcat.weatherapp.presentation.utils.ErrorDialog
-import com.softcat.weatherapp.presentation.utils.defaultWeather
 
 @Composable
 private fun Initial() {
@@ -107,7 +106,7 @@ private fun Loaded(
     ) {
         Spacer(Modifier.weight(1f))
         Text(
-            text = forecast.weather.conditionText,
+            text = forecast.weather?.conditionText.orEmpty(),
             style = MaterialTheme.typography.titleLarge
         )
         Row(
@@ -115,22 +114,22 @@ private fun Loaded(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = forecast.weather.tempC.toTemperatureString(),
+                text = forecast.weather?.tempC?.toTemperatureString().orEmpty(),
                 style = MaterialTheme.typography.headlineLarge.copy(fontSize = 70.sp)
             )
             GlideImage(
                 modifier = Modifier.size(70.dp),
-                model = forecast.weather.conditionUrl,
+                model = forecast.weather?.conditionUrl,
                 contentDescription = null
             )
         }
         Text(
-            text = forecast.weather.date.formattedFullDate(),
+            text = forecast.weather?.timeEpoch?.toCalendar()?.formattedFullDate().orEmpty(),
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(Modifier.weight(1f))
         AnimatedUpcomingWeatherContainer(
-            daysWeather = forecast.upcoming,
+            daysWeather = forecast.upcoming.orEmpty(),
             onWeatherItemClicked = onWeatherItemClicked
         )
         Spacer(Modifier.weight(0.5f))
@@ -204,9 +203,8 @@ private fun AnimatedUpcomingWeatherContainer(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-@Preview
 private fun SmallWeatherCard(
-    weather: Weather = defaultWeather,
+    weather: Weather,
     onClick: () -> Unit = {},
     isForCurrentDay: Boolean = false
 ) {
@@ -233,7 +231,7 @@ private fun SmallWeatherCard(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = weather.tempC.toTemperatureString(),
+                text = weather.avgTemp.toTemperatureString(),
                 color = Color.Black
             )
             GlideImage(
@@ -300,7 +298,7 @@ private fun TopBar(
 private fun getBackgroundGradient(state: DetailsStore.State): Brush {
     val forecastState = state.forecastState
     return if (forecastState is DetailsStore.State.ForecastState.Loaded) {
-        val t = forecastState.forecast.weather.tempC
+        val t = forecastState.forecast.weather?.tempC ?: 0f
         val r: Float = 1f / (MAX_TEMPERATURE - MIN_TEMPERATURE) * 0.8f * (t - MIN_TEMPERATURE)
         val b = 1f - r
         val firstColor = Color(r, 0f, b)

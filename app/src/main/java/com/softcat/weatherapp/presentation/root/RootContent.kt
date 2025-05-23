@@ -8,6 +8,7 @@ import com.softcat.weatherapp.presentation.details.DetailsContent
 import com.softcat.weatherapp.presentation.favourite.FavouritesContent
 import com.softcat.weatherapp.presentation.hourly.HourlyWeatherContent
 import com.softcat.weatherapp.presentation.search.SearchContent
+import com.softcat.weatherapp.presentation.settings.SettingsScreen
 import com.softcat.weatherapp.presentation.ui.theme.WeatherAppTheme
 
 @Composable
@@ -21,6 +22,7 @@ fun RootContent(component: RootComponent) {
                 is RootComponent.Child.Calendar -> CalendarContent(instance.component)
                 is RootComponent.Child.HourlyWeather -> HourlyWeatherContent(instance.component)
                 is RootComponent.Child.Authorization -> AuthorizationScreen(instance.component)
+                is RootComponent.Child.Settings -> SettingsScreen(instance.component)
             }
         }
     }

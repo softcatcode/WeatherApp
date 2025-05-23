@@ -4,15 +4,14 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.database.database
 import com.google.gson.Gson
-import com.softcat.database.exceptions.UserExistsException
 import com.softcat.database.exceptions.UserVerificationException
 import com.softcat.database.internal.DatabaseRules
 import com.softcat.database.mapper.userDbModel
 import com.softcat.database.model.UserDbModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
-import kotlin.math.max
 
 class UsersManagerImpl @Inject constructor(): UsersManager {
 
@@ -23,17 +22,29 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
         Firebase.database.getReference(DatabaseRules.USERS_TABLE_NAME)
     }
 
-    private suspend fun updateUsers(newUserList: List<UserDbModel>) {
-        withTimeout(DatabaseRules.TIMEOUT) {
+    private fun UserDbModel.formatUser(id: String) = copy(
+        id = id,
+        name = "\"$name\""
+    )
+
+    private suspend fun saveUser(user: UserDbModel): String {
+        return withTimeout(DatabaseRules.TIMEOUT) {
+            val reference = usersRef.push()
+            val userId = reference.key.toString()
+            val newUser = user.formatUser(userId)
+
             var flag = true
-            usersRef.setValue(newUserList).addOnSuccessListener {
+            reference.setValue(newUser).addOnSuccessListener {
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
             }
+            userId
         }
     }
 
@@ -43,7 +54,9 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
             auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
@@ -64,7 +77,9 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
                 }
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
@@ -73,20 +88,16 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
         }
     }
 
-    private fun getMaxId(users: List<UserDbModel>): Int {
-        var res = 0
-        users.forEach { res = max(res, it.id) }
-        return res
-    }
-
-    private suspend fun createFavouriteCitiesEntry(userId: Int) {
+    private suspend fun createFavouriteCitiesEntry(userId: String) {
         withTimeout(DatabaseRules.TIMEOUT) {
-            val reference = Firebase.database.getReference(userId.toString())
+            val reference = Firebase.database.getReference(userId)
             var flag = true
             reference.setValue(emptyList<Int>()).addOnSuccessListener {
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
@@ -95,33 +106,16 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
     }
 
     override suspend fun signIn(name: String, email: String, password: String): Result<UserDbModel> {
-        val users: List<UserDbModel>
-        try {
-            users = loadUserList()
-        } catch (e: Exception) {
-            return Result.failure(e)
-        }
-        users.find { it.name == name }?.let {
-            return Result.failure(UserExistsException(name))
-        }
-        val newUserId = getMaxId(users) + 1
-        try {
-            createFavouriteCitiesEntry(newUserId)
+        return try {
             registerUser(email, password)
+            val user = userDbModel(name, email, password)
+            val generatedId = saveUser(user)
+            createFavouriteCitiesEntry(generatedId)
+            Result.success(user.copy(id = generatedId))
         } catch (e: Exception) {
-            return Result.failure(e)
+            auth.signOut()
+            Result.failure(e)
         }
-
-        val userModel = userDbModel(newUserId, name, email, password)
-        val newUserList = users.toMutableList().apply {
-            add(userModel)
-        }
-        try {
-            updateUsers(newUserList)
-        } catch (e: Exception) {
-            return Result.failure(e)
-        }
-        return Result.success(userModel)
     }
 
     override suspend fun logIn(name: String, password: String): Result<UserDbModel> {

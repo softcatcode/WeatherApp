@@ -50,6 +50,7 @@
 
     <string name="meters_per_second">м/с</string>
     <string name="millimeters">мм</string>
+    <string name="centimeters">см</string>
 
     <string name="login">имя пользователя</string>
     <string name="password">пароль</string>
