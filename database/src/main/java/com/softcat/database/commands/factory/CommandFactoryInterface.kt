@@ -25,7 +25,7 @@ import com.softcat.database.model.WeatherTypeDbModel
 interface CommandFactoryInterface {
     fun createUserCommand(name: String, email: String, password: String): CreateUserCommand
 
-    fun getFavouriteCitiesCommand(userId: Int): GetFavouriteCitiesCommand
+    fun getFavouriteCitiesCommand(userId: String): GetFavouriteCitiesCommand
 
     fun addCountryCommand(country: CountryDbModel): AddCountryCommand
 
@@ -37,11 +37,11 @@ interface CommandFactoryInterface {
 
     fun verifyUserCommand(name: String, password: String): VerifyUserCommand
 
-    fun addToFavouriteCommand(userId: Int, cityId: Int): AddToFavouritesCommand
+    fun addToFavouriteCommand(userId: String, cityId: Int): AddToFavouritesCommand
 
-    fun removeFromFavouriteCommand(userId: Int, cityId: Int): RemoveFromFavouritesCommand
+    fun removeFromFavouriteCommand(userId: String, cityId: Int): RemoveFromFavouritesCommand
 
-    fun isFavouriteCommand(userId: Int, cityId: Int): IsFavouriteCommand
+    fun isFavouriteCommand(userId: String, cityId: Int): IsFavouriteCommand
 
     fun addWeatherCommand(model: WeatherDbModel): AddWeatherCommand
 

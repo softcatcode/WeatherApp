@@ -43,7 +43,7 @@ class CommandFactory @Inject constructor(
         )
     }
 
-    override fun getFavouriteCitiesCommand(userId: Int): GetFavouriteCitiesCommand {
+    override fun getFavouriteCitiesCommand(userId: String): GetFavouriteCitiesCommand {
         return GetFavouriteCitiesCommand(
             userId,
             favouritesManager,
@@ -65,15 +65,18 @@ class CommandFactory @Inject constructor(
         return VerifyUserCommand(name, password, usersManager)
     }
 
-    override fun addToFavouriteCommand(userId: Int, cityId: Int): AddToFavouritesCommand {
+    override fun addToFavouriteCommand(userId: String, cityId: Int): AddToFavouritesCommand {
         return AddToFavouritesCommand(userId, cityId, favouritesManager)
     }
 
-    override fun removeFromFavouriteCommand(userId: Int, cityId: Int): RemoveFromFavouritesCommand {
+    override fun removeFromFavouriteCommand(
+        userId: String,
+        cityId: Int
+    ): RemoveFromFavouritesCommand {
         return RemoveFromFavouritesCommand(userId, cityId, favouritesManager)
     }
 
-    override fun isFavouriteCommand(userId: Int, cityId: Int): IsFavouriteCommand {
+    override fun isFavouriteCommand(userId: String, cityId: Int): IsFavouriteCommand {
         return IsFavouriteCommand(userId, cityId, favouritesManager)
     }
 

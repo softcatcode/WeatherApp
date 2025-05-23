@@ -26,7 +26,7 @@ class DatabaseFacadeImpl @Inject constructor(
         return cmd.result ?: Result.failure(NoCommandResultException())
     }
 
-    override suspend fun addToFavourites(userId: Int, cityId: Int): Result<Unit> {
+    override suspend fun addToFavourites(userId: String, cityId: Int): Result<Unit> {
         val cmd = factory.addToFavouriteCommand(userId, cityId)
         cmd.execute()
         return cmd.result ?: Result.failure(NoCommandResultException())
@@ -44,13 +44,13 @@ class DatabaseFacadeImpl @Inject constructor(
         return cmd.result ?: Result.failure(NoCommandResultException())
     }
 
-    override suspend fun removeFromFavourites(userId: Int, cityId: Int): Result<Unit> {
+    override suspend fun removeFromFavourites(userId: String, cityId: Int): Result<Unit> {
         val cmd = factory.removeFromFavouriteCommand(userId, cityId)
         cmd.execute()
         return cmd.result ?: Result.failure(NoCommandResultException())
     }
 
-    override suspend fun getFavouriteCities(userId: Int): Result<List<CityDbModel>> {
+    override suspend fun getFavouriteCities(userId: String): Result<List<CityDbModel>> {
         val cmd = factory.getFavouriteCitiesCommand(userId)
         cmd.execute()
         return cmd.result ?: Result.failure(NoCommandResultException())
@@ -68,7 +68,7 @@ class DatabaseFacadeImpl @Inject constructor(
         return cmd.result ?: Result.failure(NoCommandResultException())
     }
 
-    override suspend fun isFavourite(userId: Int, cityId: Int): Result<Boolean> {
+    override suspend fun isFavourite(userId: String, cityId: Int): Result<Boolean> {
         val cmd = factory.isFavouriteCommand(userId, cityId)
         cmd.execute()
         return cmd.result ?: Result.failure(NoCommandResultException())

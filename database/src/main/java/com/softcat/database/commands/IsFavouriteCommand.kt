@@ -4,7 +4,7 @@ import com.softcat.database.exceptions.NoDelayCommandException
 import com.softcat.database.managers.remote.favourites.FavouritesManager
 
 class IsFavouriteCommand(
-    private val userId: Int,
+    private val userId: String,
     private val cityId: Int,
     private val favouritesManager: FavouritesManager
 ): Command {

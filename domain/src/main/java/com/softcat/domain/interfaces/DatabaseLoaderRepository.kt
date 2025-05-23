@@ -12,9 +12,9 @@ interface DatabaseLoaderRepository {
 
     fun updateForecastData(cityId: Int, forecast: Forecast)
 
-    fun updateHourlyWeatherData(cityId: Int, hourlyWeather: List<CurrentWeather>)
+    suspend fun updateHourlyWeatherData(cityId: Int, hourlyWeather: List<CurrentWeather>)
 
-    fun updateDayWeatherData(cityId: Int, daysWeather: List<Weather>)
+    suspend fun updateDayWeatherData(cityId: Int, daysWeather: List<Weather>)
 
     suspend fun loadWeatherTypesToDatabase(): Result<Unit>
 }

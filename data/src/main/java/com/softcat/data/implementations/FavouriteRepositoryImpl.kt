@@ -14,7 +14,7 @@ import javax.inject.Inject
 class FavouriteRepositoryImpl @Inject constructor(
     private val database: DatabaseFacade
 ) : FavouriteRepository {
-    private var selectedUserAndCity: Pair<Int, Int>? = null
+    private var selectedUserAndCity: Pair<String, Int>? = null
     private val isFavouriteUpdate = MutableSharedFlow<Unit>(replay = 1)
 
     private suspend fun isFavourite(): Boolean {
@@ -28,7 +28,7 @@ class FavouriteRepositoryImpl @Inject constructor(
         return false
     }
 
-    override fun observeIsFavourite(userId: Int, cityId: Int): Flow<Boolean> {
+    override fun observeIsFavourite(userId: String, cityId: Int): Flow<Boolean> {
         Timber.i("${this::class.simpleName}.observeIsFavourite($userId, $cityId)")
         selectedUserAndCity = userId to cityId
         return flow {
@@ -39,7 +39,7 @@ class FavouriteRepositoryImpl @Inject constructor(
         }
     }
 
-    private var selectedUser: Int? = null
+    private var selectedUser: String? = null
     private val favouriteCitiesUpdate = MutableSharedFlow<Unit>(replay = 1)
 
     private suspend fun loadFavouriteCities(): List<City> {
@@ -54,7 +54,7 @@ class FavouriteRepositoryImpl @Inject constructor(
         return emptyList()
     }
 
-    override fun getFavouriteCities(userId: Int): Flow<List<City>> {
+    override fun getFavouriteCities(userId: String): Flow<List<City>> {
         Timber.i("${this::class.simpleName}.getFavouriteCitiesIds($userId)")
         selectedUser = userId
         return flow {
@@ -65,7 +65,7 @@ class FavouriteRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun addToFavourite(userId: Int, city: City) {
+    override suspend fun addToFavourite(userId: String, city: City) {
         Timber.i("${this::class.simpleName}.addToFavourites($userId, $city)")
         val countryModel = CountryDbModel(name = city.country)
         database.saveCountry(countryModel)
@@ -74,7 +74,7 @@ class FavouriteRepositoryImpl @Inject constructor(
         favouriteCitiesUpdate.emit(Unit)
     }
 
-    override suspend fun removeFromFavourite(userId: Int, cityId: Int) {
+    override suspend fun removeFromFavourite(userId: String, cityId: Int) {
         Timber.i("${this::class.simpleName}.removeFromFavourite($userId, $cityId)")
         database.removeFromFavourites(userId, cityId)
         isFavouriteUpdate.emit(Unit)

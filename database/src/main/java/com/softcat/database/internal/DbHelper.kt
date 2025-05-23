@@ -46,7 +46,6 @@ class DbHelper @Inject constructor(
             dropTables(it)
             createTables(it)
         }
-        db?.execSQL(DeleteQueries.DROP_DATABASE)
         onCreate(db)
     }
 }

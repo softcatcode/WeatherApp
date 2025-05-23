@@ -6,7 +6,7 @@ import com.softcat.database.managers.remote.favourites.FavouritesManager
 import com.softcat.database.model.CityDbModel
 
 class GetFavouriteCitiesCommand(
-    private val userId: Int,
+    private val userId: String,
     private val favouritesManager: FavouritesManager,
     private val managerFactory: ManagerFactoryInterface
 ): Command {

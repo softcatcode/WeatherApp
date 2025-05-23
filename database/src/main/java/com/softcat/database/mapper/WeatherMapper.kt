@@ -22,7 +22,7 @@ fun WeatherTypeInfo.toDbModel(bytes: ByteArray?) = WeatherTypeDbModel(
 
 fun Weather.toDbModel(cityId: Int) = WeatherDbModel(
     id = WeatherDbModel.UNSPECIFIED_ID,
-    timeEpoch = date.timeInMillis,
+    timeEpoch = date.timeInMillis / 1000L,
     cityId = cityId,
     type = conditionCode,
     avgTemp = avgTemp,
@@ -82,12 +82,12 @@ fun CurrentWeatherDbModel.toEntity(weatherType: WeatherTypeDbModel) = CurrentWea
 )
 
 private fun Long.toCalendar() = Calendar.getInstance().apply {
-    time = Date(this@toCalendar)
+    time = Date(this@toCalendar * 1000)
 }
 
 private fun Long.toFormattedDate(): String {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    return dateFormat.format(Date(this))
+    return dateFormat.format(Date(this * 1000))
 }
 
 fun WeatherDbModel.toEntity(weatherType: WeatherTypeDbModel) = Weather(

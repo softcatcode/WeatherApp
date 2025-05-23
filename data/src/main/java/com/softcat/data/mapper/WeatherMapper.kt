@@ -85,7 +85,7 @@ private fun String.correctIconUrl() = "https:$this".replace("64x64", "128x128")
 fun toIconUrl(iconCode: Int) = "https://cdn.weatherapi.com/weather/128x128/day/$iconCode.png"
 
 fun WeatherTypeInfoDto.toEntity(): WeatherTypeInfo {
-    val language = Locale.getDefault().toLanguageTag()
+    val language = Locale.getDefault().language
     val languageDto = languages.find { it.label == language } ?: languages.find { it.label == "en" }
     return WeatherTypeInfo(
         code = code,

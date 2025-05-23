@@ -2,11 +2,11 @@ package com.softcat.database.managers.remote.favourites
 
 interface FavouritesManager {
 
-    suspend fun addToFavourites(userId: Int, cityId: Int): Result<Unit>
+    suspend fun addToFavourites(userId: String, cityId: Int): Result<Unit>
 
-    suspend fun removeFromFavourites(userId: Int, cityId: Int): Result<Unit>
+    suspend fun removeFromFavourites(userId: String, cityId: Int): Result<Unit>
 
-    suspend fun getFavouriteCitiesIds(userId: Int): Result<List<Int>>
+    suspend fun getFavouriteCitiesIds(userId: String): Result<List<Int>>
 
-    suspend fun isFavourite(userId: Int, cityId: Int): Result<Boolean>
+    suspend fun isFavourite(userId: String, cityId: Int): Result<Boolean>
 }

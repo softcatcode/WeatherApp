@@ -17,7 +17,7 @@ internal object GetDataQueries {
 
     const val GET_WEATHER = """
         select * from $WEATHER_TABLE_NAME
-        where cityId = %d and timeEpoch in %d and %d;
+        where cityId = %d and timeEpoch between %d and %d;
     """
 
     const val GET_CURRENT_WEATHER = """

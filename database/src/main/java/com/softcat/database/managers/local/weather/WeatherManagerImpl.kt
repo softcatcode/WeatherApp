@@ -16,8 +16,11 @@ class WeatherManagerImpl @Inject constructor(
 ): WeatherManager {
 
     override fun addWeather(model: WeatherDbModel): Result<Unit> {
-        return try {
+        try {
             executor.deleteWeather(model.cityId, model.timeEpoch)
+        } catch (_: Exception) {}
+
+        return try {
             executor.insertWeather(model)
             Result.success(Unit)
         } catch (e: Exception) {
@@ -26,8 +29,11 @@ class WeatherManagerImpl @Inject constructor(
     }
 
     override fun addHourlyWeather(model: CurrentWeatherDbModel): Result<Unit> {
+        try {
+            executor.deleteCurrentWeather(model.cityId, model.timeEpoch)
+        } catch (_: Exception) {}
+
         return try {
-            executor.deleteWeather(model.cityId, model.timeEpoch)
             executor.insertCurrentWeather(model)
             Result.success(Unit)
         } catch (e: Exception) {
@@ -63,12 +69,11 @@ class WeatherManagerImpl @Inject constructor(
         dayTimeEpoch: Long
     ): Result<List<CurrentWeatherDbModel>> {
         return try {
-            val calendar = Calendar.getInstance().apply {
-                time = Date(dayTimeEpoch)
-                set(Calendar.MILLISECONDS_IN_DAY, 0)
+            val dayEndTime = Calendar.getInstance().apply {
+                time = Date(dayTimeEpoch * 1000)
                 add(Calendar.DATE, 1)
-            }
-            val cursor = executor.getCurrentWeather(cityId, dayTimeEpoch, calendar.timeInMillis)
+            }.timeInMillis / 1000L
+            val cursor = executor.getCurrentWeather(cityId, dayTimeEpoch, dayEndTime)
             val result = toCurrentWeatherList(cursor)
             Result.success(result)
         } catch (e: Exception) {

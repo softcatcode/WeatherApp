@@ -7,6 +7,7 @@ import com.softcat.database.internal.DatabaseRules
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
@@ -34,7 +35,9 @@ class RegionManagerRemoteImpl @Inject constructor(): RegionManager {
                 }
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
@@ -57,7 +60,9 @@ class RegionManagerRemoteImpl @Inject constructor(): RegionManager {
                 }
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
@@ -93,7 +98,9 @@ class RegionManagerRemoteImpl @Inject constructor(): RegionManager {
             citiesStorage.setValue(cities).addOnSuccessListener {
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
@@ -107,7 +114,9 @@ class RegionManagerRemoteImpl @Inject constructor(): RegionManager {
             countriesStorage.setValue(countries).addOnSuccessListener {
                 flag = false
             }.addOnFailureListener {
-                throw it
+                if (isActive)
+                    throw it
+                flag = false
             }
             while (flag) {
                 delay(1L)
