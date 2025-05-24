@@ -9,7 +9,7 @@ import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 
-fun toCitiesModels(cursor: Cursor): List<CityDbModel> {
+fun toCityModels(cursor: Cursor): List<CityDbModel> {
     val cities = mutableListOf<CityDbModel>()
     cursor.use {
         while (it.moveToNext()) {

@@ -14,7 +14,7 @@ import com.softcat.database.internal.queries.InsertQueries.INSERT_CITY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_COUNTRY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_CURRENT_WEATHER
 import com.softcat.database.internal.queries.InsertQueries.INSERT_WEATHER
-import com.softcat.database.mapper.toWeatherList
+import com.softcat.database.mapper.toCityModels
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
@@ -32,6 +32,11 @@ class SQLiteExecutor @Inject constructor(
 
     override fun getCountries(): Cursor {
         return dbHelper.readableDatabase.rawQuery(GetDataQueries.GET_COUNTRIES, null)
+    }
+
+    override fun getCountryId(name: String): Cursor {
+        val query = GetDataQueries.GET_COUNTRY_ID.format(name)
+        return dbHelper.readableDatabase.rawQuery(query, null)
     }
 
     override fun getCity(id: Int): Cursor {

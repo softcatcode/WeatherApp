@@ -12,6 +12,8 @@ interface SQLiteInterface {
 
     fun getCountries(): Cursor
 
+    fun getCountryId(name: String): Cursor
+
     fun getCity(id: Int): Cursor
 
     fun insertCountry(model: CountryDbModel): Cursor

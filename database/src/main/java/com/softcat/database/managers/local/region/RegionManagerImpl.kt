@@ -2,7 +2,7 @@ package com.softcat.database.managers.local.region
 
 import com.softcat.database.exceptions.DuplicateCountryException
 import com.softcat.database.internal.sqlExecutor.SQLiteExecutor
-import com.softcat.database.mapper.toCitiesModels
+import com.softcat.database.mapper.toCityModels
 import com.softcat.database.mapper.toCountriesModels
 import com.softcat.database.mapper.toInt
 import com.softcat.database.model.CityDbModel
@@ -17,7 +17,7 @@ class RegionManagerImpl @Inject constructor(
         return try {
             val result = ids.mapNotNull { cityId ->
                 val cursor = executor.getCity(cityId)
-                toCitiesModels(cursor).firstOrNull()
+                toCityModels(cursor).firstOrNull()
             }
             Result.success(result)
         } catch (e: Exception) {
@@ -61,7 +61,8 @@ class RegionManagerImpl @Inject constructor(
                 val id = toInt(executor.insertCountry(country))
                 Result.success(id)
             } else {
-                Result.failure(DuplicateCountryException(country.name))
+                val id = toInt(executor.getCountryId(country.name))
+                Result.success(id)
             }
         } catch (e: Exception) {
             return Result.failure(e)
