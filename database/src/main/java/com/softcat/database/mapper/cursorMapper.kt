@@ -6,6 +6,7 @@ import androidx.core.database.getIntOrNull
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.PlotDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 
@@ -110,6 +111,21 @@ fun toWeatherType(cursor: Cursor): WeatherTypeDbModel {
             nightDescription = getString(2),
             url = getString(3),
             iconBytes = getBlobOrNull(4)
+        )
+    }
+}
+
+fun toPlot(cursor: Cursor): PlotDbModel {
+    cursor.moveToNext()
+    return with (cursor) {
+        PlotDbModel(
+            id = getInt(0),
+            parameter = getString(1),
+            values = getString(2),
+            time = getString(3),
+            cityId = getInt(4),
+            authorId = getString(5),
+            description = getString(6)
         )
     }
 }

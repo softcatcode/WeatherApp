@@ -3,6 +3,7 @@ package com.softcat.database.internal.queries
 import com.softcat.database.internal.DatabaseRules.CITIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.COUNTRIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.CURRENT_WEATHER_TABLE_NAME
+import com.softcat.database.internal.DatabaseRules.PLOT_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.WEATHER_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.WEATHER_TYPE_TABLE_NAME
 
@@ -81,6 +82,20 @@ internal object CreateQueries {
             
             foreign key (cityId) references $CITIES_TABLE_NAME(id),
             foreign key (type) references $WEATHER_TYPE_TABLE_NAME(id)
+        );
+    """
+
+    const val CREATE_PLOT_TABLE = """
+        create table if not exists $PLOT_TABLE_NAME(
+            id Integer not null primary key AUTOINCREMENT,
+            parameter Text not null,
+            values Text not null,
+            time Text not null,
+            cityId Integer not null,
+            authorId Text not null,
+            description Text,
+            
+            foreign key (cityId) references $CITIES_TABLE_NAME(id)
         );
     """
 }
