@@ -16,7 +16,7 @@ internal object DeleteQueries {
 
     const val DELETE_COUNTRY = "delete from $COUNTRIES_TABLE_NAME where id = %d;"
 
-    const val DROP_PLOTS = "drop table if exists $PLOT_TABLE_NAME$;"
+    const val DROP_PLOTS = "drop table if exists $PLOT_TABLE_NAME;"
 
     const val DELETE_CITY = "delete from $CITIES_TABLE_NAME where id = %d;"
 
