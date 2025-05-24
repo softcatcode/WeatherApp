@@ -9,7 +9,7 @@ import com.softcat.database.model.WeatherTypeDbModel
 
 interface DatabaseFacade {
 
-    suspend fun createUser(login: String, email: String, password: String): Result<UserDbModel>
+    suspend fun createUser(user: UserDbModel): Result<UserDbModel>
 
     suspend fun verifyUser(name: String, password: String): Result<UserDbModel>
 

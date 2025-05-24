@@ -5,21 +5,21 @@ import com.softcat.data.network.dto.CurrentWeatherResponse
 import com.softcat.data.network.dto.CurrentWeatherDto
 import com.softcat.data.network.dto.WeatherForecastDto
 import com.softcat.data.network.dto.WeatherTypeInfoDto
+import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.WeatherDbModel
+import com.softcat.database.model.WeatherTypeDbModel
 import com.softcat.domain.entity.AstrologicalParameters
 import com.softcat.domain.entity.CurrentWeather
 import com.softcat.domain.entity.Forecast
 import com.softcat.domain.entity.Weather
 import com.softcat.domain.entity.WeatherTypeInfo
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
 
 fun CurrentWeatherResponse.toEntity() = value.toEntity(location.localtimeEpoch)
-
-fun Long.toCalendar(): Calendar = Calendar.getInstance().apply {
-    time = Date(this@toCalendar * 1000)
-}
 
 private fun String.hour12ToTimeEpoch(): Long {
     val i = indexOfFirst { it == ':' }
@@ -108,3 +108,95 @@ fun WeatherTypeInfoDto.toEntity(): WeatherTypeInfo {
         iconUrl = toIconUrl(iconCode),
     )
 }
+
+fun WeatherTypeInfo.toDbModel(bytes: ByteArray?) = WeatherTypeDbModel(
+    code = code,
+    dayDescription = dayDescription,
+    nightDescription = nightDescription,
+    url = iconUrl,
+    iconBytes = bytes
+)
+
+fun Weather.toDbModel(cityId: Int) = WeatherDbModel(
+    id = WeatherDbModel.UNSPECIFIED_ID,
+    timeEpoch = date.timeInMillis / 1000L,
+    cityId = cityId,
+    type = conditionCode,
+    avgTemp = avgTemp,
+    humidity = humidity,
+    windSpeed = windSpeed,
+    snowVolume = snowVolume,
+    precipitations = precipitations,
+    vision = vision,
+    sunriseTime = astrologicalParams.sunriseTime,
+    sunsetTime = astrologicalParams.sunsetTime,
+    moonriseTime = astrologicalParams.moonriseTime,
+    moonsetTime = astrologicalParams.moonsetTime,
+    moonIllumination = astrologicalParams.moonIllumination,
+    moonPhase = astrologicalParams.moonPhase,
+    rainChance = rainChance,
+)
+
+fun CurrentWeather.toDbModel(cityId: Int) = CurrentWeatherDbModel(
+    id = CurrentWeatherDbModel.UNSPECIFIED_ID,
+    cityId = cityId,
+    timeEpoch = timeEpoch,
+    tempC = tempC,
+    feelsLike = feelsLike,
+    isDay = if (isDay) 1 else 0,
+    type = conditionCode,
+    windSpeed = windSpeed,
+    precipitations = precipitations,
+    snow = snow,
+    humidity = humidity,
+    cloud = cloud,
+    vision = vision,
+)
+
+fun CurrentWeatherDbModel.toEntity(weatherType: WeatherTypeDbModel) = CurrentWeather(
+    timeEpoch = timeEpoch,
+    tempC = tempC,
+    feelsLike = feelsLike,
+    isDay = isDay == 1,
+    conditionCode = weatherType.code,
+    conditionUrl = weatherType.url,
+    conditionText = if (isDay == 1) weatherType.dayDescription else weatherType.nightDescription,
+    windSpeed = windSpeed,
+    precipitations = precipitations,
+    snow = snow,
+    humidity = humidity,
+    cloud = cloud,
+    vision = vision,
+)
+
+fun Long.toCalendar() = Calendar.getInstance().apply {
+    time = Date(this@toCalendar * 1000)
+}
+
+private fun Long.toFormattedDate(): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return dateFormat.format(Date(this * 1000))
+}
+
+fun WeatherDbModel.toEntity(weatherType: WeatherTypeDbModel) = Weather(
+    avgTemp = avgTemp,
+    conditionCode = weatherType.code,
+    conditionText = weatherType.dayDescription,
+    conditionUrl = weatherType.url,
+    date = timeEpoch.toCalendar(),
+    formattedDate = timeEpoch.toFormattedDate(),
+    vision = vision,
+    humidity = humidity,
+    windSpeed = windSpeed,
+    snowVolume = snowVolume,
+    precipitations = precipitations,
+    astrologicalParams = AstrologicalParameters(
+        sunriseTime = sunriseTime,
+        sunsetTime = sunsetTime,
+        moonriseTime = moonriseTime,
+        moonsetTime = moonsetTime,
+        moonPhase = moonPhase,
+        moonIllumination = moonIllumination,
+    ),
+    rainChance = rainChance,
+)

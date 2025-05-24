@@ -1,4 +1,4 @@
-package com.softcat.database.mapper
+package com.softcat.data.mapper
 
 import com.softcat.database.model.UserDbModel
 import com.softcat.domain.entity.User

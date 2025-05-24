@@ -19,11 +19,12 @@ import com.softcat.database.commands.VerifyUserCommand
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 
 interface CommandFactoryInterface {
-    fun createUserCommand(name: String, email: String, password: String): CreateUserCommand
+    fun createUserCommand(user: UserDbModel): CreateUserCommand
 
     fun getFavouriteCitiesCommand(userId: String): GetFavouriteCitiesCommand
 

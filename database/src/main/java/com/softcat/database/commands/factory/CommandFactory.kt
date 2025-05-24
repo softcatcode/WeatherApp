@@ -23,6 +23,7 @@ import com.softcat.database.managers.remote.user.UsersManager
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 import javax.inject.Inject
@@ -34,11 +35,9 @@ class CommandFactory @Inject constructor(
     private val weatherManager: WeatherManager,
 ): CommandFactoryInterface {
 
-    override fun createUserCommand(name: String, email: String, password: String): CreateUserCommand {
+    override fun createUserCommand(user: UserDbModel): CreateUserCommand {
         return CreateUserCommand(
-            name,
-            email,
-            password,
+            user,
             usersManager
         )
     }

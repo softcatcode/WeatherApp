@@ -6,7 +6,7 @@ interface UsersManager {
 
     suspend fun loadUserList(): List<UserDbModel>
 
-    suspend fun signIn(name: String, email: String, password: String): Result<UserDbModel>
+    suspend fun signIn(user: UserDbModel): Result<UserDbModel>
 
     suspend fun logIn(name: String, password: String): Result<UserDbModel>
 }

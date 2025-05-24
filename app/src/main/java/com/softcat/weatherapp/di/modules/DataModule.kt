@@ -20,6 +20,8 @@ import com.softcat.database.managers.remote.user.UsersManager
 import com.softcat.database.managers.remote.user.UsersManagerImpl
 import com.softcat.database.facade.DatabaseFacade
 import com.softcat.database.facade.DatabaseFacadeImpl
+import com.softcat.database.internal.CursorMapper
+import com.softcat.database.internal.CursorMapperInterface
 import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.local.region.RegionManagerImpl
 import com.softcat.database.managers.local.weather.WeatherManager
@@ -98,6 +100,10 @@ interface DataModule {
     @ApplicationScope
     @Binds
     fun bindWeatherManagerFactory(impl: WeatherManagerImpl): WeatherManager
+
+    @ApplicationScope
+    @Binds
+    fun bindCursorMapperInterface(impl: CursorMapper): CursorMapperInterface
 
     companion object {
 

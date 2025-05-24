@@ -1,4 +1,4 @@
-package com.softcat.database.mapper
+package com.softcat.data.mapper
 
 import com.google.gson.Gson
 import com.softcat.database.model.PlotDbModel

@@ -6,7 +6,6 @@ import com.google.firebase.database.database
 import com.google.gson.Gson
 import com.softcat.database.exceptions.UserVerificationException
 import com.softcat.database.internal.DatabaseRules
-import com.softcat.database.mapper.userDbModel
 import com.softcat.database.model.UserDbModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -105,10 +104,9 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
         }
     }
 
-    override suspend fun signIn(name: String, email: String, password: String): Result<UserDbModel> {
+    override suspend fun signIn(user: UserDbModel): Result<UserDbModel> {
         return try {
-            registerUser(email, password)
-            val user = userDbModel(name, email, password)
+            registerUser(user.email, user.password)
             val generatedId = saveUser(user)
             createFavouriteCitiesEntry(generatedId)
             Result.success(user.copy(id = generatedId))

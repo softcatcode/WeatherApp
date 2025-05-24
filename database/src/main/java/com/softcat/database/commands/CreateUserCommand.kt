@@ -5,9 +5,7 @@ import com.softcat.database.exceptions.NoDelayCommandException
 import com.softcat.database.model.UserDbModel
 
 class CreateUserCommand internal constructor(
-    private val name: String,
-    private val email: String,
-    private val password: String,
+    private val user: UserDbModel,
     private val usersManager: UsersManager
 ): Command {
 
@@ -15,7 +13,7 @@ class CreateUserCommand internal constructor(
         private set
 
     override suspend fun execute() {
-        result = usersManager.signIn(name, email, password)
+        result = usersManager.signIn(user)
     }
 
     override suspend fun rollback() {
