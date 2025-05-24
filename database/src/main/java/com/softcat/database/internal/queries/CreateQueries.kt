@@ -31,9 +31,9 @@ internal object CreateQueries {
     const val CREATE_WEATHER_TYPES = """
         create table if not exists $WEATHER_TYPE_TABLE_NAME(
             code Integer not null primary key,
-            dayDescription Char(100) not null,
-            nightDescription Char(100) not null,
-            url Char(100) not null,
+            dayDescription Text not null,
+            nightDescription Text not null,
+            url Text not null,
             icon Blob
         );
     """
@@ -50,12 +50,12 @@ internal object CreateQueries {
             snowVolume Integer not null,
             precipitations Integer not null,
             vision Float not null,
-            sunriseTime Char(10) not null,
-            sunsetTime String not null,
-            moonriseTime Char(10) not null,
-            moonsetTime Char(10) not null,
+            sunriseTime Integer not null,
+            sunsetTime Integer not null,
+            moonriseTime Integer not null,
+            moonsetTime Integer not null,
             moonIllumination Integer not null,
-            moonPhase Char(10) not null,
+            moonPhase Text not null,
             rainChance Integer not null,
             
             foreign key (cityId) references $CITIES_TABLE_NAME(id),

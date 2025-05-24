@@ -9,5 +9,5 @@ object DatabaseRules {
     const val CURRENT_WEATHER_TABLE_NAME = "CurrentWeather"
     const val CITIES_TABLE_NAME = "City"
     const val TIMEOUT = 5000L
-    const val VERSION = 9
+    const val VERSION = 10
 }

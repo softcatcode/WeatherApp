@@ -21,11 +21,27 @@ fun Long.toCalendar(): Calendar = Calendar.getInstance().apply {
     time = Date(this@toCalendar * 1000)
 }
 
+private fun String.hour12ToTimeEpoch(): Long {
+    val i = indexOfFirst { it == ':' }
+    val j = indexOfFirst { it == ' ' }
+    val minute = substring(i + 1, j).toInt()
+    val label = substring(j + 1)
+    val hour = substring(0, i).toInt() + if (label == "PM") 12 else 0
+
+    val time = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, hour)
+        set(Calendar.MINUTE, minute)
+        set(Calendar.SECOND, 0)
+    }.timeInMillis / 1000L
+
+    return time
+}
+
 fun AstronomicParametersDto.toEntity() = AstrologicalParameters(
-    sunriseTime = sunriseTime,
-    sunsetTime = sunsetTime,
-    moonriseTime = moonriseTime,
-    moonsetTime = moonsetTime,
+    sunriseTime = sunriseTime.hour12ToTimeEpoch(),
+    sunsetTime = sunsetTime.hour12ToTimeEpoch(),
+    moonriseTime = moonriseTime.hour12ToTimeEpoch(),
+    moonsetTime = moonsetTime.hour12ToTimeEpoch(),
     moonPhase = moonPhase,
     moonIllumination = moonIllumination
 )

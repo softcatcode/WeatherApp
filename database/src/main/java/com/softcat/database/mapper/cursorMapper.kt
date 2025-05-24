@@ -63,7 +63,7 @@ fun toCurrentWeatherList(cursor: Cursor): List<CurrentWeatherDbModel> {
                 precipitations = it.getInt(8),
                 snow = it.getIntOrNull(9),
                 humidity = it.getInt(10),
-                cloud = it.getInt(12),
+                cloud = it.getInt(11),
                 vision = it.getFloat(12),
             )
             result.add(item)
@@ -87,10 +87,10 @@ fun toWeatherList(cursor: Cursor): List<WeatherDbModel> {
                 snowVolume = it.getInt(7),
                 precipitations = it.getInt(8),
                 vision = it.getFloat(9),
-                sunriseTime = it.getString(10),
-                sunsetTime = it.getString(11),
-                moonriseTime = it.getString(12),
-                moonsetTime = it.getString(13),
+                sunriseTime = it.getLong(10),
+                sunsetTime = it.getLong(11),
+                moonriseTime = it.getLong(12),
+                moonsetTime = it.getLong(13),
                 moonIllumination = it.getInt(14),
                 moonPhase = it.getString(15),
                 rainChance = it.getInt(16)
