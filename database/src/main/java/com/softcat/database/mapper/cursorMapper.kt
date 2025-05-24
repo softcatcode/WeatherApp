@@ -92,10 +92,8 @@ fun toWeatherList(cursor: Cursor): List<WeatherDbModel> {
                 moonriseTime = it.getString(12),
                 moonsetTime = it.getString(13),
                 moonIllumination = it.getInt(14),
-                isSunUp = it.getInt(15),
-                isMoonUp = it.getInt(16),
-                moonPhase = it.getString(17),
-                rainChance = it.getInt(18)
+                moonPhase = it.getString(15),
+                rainChance = it.getInt(16)
             )
             result.add(item)
         }

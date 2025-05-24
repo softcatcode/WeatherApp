@@ -26,8 +26,6 @@ fun AstronomicParametersDto.toEntity() = AstrologicalParameters(
     sunsetTime = sunsetTime,
     moonriseTime = moonriseTime,
     moonsetTime = moonsetTime,
-    isSunUp = isSunUp == 1,
-    isMoonUp = isMoonUp == 1,
     moonPhase = moonPhase,
     moonIllumination = moonIllumination
 )

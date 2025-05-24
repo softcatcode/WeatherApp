@@ -1,8 +1,6 @@
 package com.softcat.domain.useCases
 
 import com.softcat.domain.entity.CurrentWeather
-import com.softcat.domain.entity.Weather
-import com.softcat.domain.interfaces.DatabaseLoaderRepository
 import com.softcat.domain.interfaces.WeatherRepository
 import timber.log.Timber
 import javax.inject.Inject

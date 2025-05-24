@@ -3,12 +3,11 @@ package com.softcat.database.internal.queries
 import com.softcat.database.internal.DatabaseRules.CITIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.COUNTRIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.CURRENT_WEATHER_TABLE_NAME
-import com.softcat.database.internal.DatabaseRules.DATABASE_NAME
 import com.softcat.database.internal.DatabaseRules.WEATHER_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.WEATHER_TYPE_TABLE_NAME
 
 internal object DeleteQueries {
-    const val DROP_DATABASE = "drop database if exists $DATABASE_NAME;"
+    //const val DROP_DATABASE = "drop database if exists $DATABASE_NAME;"
 
     const val DROP_COUNTRIES = "drop table $COUNTRIES_TABLE_NAME;"
 

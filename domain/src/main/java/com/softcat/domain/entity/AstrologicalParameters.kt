@@ -11,6 +11,4 @@ class AstrologicalParameters(
     val moonsetTime: String,
     val moonPhase: String,
     val moonIllumination: Int,
-    val isSunUp: Boolean,
-    val isMoonUp: Boolean
 ): Parcelable

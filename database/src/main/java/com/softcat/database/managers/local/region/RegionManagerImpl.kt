@@ -1,6 +1,5 @@
 package com.softcat.database.managers.local.region
 
-import com.softcat.database.exceptions.DuplicateCountryException
 import com.softcat.database.internal.sqlExecutor.SQLiteExecutor
 import com.softcat.database.mapper.toCityModels
 import com.softcat.database.mapper.toCountriesModels

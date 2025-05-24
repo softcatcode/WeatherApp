@@ -55,8 +55,6 @@ internal object CreateQueries {
             moonriseTime Char(10) not null,
             moonsetTime Char(10) not null,
             moonIllumination Integer not null,
-            isSunUp Integer not null,
-            isMoonUp Integer not null,
             moonPhase Char(10) not null,
             rainChance Integer not null,
             

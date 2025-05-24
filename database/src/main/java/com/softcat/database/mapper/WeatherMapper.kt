@@ -36,8 +36,6 @@ fun Weather.toDbModel(cityId: Int) = WeatherDbModel(
     moonriseTime = astrologicalParams.moonriseTime,
     moonsetTime = astrologicalParams.moonsetTime,
     moonIllumination = astrologicalParams.moonIllumination,
-    isSunUp = if (astrologicalParams.isSunUp) 1 else 0,
-    isMoonUp = if (astrologicalParams.isMoonUp) 1 else 0,
     moonPhase = astrologicalParams.moonPhase,
     rainChance = rainChance,
 )
@@ -56,13 +54,6 @@ fun CurrentWeather.toDbModel(cityId: Int) = CurrentWeatherDbModel(
     humidity = humidity,
     cloud = cloud,
     vision = vision,
-)
-
-fun WeatherTypeDbModel.toEntity() = WeatherTypeInfo(
-    code = code,
-    dayDescription = dayDescription,
-    nightDescription = nightDescription,
-    iconUrl = url,
 )
 
 fun CurrentWeatherDbModel.toEntity(weatherType: WeatherTypeDbModel) = CurrentWeather(
@@ -109,8 +100,6 @@ fun WeatherDbModel.toEntity(weatherType: WeatherTypeDbModel) = Weather(
         moonsetTime = moonsetTime,
         moonPhase = moonPhase,
         moonIllumination = moonIllumination,
-        isSunUp = isSunUp == 1,
-        isMoonUp = isMoonUp == 1
     ),
     rainChance = rainChance,
 )

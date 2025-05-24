@@ -16,8 +16,6 @@ data class WeatherDbModel(
     val moonriseTime: String,
     val moonsetTime: String,
     val moonIllumination: Int,
-    val isSunUp: Int,
-    val isMoonUp: Int,
     val moonPhase: String,
     val rainChance: Int,
 ) {

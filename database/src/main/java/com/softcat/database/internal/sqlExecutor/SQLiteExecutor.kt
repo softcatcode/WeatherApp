@@ -14,7 +14,6 @@ import com.softcat.database.internal.queries.InsertQueries.INSERT_CITY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_COUNTRY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_CURRENT_WEATHER
 import com.softcat.database.internal.queries.InsertQueries.INSERT_WEATHER
-import com.softcat.database.mapper.toCityModels
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
@@ -94,7 +93,7 @@ class SQLiteExecutor @Inject constructor(
                 timeEpoch, cityId, type, avgTemp, humidity,
                 windSpeed, snowVolume, precipitations, vision,
                 sunriseTime, sunsetTime, moonriseTime, moonsetTime,
-                moonIllumination, isSunUp, isMoonUp, moonPhase,
+                moonIllumination, moonPhase,
                 rainChance,
             )
         }
