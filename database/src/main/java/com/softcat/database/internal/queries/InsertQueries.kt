@@ -12,7 +12,7 @@ object InsertQueries {
 
     const val INSERT_WEATHER = """
         insert into $WEATHER_TABLE_NAME values
-            (null, %d, %d, %d, %f, %d, %d, %d, %d, %f, '%s', '%s', '%s', '%s', %d, %d, %d, '%s', %d);
+            (null, %d, %d, %d, %f, %d, %d, %d, %d, %f, %d, %d, %d, %d, %d, '%s', %d);
     """
 
     const val INSERT_CURRENT_WEATHER = """

@@ -2,7 +2,8 @@ package com.softcat.data.implementations
 
 import com.softcat.database.exceptions.UnknownException
 import com.softcat.database.exceptions.UserVerificationException
-import com.softcat.database.mapper.toEntity
+import com.softcat.data.mapper.toEntity
+import com.softcat.data.mapper.userDbModel
 import com.softcat.database.facade.DatabaseFacade
 import com.softcat.domain.entity.User
 import com.softcat.domain.interfaces.AuthorizationRepository
@@ -24,10 +25,11 @@ class AuthorizationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun register(login: String, email: String, password: String): Result<User> {
-        val result = database.createUser(login, email, password)
+        val user = userDbModel(login, email, password)
+        val result = database.createUser(user)
         result.onSuccess {
-            val user = it.toEntity()
-            return Result.success(user)
+            val userModel = it.toEntity()
+            return Result.success(userModel)
         }.onFailure {
             return Result.failure(it)
         }

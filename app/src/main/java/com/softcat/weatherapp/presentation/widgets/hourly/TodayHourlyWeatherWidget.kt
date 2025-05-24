@@ -8,7 +8,6 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.provideContent
 import com.softcat.domain.entity.Weather
 import com.softcat.domain.useCases.GetLastCityFromDatastoreUseCase
-import com.softcat.domain.useCases.GetTodayForecastUseCase
 import com.softcat.weatherapp.WeatherApplication
 
 class TodayHourlyWeatherWidget(

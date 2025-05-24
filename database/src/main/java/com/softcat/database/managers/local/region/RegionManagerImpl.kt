@@ -1,23 +1,21 @@
 package com.softcat.database.managers.local.region
 
-import com.softcat.database.exceptions.DuplicateCountryException
+import com.softcat.database.internal.CursorMapperInterface
 import com.softcat.database.internal.sqlExecutor.SQLiteExecutor
-import com.softcat.database.mapper.toCitiesModels
-import com.softcat.database.mapper.toCountriesModels
-import com.softcat.database.mapper.toInt
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import javax.inject.Inject
 
 class RegionManagerImpl @Inject constructor(
-    private val executor: SQLiteExecutor
+    private val executor: SQLiteExecutor,
+    private val mapper: CursorMapperInterface
 ): RegionManager {
 
     override suspend fun getCities(ids: List<Int>): Result<List<CityDbModel>> {
         return try {
             val result = ids.mapNotNull { cityId ->
                 val cursor = executor.getCity(cityId)
-                toCitiesModels(cursor).firstOrNull()
+                mapper.toCityModels(cursor).firstOrNull()
             }
             Result.success(result)
         } catch (e: Exception) {
@@ -27,7 +25,7 @@ class RegionManagerImpl @Inject constructor(
 
     override suspend fun getCountries(): Result<List<CountryDbModel>> {
         return try {
-            val result = toCountriesModels(executor.getCountries())
+            val result = mapper.toCountriesModels(executor.getCountries())
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
@@ -44,10 +42,8 @@ class RegionManagerImpl @Inject constructor(
 
     override suspend fun updateCountries(countries: List<CountryDbModel>): Result<List<Int>> {
         return try {
-            val models = toCountriesModels(executor.getCountries())
             val result = countries.map { country ->
-                val model = models.find { it.name == country.name }
-                model?.id ?: toInt(executor.insertCountry(country))
+                saveCountry(country).getOrThrow()
             }
             Result.success(result)
         } catch (e: Exception) {
@@ -55,14 +51,17 @@ class RegionManagerImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveCountry(country: CountryDbModel): Result<Int> {
+    @Synchronized
+    override fun saveCountry(country: CountryDbModel): Result<Int> {
         return try {
-            val countries = toCountriesModels(executor.getCountries())
+            val countries =
+                mapper.toCountriesModels(executor.getCountries())
             if (countries.find { it.name == country.name } == null) {
-                val id = toInt(executor.insertCountry(country))
+                val id = mapper.toInt(executor.insertCountry(country))
                 Result.success(id)
             } else {
-                Result.failure(DuplicateCountryException(country.name))
+                val id = mapper.toInt(executor.getCountryId(country.name))
+                Result.success(id)
             }
         } catch (e: Exception) {
             return Result.failure(e)

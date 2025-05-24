@@ -16,13 +16,14 @@ import com.softcat.database.commands.RemoveFromFavouritesCommand
 import com.softcat.database.commands.UpdateCountriesCommand
 import com.softcat.database.commands.UpdateWeatherTypesCommand
 import com.softcat.database.commands.VerifyUserCommand
-import com.softcat.database.managers.ManagerFactoryInterface
+import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.local.weather.WeatherManager
 import com.softcat.database.managers.remote.favourites.FavouritesManager
 import com.softcat.database.managers.remote.user.UsersManager
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 import javax.inject.Inject
@@ -30,15 +31,13 @@ import javax.inject.Inject
 class CommandFactory @Inject constructor(
     private val usersManager: UsersManager,
     private val favouritesManager: FavouritesManager,
-    private val managerFactory: ManagerFactoryInterface,
+    private val regionManager: RegionManager,
     private val weatherManager: WeatherManager,
 ): CommandFactoryInterface {
 
-    override fun createUserCommand(name: String, email: String, password: String): CreateUserCommand {
+    override fun createUserCommand(user: UserDbModel): CreateUserCommand {
         return CreateUserCommand(
-            name,
-            email,
-            password,
+            user,
             usersManager
         )
     }
@@ -47,18 +46,18 @@ class CommandFactory @Inject constructor(
         return GetFavouriteCitiesCommand(
             userId,
             favouritesManager,
-            managerFactory
+            regionManager
         )
     }
 
-    override fun addCountryCommand(country: CountryDbModel) = AddCountryCommand(country, managerFactory)
+    override fun addCountryCommand(country: CountryDbModel) = AddCountryCommand(country, regionManager)
 
-    override fun addCityCommand(city: CityDbModel) = AddCityCommand(city, managerFactory)
+    override fun addCityCommand(city: CityDbModel) = AddCityCommand(city, regionManager)
 
-    override fun getCountriesCommand() = GetCountriesCommand(managerFactory)
+    override fun getCountriesCommand() = GetCountriesCommand(regionManager)
 
     override fun updateCountriesCommand(countries: List<CountryDbModel>): UpdateCountriesCommand {
-        return UpdateCountriesCommand(countries, managerFactory)
+        return UpdateCountriesCommand(countries, regionManager)
     }
 
     override fun verifyUserCommand(name: String, password: String): VerifyUserCommand {

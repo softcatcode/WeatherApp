@@ -10,8 +10,6 @@ interface FavouritesComponent {
 
     fun onAddToFavouritesClick()
 
-    fun onSettingsClick()
-
     fun onCityItemClick(city: City)
 
     fun reloadCities()

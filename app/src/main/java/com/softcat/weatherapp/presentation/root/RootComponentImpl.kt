@@ -5,10 +5,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
-import com.arkivanov.decompose.router.stack.replaceCurrent
 import com.arkivanov.decompose.value.Value
 import com.softcat.domain.entity.City
 import com.softcat.domain.entity.CurrentWeather
@@ -20,7 +18,6 @@ import com.softcat.weatherapp.presentation.favourite.FavouritesComponentImpl
 import com.softcat.weatherapp.presentation.hourly.HourlyWeatherComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchOpenReason
-import com.softcat.weatherapp.presentation.settings.SettingsComponentImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -34,7 +31,6 @@ class RootComponentImpl @AssistedInject constructor(
     private val calendarComponentFactory: CalendarComponentImpl.Factory,
     private val hourlyWeatherComponentFactory: HourlyWeatherComponentImpl.Factory,
     private val authComponentFactory: AuthorizationComponentImpl.Factory,
-    private val settingsComponentFactory: SettingsComponentImpl.Factory,
     @Assisted("componentContext") componentContext: ComponentContext,
 ): RootComponent, ComponentContext by componentContext {
 
@@ -96,9 +92,6 @@ class RootComponentImpl @AssistedInject constructor(
                     },
                     onCityItemClickedCallback = { user, city ->
                         navigation.push(Config.Details(user, city))
-                    },
-                    onSettingsClickCallback = {
-                        navigation.push(Config.Settings)
                     }
                 )
                 RootComponent.Child.Favourites(component)
@@ -131,14 +124,6 @@ class RootComponentImpl @AssistedInject constructor(
                 )
                 RootComponent.Child.Authorization(component)
             }
-
-            Config.Settings -> {
-                val component = settingsComponentFactory.create(
-                    componentContext = componentContext,
-                    onBackClick = { navigation.pop() },
-                )
-                RootComponent.Child.Settings(component)
-            }
         }
         Timber.i("Result child: $result.")
         return result
@@ -165,9 +150,6 @@ class RootComponentImpl @AssistedInject constructor(
 
         @Parcelize
         data object Authorization: Config
-
-        @Parcelize
-        data object Settings: Config
     }
 
     @AssistedFactory

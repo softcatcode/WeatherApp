@@ -23,6 +23,7 @@ class DbHelper @Inject constructor(
             execSQL(CreateQueries.CREATE_WEATHER_TYPES)
             execSQL(CreateQueries.CREATE_WEATHER)
             execSQL(CreateQueries.CREATE_CURRENT_WEATHER)
+            execSQL(CreateQueries.CREATE_PLOT_TABLE)
         }
     }
 
@@ -33,6 +34,7 @@ class DbHelper @Inject constructor(
             execSQL(DeleteQueries.DROP_WEATHER_TYPES)
             execSQL(DeleteQueries.DROP_CURRENT_WEATHER)
             execSQL(DeleteQueries.DROP_WEATHER)
+            execSQL(DeleteQueries.DROP_PLOTS)
         }
     }
 

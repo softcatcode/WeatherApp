@@ -22,7 +22,6 @@ class FavouritesComponentImpl @AssistedInject constructor(
     @Assisted("onCityItemClickedCallback") private val onCityItemClickedCallback: (User, City) -> Unit,
     @Assisted("onAddToFavouritesClickCallback") private val onAddToFavouritesClickCallback: () -> Unit,
     @Assisted("onSearchClickCallback") private val onSearchClickCallback: () -> Unit,
-    @Assisted("onSettingsClickCallback") private val onSettingsClickCallback: () -> Unit,
 ): FavouritesComponent, ComponentContext by componentContext {
 
     private val store: FavouritesStore = instanceKeeper.getStore { storeFactory.create(user) }
@@ -40,7 +39,6 @@ class FavouritesComponentImpl @AssistedInject constructor(
             FavouritesStore.Label.AddFavouritesClicked -> onAddToFavouritesClickCallback()
             is FavouritesStore.Label.CityItemClicked -> onCityItemClickedCallback(user, label.city)
             FavouritesStore.Label.SearchClicked -> onSearchClickCallback()
-            FavouritesStore.Label.SettingsClicked -> onSettingsClickCallback()
         }
     }
 
@@ -55,11 +53,6 @@ class FavouritesComponentImpl @AssistedInject constructor(
     override fun onAddToFavouritesClick() {
         Timber.i("${this::class.simpleName}.onAddToFavouritesClick()")
         store.accept(FavouritesStore.Intent.AddFavouritesClicked)
-    }
-
-    override fun onSettingsClick() {
-        Timber.i("${this::class.simpleName}.onSettingsClick()")
-        store.accept(FavouritesStore.Intent.SettingsClicked)
     }
 
     override fun onCityItemClick(city: City) {
@@ -81,7 +74,6 @@ class FavouritesComponentImpl @AssistedInject constructor(
             @Assisted("onCityItemClickedCallback") onCityItemClickedCallback: (User, City) -> Unit,
             @Assisted("onAddToFavouritesClickCallback") onAddToFavouritesClickCallback: () -> Unit,
             @Assisted("onSearchClickCallback") onSearchClickCallback: () -> Unit,
-            @Assisted("onSettingsClickCallback") onSettingsClickCallback: () -> Unit,
         ): FavouritesComponentImpl
     }
 }

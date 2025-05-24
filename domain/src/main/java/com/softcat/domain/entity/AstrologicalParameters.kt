@@ -5,12 +5,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class AstrologicalParameters(
-    val sunriseTime: String,
-    val sunsetTime: String,
-    val moonriseTime: String,
-    val moonsetTime: String,
+    val sunriseTime: Long,
+    val sunsetTime: Long,
+    val moonriseTime: Long,
+    val moonsetTime: Long,
     val moonPhase: String,
     val moonIllumination: Int,
-    val isSunUp: Boolean,
-    val isMoonUp: Boolean
 ): Parcelable

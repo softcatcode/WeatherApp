@@ -1,10 +1,8 @@
 package com.softcat.database.managers.local.weather
 
 import android.icu.util.Calendar
+import com.softcat.database.internal.CursorMapperInterface
 import com.softcat.database.internal.sqlExecutor.SQLiteExecutor
-import com.softcat.database.mapper.toCurrentWeatherList
-import com.softcat.database.mapper.toWeatherList
-import com.softcat.database.mapper.toWeatherType
 import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -12,7 +10,8 @@ import java.util.Date
 import javax.inject.Inject
 
 class WeatherManagerImpl @Inject constructor(
-    private val executor: SQLiteExecutor
+    private val executor: SQLiteExecutor,
+    private val mapper: CursorMapperInterface
 ): WeatherManager {
 
     override fun addWeather(model: WeatherDbModel): Result<Unit> {
@@ -56,7 +55,7 @@ class WeatherManagerImpl @Inject constructor(
         return try {
             val result = typeCodes.map { code ->
                 val cursor = executor.getWeatherType(code)
-                toWeatherType(cursor)
+                mapper.toWeatherType(cursor)
             }
             Result.success(result)
         } catch (e: Exception) {
@@ -74,7 +73,7 @@ class WeatherManagerImpl @Inject constructor(
                 add(Calendar.DATE, 1)
             }.timeInMillis / 1000L
             val cursor = executor.getCurrentWeather(cityId, dayTimeEpoch, dayEndTime)
-            val result = toCurrentWeatherList(cursor)
+            val result = mapper.toCurrentWeatherList(cursor)
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
@@ -84,7 +83,7 @@ class WeatherManagerImpl @Inject constructor(
     override fun getDaysWeather(cityId: Int, startTime: Long, endTime: Long): Result<List<WeatherDbModel>> {
         return try {
             val cursor = executor.getDaysWeather(cityId, startTime, endTime)
-            val result = toWeatherList(cursor)
+            val result = mapper.toWeatherList(cursor)
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)

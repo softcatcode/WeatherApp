@@ -12,7 +12,7 @@ interface RegionManager {
 
     suspend fun updateCountries(countries: List<CountryDbModel>): Result<List<Int>>
 
-    suspend fun saveCountry(country: CountryDbModel): Result<Int>
+    fun saveCountry(country: CountryDbModel): Result<Int>
 
     suspend fun deleteCountry(id: Int): Result<Unit>
 
