@@ -30,7 +30,7 @@ class CursorMapper @Inject constructor(): CursorMapperInterface {
         return cities
     }
 
-    override fun toCountriesModels(cursor: Cursor): List<CountryDbModel> {
+    override fun toCountryModels(cursor: Cursor): List<CountryDbModel> {
         val countries = mutableListOf<CountryDbModel>()
         cursor.use {
             while (it.moveToNext()) {

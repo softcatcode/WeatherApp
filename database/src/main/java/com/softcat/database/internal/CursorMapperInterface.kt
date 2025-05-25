@@ -12,7 +12,7 @@ interface CursorMapperInterface {
 
     fun toCityModels(cursor: Cursor): List<CityDbModel>
 
-    fun toCountriesModels(cursor: Cursor): List<CountryDbModel>
+    fun toCountryModels(cursor: Cursor): List<CountryDbModel>
 
     fun toInt(cursor: Cursor): Int
 

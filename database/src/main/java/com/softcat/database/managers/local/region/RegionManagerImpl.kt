@@ -25,7 +25,7 @@ class RegionManagerImpl @Inject constructor(
 
     override suspend fun getCountries(): Result<List<CountryDbModel>> {
         return try {
-            val result = mapper.toCountriesModels(executor.getCountries())
+            val result = mapper.toCountryModels(executor.getCountries())
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
@@ -55,7 +55,7 @@ class RegionManagerImpl @Inject constructor(
     override fun saveCountry(country: CountryDbModel): Result<Int> {
         return try {
             val countries =
-                mapper.toCountriesModels(executor.getCountries())
+                mapper.toCountryModels(executor.getCountries())
             if (countries.find { it.name == country.name } == null) {
                 val id = mapper.toInt(executor.insertCountry(country))
                 Result.success(id)
