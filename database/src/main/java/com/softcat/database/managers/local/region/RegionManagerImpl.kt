@@ -53,16 +53,17 @@ class RegionManagerImpl @Inject constructor(
 
     @Synchronized
     override fun saveCountry(country: CountryDbModel): Result<Int> {
-        return try {
-            val countries =
-                mapper.toCountryModels(executor.getCountries())
-            if (countries.find { it.name == country.name } == null) {
-                val id = mapper.toInt(executor.insertCountry(country))
-                Result.success(id)
-            } else {
-                val id = mapper.toInt(executor.getCountryId(country.name))
-                Result.success(id)
+        try {
+            val duplicateCountryId = try {
+                mapper.toInt(executor.getCountryId(country.name))
+            } catch (_: Exception) {
+                null
             }
+            duplicateCountryId?.let {
+                return Result.success(it)
+            }
+            val id = mapper.toInt(executor.insertCountry(country))
+            return Result.success(id)
         } catch (e: Exception) {
             return Result.failure(e)
         }

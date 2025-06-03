@@ -60,7 +60,7 @@ internal object CreateQueries {
             rainChance Integer not null,
             
             foreign key (cityId) references $CITIES_TABLE_NAME(id),
-            foreign key (type) references $WEATHER_TYPE_TABLE_NAME(id)
+            foreign key (type) references $WEATHER_TYPE_TABLE_NAME(code)
         );
     """
 
@@ -81,7 +81,7 @@ internal object CreateQueries {
             vision Float not null,
             
             foreign key (cityId) references $CITIES_TABLE_NAME(id),
-            foreign key (type) references $WEATHER_TYPE_TABLE_NAME(id)
+            foreign key (type) references $WEATHER_TYPE_TABLE_NAME(code)
         );
     """
 
@@ -89,8 +89,8 @@ internal object CreateQueries {
         create table if not exists $PLOT_TABLE_NAME(
             id Integer not null primary key AUTOINCREMENT,
             parameter Text not null,
-            values Text not null,
-            time Text not null,
+            parameter_values Text not null,
+            time_values Text not null,
             cityId Integer not null,
             authorId Text not null,
             description Text,
