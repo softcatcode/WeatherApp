@@ -48,19 +48,17 @@ class DatabaseLoaderRepositoryImpl @Inject constructor(
         dayBias: Int
     ): Result<List<CurrentWeather>> {
         val timeEpoch = getCurrentDayTime(dayBias)
-        val response = database.getCurrentWeather(cityId, timeEpoch)
-        response.onSuccess { hoursWeather ->
+        return try {
+            val hoursWeather = database.getCurrentWeather(cityId, timeEpoch).getOrThrow()
             val typeCodes = hoursWeather.map { it.type }
-            database.getWeatherTypes(typeCodes).onSuccess { typeModels ->
-                val result = hoursWeather.mapIndexed { index, weatherModel ->
-                    weatherModel.toEntity(typeModels[index])
-                }
-                return Result.success(result)
-            }.onFailure {
-                return Result.failure(it)
+            val typeModels = database.getWeatherTypes(typeCodes).getOrThrow()
+            val result = hoursWeather.mapIndexed { index, weatherModel ->
+                weatherModel.toEntity(typeModels[index])
             }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-        return Result.failure(response.exceptionOrNull()!!)
     }
 
     override suspend fun tryLoadUpcomingDaysWeather(
@@ -69,19 +67,17 @@ class DatabaseLoaderRepositoryImpl @Inject constructor(
     ): Result<List<Weather>> {
         val startTime = getCurrentDayTime(0)
         val endTime = getCurrentDayTime(dayCount)
-        val response = database.getDaysWeather(cityId, startTime, endTime)
-        response.onSuccess { daysWeather ->
+        return try {
+            val daysWeather = database.getDaysWeather(cityId, startTime, endTime).getOrThrow()
             val typeCodes = daysWeather.map { it.type }
-            database.getWeatherTypes(typeCodes).onSuccess { typeModels ->
-                val result = daysWeather.mapIndexed { index, weather ->
-                    weather.toEntity(typeModels[index])
-                }
-                return Result.success(result)
-            }.onFailure {
-                return Result.failure(it)
+            val typeModels = database.getWeatherTypes(typeCodes).getOrThrow()
+            val result = daysWeather.mapIndexed { index, weather ->
+                weather.toEntity(typeModels[index])
             }
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-        return Result.failure(response.exceptionOrNull()!!)
     }
 
     override fun updateForecastData(cityId: Int, forecast: Forecast) {
@@ -123,8 +119,11 @@ class DatabaseLoaderRepositoryImpl @Inject constructor(
             val image = url.readBytes()
             entity.toDbModel(image)
         }
-        val result = database.initWeatherTypes(weatherTypes)
-        result.onSuccess { return Result.success(it) }
-        return Result.failure(result.exceptionOrNull()!!)
+        return try {
+            val result = database.initWeatherTypes(weatherTypes).getOrThrow()
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
