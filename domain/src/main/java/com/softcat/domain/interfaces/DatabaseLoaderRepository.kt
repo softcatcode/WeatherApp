@@ -1,10 +1,13 @@
 package com.softcat.domain.interfaces
 
+import com.softcat.domain.entity.City
 import com.softcat.domain.entity.CurrentWeather
 import com.softcat.domain.entity.Forecast
 import com.softcat.domain.entity.Weather
 
 interface DatabaseLoaderRepository {
+
+    suspend fun searchCities(query: String): Result<List<City>>
 
     suspend fun tryGetHourlyWeather(cityId: Int, dayBias: Int): Result<List<CurrentWeather>>
 

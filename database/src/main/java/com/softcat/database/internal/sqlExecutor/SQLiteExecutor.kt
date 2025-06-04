@@ -2,7 +2,6 @@ package com.softcat.database.internal.sqlExecutor
 
 import android.content.ContentValues
 import android.database.Cursor
-import com.softcat.database.internal.CursorMapper
 import com.softcat.database.internal.DatabaseRules
 import com.softcat.database.internal.DbHelper
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_CITY

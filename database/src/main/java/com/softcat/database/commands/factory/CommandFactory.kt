@@ -13,6 +13,7 @@ import com.softcat.database.commands.GetFavouriteCitiesCommand
 import com.softcat.database.commands.GetWeatherTypesCommand
 import com.softcat.database.commands.IsFavouriteCommand
 import com.softcat.database.commands.RemoveFromFavouritesCommand
+import com.softcat.database.commands.SearchCityCommand
 import com.softcat.database.commands.UpdateCountriesCommand
 import com.softcat.database.commands.UpdateWeatherTypesCommand
 import com.softcat.database.commands.VerifyUserCommand
@@ -34,6 +35,10 @@ class CommandFactory @Inject constructor(
     private val regionManager: RegionManager,
     private val weatherManager: WeatherManager,
 ): CommandFactoryInterface {
+
+    override fun searchCityCommand(query: String): SearchCityCommand {
+        return SearchCityCommand(regionManager, query)
+    }
 
     override fun createUserCommand(user: UserDbModel): CreateUserCommand {
         return CreateUserCommand(

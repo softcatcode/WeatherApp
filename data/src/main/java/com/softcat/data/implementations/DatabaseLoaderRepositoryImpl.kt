@@ -2,9 +2,11 @@ package com.softcat.data.implementations
 
 import android.icu.util.Calendar
 import com.softcat.data.mapper.toDbModel
+import com.softcat.data.mapper.toEntities
 import com.softcat.data.mapper.toEntity
 import com.softcat.data.network.api.DocsApiService
 import com.softcat.database.facade.DatabaseFacade
+import com.softcat.domain.entity.City
 import com.softcat.domain.entity.CurrentWeather
 import com.softcat.domain.entity.Forecast
 import com.softcat.domain.entity.Weather
@@ -28,6 +30,17 @@ class DatabaseLoaderRepositoryImpl @Inject constructor(
             add(Calendar.DATE, dayBias)
         }
         return calendar.timeInMillis / 1000L
+    }
+
+    override suspend fun searchCities(query: String): Result<List<City>> {
+        return try {
+            val cityList = database.searchCity(query).getOrThrow()
+            val countryList = database.getCountries().getOrThrow()
+            val result = cityList.toEntities(countryList)
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun tryGetHourlyWeather(

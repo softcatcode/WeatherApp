@@ -14,6 +14,12 @@ class DatabaseFacadeImpl @Inject constructor(
     private val factory: CommandFactoryInterface
 ): DatabaseFacade {
 
+    override suspend fun searchCity(query: String): Result<List<CityDbModel>> {
+        val cmd = factory.searchCityCommand(query)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
     override suspend fun createUser(user: UserDbModel): Result<UserDbModel> {
         val cmd = factory.createUserCommand(user)
         cmd.execute()

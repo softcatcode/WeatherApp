@@ -11,6 +11,28 @@ class RegionManagerImpl @Inject constructor(
     private val mapper: CursorMapperInterface
 ): RegionManager {
 
+    private fun match(query: String, name: String): Boolean {
+        val q = query.lowercase()
+        val s = name.lowercase()
+        val lastInd = s.length - q.length
+        for (i in 0..lastInd) {
+            if (s.substring(i, i + q.length) == q)
+                return true
+        }
+        return false
+    }
+
+    override suspend fun searchCity(query: String): Result<List<CityDbModel>> {
+        val cities = try {
+            val cursor = executor.getCities()
+            mapper.toCityModels(cursor)
+        } catch (e: Exception) {
+            return Result.failure(e)
+        }
+        val result = cities.filter { match(query, it.name) }
+        return Result.success(result)
+    }
+
     override suspend fun getCities(ids: List<Int>): Result<List<CityDbModel>> {
         return try {
             val result = ids.mapNotNull { cityId ->
