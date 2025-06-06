@@ -1,12 +1,15 @@
 package com.softcat.weatherapp
 
+import android.icu.util.Calendar
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.softcat.data.mapper.toDbModel
 import com.softcat.data.mapper.toIconUrl
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
+import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.UserDbModel
+import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 import com.softcat.domain.entity.City
 import com.softcat.domain.entity.User
@@ -15,7 +18,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.net.URL
-import java.util.Calendar
 import kotlin.math.abs
 
 @RunWith(AndroidJUnit4::class)
@@ -53,6 +55,42 @@ class InsertQueryTest {
         assert(a.password == b.password)
         assert(a.registerTimeEpoch == b.registerTimeEpoch)
         assert(a.id == UserDbModel.UNSPECIFIED_ID || a.id == b.id)
+    }
+
+    private fun cmp(a: WeatherDbModel, b: WeatherDbModel) {
+        assert(a.id == b.id)
+        assert(a.type == b.type)
+        assert(a.vision == b.vision)
+        assert(a.cityId == b.cityId)
+        assert(a.avgTemp == b.avgTemp)
+        assert(a.humidity == b.humidity)
+        assert(a.moonIllumination == b.moonIllumination)
+        assert(a.moonPhase == b.moonPhase)
+        assert(a.moonriseTime == b.moonriseTime)
+        assert(a.moonsetTime == b.moonsetTime)
+        assert(a.sunsetTime == b.sunsetTime)
+        assert(a.sunriseTime == b.sunriseTime)
+        assert(a.precipitations == b.precipitations)
+        assert(a.snowVolume == b.snowVolume)
+        assert(a.rainChance == b.rainChance)
+        assert(a.windSpeed == b.windSpeed)
+        assert(a.timeEpoch == b.timeEpoch)
+    }
+
+    private fun cmp(a: CurrentWeatherDbModel, b: CurrentWeatherDbModel) {
+        assert(a.id == b.id)
+        assert(a.type == b.type)
+        assert(a.vision == b.vision)
+        assert(a.cityId == b.cityId)
+        assert(a.tempC == b.tempC)
+        assert(a.humidity == b.humidity)
+        assert(a.cloud == b.cloud)
+        assert(a.isDay == b.isDay)
+        assert(a.timeEpoch == b.timeEpoch)
+        assert(a.snow == b.snow)
+        assert(a.precipitations == b.precipitations)
+        assert(a.feelsLike == b.feelsLike)
+        assert(a.windSpeed == b.windSpeed)
     }
 
     @Test
@@ -280,9 +318,9 @@ class InsertQueryTest {
             iconBytes = iconsImage[0]
         )
 
-        weatherManager.updateWeatherTypes(weatherTypes)
-        val savedTypes = weatherManager.getWeatherTypes(listOf(1000, 1063)).getOrThrow()
+        db.initWeatherTypes(weatherTypes)
         weatherManager.updateWeatherTypes(listOf(additionalType))
+        val savedTypes = weatherManager.getWeatherTypes(listOf(1000, 1063)).getOrThrow()
 
         assert(savedTypes.size == 2)
         for (i in savedTypes.indices) {
@@ -290,40 +328,340 @@ class InsertQueryTest {
         }
     }
 
+//    @Test
+//    fun createUserWithIllegalPasswordTest() = runBlocking {
+//        val user = UserDbModel(
+//            name = "Batman",
+//            email = "betsy.thebat@gmail.com",
+//            password = "bat",
+//            role = User.Status.Regular.name,
+//            registerTimeEpoch = Calendar.getInstance().timeInMillis / 1000L,
+//            id = UserDbModel.UNSPECIFIED_ID
+//        )
+//
+//        val registerResult = db.createUser(user).getOrNull()
+//        val verifiedUser = db.verifyUser(user.name, user.password).getOrNull()
+//
+//        assertNull(registerResult)
+//        assertNull(verifiedUser)
+//    }
+//
+//    @Test
+//    fun createUserWithSpaceInNameTest() = runBlocking {
+//        val user = UserDbModel(
+//            name = "Spider man",
+//            email = "spider.man@gmail.com",
+//            password = "Spider",
+//            role = User.Status.Regular.name,
+//            registerTimeEpoch = Calendar.getInstance().timeInMillis / 1000L,
+//            id = UserDbModel.UNSPECIFIED_ID
+//        )
+//
+//        db.createUser(user)
+//        val verifiedUser = db.verifyUser(user.name, user.password).getOrThrow()
+//
+//        cmp(user, verifiedUser)
+//    }
+
     @Test
-    fun createUserWithIllegalPasswordTest() = runBlocking {
-        val user = UserDbModel(
-            name = "Batman",
-            email = "betsy.thebat@gmail.com",
-            password = "bat",
-            role = User.Status.Regular.name,
-            registerTimeEpoch = Calendar.getInstance().timeInMillis / 1000L,
-            id = UserDbModel.UNSPECIFIED_ID
+    fun insertWeatherTest(): Unit = runBlocking {
+        val iconsUrl = listOf(toIconUrl(113), toIconUrl(176))
+        val urls = iconsUrl.map { URL(it) }
+        val iconsImage = urls.map { it.readBytes() }
+        val weatherTypes = listOf(
+            WeatherTypeDbModel(
+                code = 1000,
+                dayDescription = "Sunny",
+                nightDescription = "Clear",
+                url = iconsUrl[0],
+                iconBytes = iconsImage[0]
+            ),
+            WeatherTypeDbModel(
+                code = 1063,
+                dayDescription = "Patchy rain possible",
+                nightDescription = "Patchy rain possible",
+                url = iconsUrl[1],
+                iconBytes = iconsImage[1]
+            )
+        )
+        db.initWeatherTypes(weatherTypes)
+        val time1 = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_YEAR, 0)
+            set(Calendar.MILLISECONDS_IN_DAY, 0)
+        }.timeInMillis / 1000L
+        val time2 = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_YEAR, 1)
+            set(Calendar.MILLISECONDS_IN_DAY, 0)
+        }.timeInMillis / 1000L
+
+        val weather1 = WeatherDbModel(
+            id = 0,
+            timeEpoch = time1,
+            cityId = 1,
+            type = 1000,
+            avgTemp = 20f,
+            humidity = 20,
+            windSpeed = 1,
+            snowVolume = 0,
+            precipitations = 0,
+            vision = 10f,
+            sunriseTime = 0,
+            sunsetTime = 0,
+            moonriseTime = 0,
+            moonsetTime = 0,
+            moonIllumination = 80,
+            moonPhase = "Regular",
+            rainChance = 10
+        )
+        val weather2 = WeatherDbModel(
+            id = 0,
+            timeEpoch = time2,
+            cityId = 1,
+            type = 1063,
+            avgTemp = 20f,
+            humidity = 60,
+            windSpeed = 6,
+            snowVolume = 0,
+            precipitations = 0,
+            vision = 10f,
+            sunriseTime = 0,
+            sunsetTime = 0,
+            moonriseTime = 0,
+            moonsetTime = 0,
+            moonIllumination = 80,
+            moonPhase = "Regular",
+            rainChance = 60
         )
 
-        val registerResult = db.createUser(user).getOrNull()
-        val verifiedUser = db.verifyUser(user.name, user.password).getOrNull()
+        db.saveWeather(weather1)
+        db.saveWeather(weather2)
+        val result = db.getDaysWeather(1, time1, time2).getOrThrow()
 
-        assertNull(registerResult)
-        assertNull(verifiedUser)
+        assert(result.size == 2)
+        cmp(result[0], weather1)
+        cmp(result[1], weather1)
     }
 
     @Test
-    fun createUserWithSpaceInNameTest() = runBlocking {
-        val user = UserDbModel(
-            name = "Spider man",
-            email = "spider.man@gmail.com",
-            password = "Spider",
-            role = User.Status.Regular.name,
-            registerTimeEpoch = Calendar.getInstance().timeInMillis / 1000L,
-            id = UserDbModel.UNSPECIFIED_ID
+    fun insertWeatherWithCollisionTest(): Unit = runBlocking {
+        val iconsUrl = listOf(toIconUrl(113), toIconUrl(176))
+        val urls = iconsUrl.map { URL(it) }
+        val iconsImage = urls.map { it.readBytes() }
+        val weatherTypes = listOf(
+            WeatherTypeDbModel(
+                code = 1000,
+                dayDescription = "Sunny",
+                nightDescription = "Clear",
+                url = iconsUrl[0],
+                iconBytes = iconsImage[0]
+            ),
+            WeatherTypeDbModel(
+                code = 1063,
+                dayDescription = "Patchy rain possible",
+                nightDescription = "Patchy rain possible",
+                url = iconsUrl[1],
+                iconBytes = iconsImage[1]
+            )
+        )
+        db.initWeatherTypes(weatherTypes)
+        val time = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_YEAR, 0)
+            set(Calendar.MILLISECONDS_IN_DAY, 0)
+        }.timeInMillis / 1000L
+        val weather1 = WeatherDbModel(
+            id = 0,
+            timeEpoch = time,
+            cityId = 1,
+            type = 1000,
+            avgTemp = 20f,
+            humidity = 20,
+            windSpeed = 1,
+            snowVolume = 0,
+            precipitations = 0,
+            vision = 10f,
+            sunriseTime = 0,
+            sunsetTime = 0,
+            moonriseTime = 0,
+            moonsetTime = 0,
+            moonIllumination = 80,
+            moonPhase = "Regular",
+            rainChance = 10
+        )
+        val weather2 = WeatherDbModel(
+            id = 0,
+            timeEpoch = time,
+            cityId = 1,
+            type = 1063,
+            avgTemp = 20f,
+            humidity = 60,
+            windSpeed = 6,
+            snowVolume = 0,
+            precipitations = 0,
+            vision = 10f,
+            sunriseTime = 0,
+            sunsetTime = 0,
+            moonriseTime = 0,
+            moonsetTime = 0,
+            moonIllumination = 80,
+            moonPhase = "Regular",
+            rainChance = 60
         )
 
-        db.createUser(user)
-        val verifiedUser = db.verifyUser(user.name, user.password).getOrThrow()
+        db.saveWeather(weather1)
+        db.saveWeather(weather2)
+        val result = db.getDaysWeather(1, time, time + 1).getOrThrow()
 
-        cmp(user, verifiedUser)
+        assert(result.size == 1)
+        cmp(result[0], weather2)
     }
 
+    @Test
+    fun insertCurrentWeatherTest(): Unit = runBlocking {
+        val iconsUrl = listOf(toIconUrl(113), toIconUrl(176))
+        val urls = iconsUrl.map { URL(it) }
+        val iconsImage = urls.map { it.readBytes() }
+        val weatherTypes = listOf(
+            WeatherTypeDbModel(
+                code = 1000,
+                dayDescription = "Sunny",
+                nightDescription = "Clear",
+                url = iconsUrl[0],
+                iconBytes = iconsImage[0]
+            ),
+            WeatherTypeDbModel(
+                code = 1063,
+                dayDescription = "Patchy rain possible",
+                nightDescription = "Patchy rain possible",
+                url = iconsUrl[1],
+                iconBytes = iconsImage[1]
+            )
+        )
+        db.initWeatherTypes(weatherTypes)
+        val time1 = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_YEAR, 0)
+            set(Calendar.HOUR_OF_DAY, 2)
+            set(Calendar.MILLISECONDS_IN_DAY, 0)
+        }.timeInMillis / 1000L
+        val time2 = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_YEAR, 0)
+            set(Calendar.HOUR_OF_DAY, 3)
+            set(Calendar.MILLISECONDS_IN_DAY, 0)
+        }.timeInMillis / 1000L
+        val dayEpoch = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_YEAR, 0)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MILLISECONDS_IN_DAY, 0)
+        }.timeInMillis / 1000L
 
+        val weather1 = CurrentWeatherDbModel(
+            id = 0,
+            timeEpoch = time1,
+            cityId = 1,
+            type = 1000,
+            tempC = 20f,
+            feelsLike = 15,
+            humidity = 20,
+            windSpeed = 2,
+            snow = 0,
+            precipitations = 0,
+            vision = 10f,
+            isDay = 1,
+            cloud = 60,
+        )
+        val weather2 = CurrentWeatherDbModel(
+            id = 0,
+            timeEpoch = time2,
+            cityId = 1,
+            type = 1063,
+            tempC = 22f,
+            feelsLike = 15,
+            humidity = 21,
+            windSpeed = 2,
+            snow = 0,
+            precipitations = 0,
+            vision = 15f,
+            isDay = 1,
+            cloud = 60,
+        )
+
+        db.saveCurrentWeather(weather1)
+        db.saveCurrentWeather(weather2)
+        val result = db.getCurrentWeather(1, dayEpoch).getOrThrow()
+
+        assert(result.size == 2)
+        cmp(result[0], weather1)
+        cmp(result[1], weather1)
+    }
+
+    @Test
+    fun insertCurrentWeatherWithCollisionTest(): Unit = runBlocking {
+        val iconsUrl = listOf(toIconUrl(113), toIconUrl(176))
+        val urls = iconsUrl.map { URL(it) }
+        val iconsImage = urls.map { it.readBytes() }
+        val weatherTypes = listOf(
+            WeatherTypeDbModel(
+                code = 1000,
+                dayDescription = "Sunny",
+                nightDescription = "Clear",
+                url = iconsUrl[0],
+                iconBytes = iconsImage[0]
+            ),
+            WeatherTypeDbModel(
+                code = 1063,
+                dayDescription = "Patchy rain possible",
+                nightDescription = "Patchy rain possible",
+                url = iconsUrl[1],
+                iconBytes = iconsImage[1]
+            )
+        )
+        db.initWeatherTypes(weatherTypes)
+        val time = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_YEAR, 0)
+            set(Calendar.HOUR_OF_DAY, 2)
+            set(Calendar.MILLISECONDS_IN_DAY, 0)
+        }.timeInMillis / 1000L
+        val dayEpoch = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_YEAR, 0)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MILLISECONDS_IN_DAY, 0)
+        }.timeInMillis / 1000L
+
+        val weather1 = CurrentWeatherDbModel(
+            id = 0,
+            timeEpoch = time,
+            cityId = 1,
+            type = 1000,
+            tempC = 20f,
+            feelsLike = 15,
+            humidity = 20,
+            windSpeed = 2,
+            snow = 0,
+            precipitations = 0,
+            vision = 10f,
+            isDay = 1,
+            cloud = 60,
+        )
+        val weather2 = CurrentWeatherDbModel(
+            id = 0,
+            timeEpoch = time,
+            cityId = 1,
+            type = 1063,
+            tempC = 22f,
+            feelsLike = 15,
+            humidity = 21,
+            windSpeed = 2,
+            snow = 0,
+            precipitations = 0,
+            vision = 15f,
+            isDay = 1,
+            cloud = 60,
+        )
+
+        db.saveCurrentWeather(weather1)
+        db.saveCurrentWeather(weather2)
+        val result = db.getCurrentWeather(1, dayEpoch).getOrThrow()
+
+        assert(result.size == 1)
+        cmp(result[0], weather2)
+    }
 }

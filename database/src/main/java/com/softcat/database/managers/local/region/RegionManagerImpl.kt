@@ -23,6 +23,8 @@ class RegionManagerImpl @Inject constructor(
     }
 
     override suspend fun searchCity(query: String): Result<List<CityDbModel>> {
+        if (query.isBlank())
+            return Result.success(emptyList())
         val cities = try {
             val cursor = executor.getCities()
             mapper.toCityModels(cursor)
