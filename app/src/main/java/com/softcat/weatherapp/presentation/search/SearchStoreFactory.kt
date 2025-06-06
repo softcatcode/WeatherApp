@@ -48,7 +48,7 @@ class SearchStoreFactory @Inject constructor(
 
         data object LoadingSearchResult: Msg
 
-        data object SearchResultError: Msg
+        data class SearchResultError(val error: Throwable): Msg
     }
 
     private inner class ExecutorImpl(private val openReason: SearchOpenReason):
@@ -86,12 +86,11 @@ class SearchStoreFactory @Inject constructor(
         private fun launchSearchProcess(state: SearchStore.State) {
             searchJob?.cancel()
             searchJob = scope.launch {
-                try {
-                    dispatch(Msg.LoadingSearchResult)
-                    val cities = searchCityUseCase(state.searchQuery)
+                dispatch(Msg.LoadingSearchResult)
+                searchCityUseCase(state.searchQuery).onSuccess { cities ->
                     dispatch(Msg.SearchResultLoaded(cities))
-                } catch (e: Exception) {
-                    dispatch(Msg.SearchResultError)
+                }.onFailure {
+                    dispatch(Msg.SearchResultError(it))
                 }
             }
         }
@@ -104,7 +103,7 @@ class SearchStoreFactory @Inject constructor(
 
                 Msg.LoadingSearchResult -> copy(searchState = SearchStore.State.SearchState.Loading)
 
-                Msg.SearchResultError -> copy(searchState = SearchStore.State.SearchState.Error)
+                is Msg.SearchResultError -> copy(searchState = SearchStore.State.SearchState.Error(msg.error))
 
                 is Msg.SearchResultLoaded -> copy(
                     searchState = SearchStore.State.SearchState.Success(msg.cities)
