@@ -9,6 +9,9 @@ data class UserDbModel(
     val id: String = UNSPECIFIED_ID,
 ) {
     companion object {
+        const val ROLE_REGULAR = "Regular"
+        const val ROLE_FOLLOWER = "Follower"
+        const val ROLE_PREMIUM = "Premium"
         const val UNSPECIFIED_ID = "unspecified"
     }
 }
