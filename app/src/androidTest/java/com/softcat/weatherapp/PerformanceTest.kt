@@ -19,7 +19,7 @@ class PerformanceTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
     private val component = DaggerUnitTestsComponent.factory().create(context)
-    private val db = component.getDatabase()
+    private val db = component.getDatabaseImpl()
     private val regionManager = component.getRegionManager()
 
     private suspend fun getDayWeatherMillis(n: Int): Float {
