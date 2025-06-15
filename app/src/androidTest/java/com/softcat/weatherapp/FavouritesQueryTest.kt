@@ -17,6 +17,7 @@ class FavouritesQueryTest {
     private val component = DaggerUnitTestsComponent.factory().create(context)
     private val db = component.getDatabaseImpl()
     private val usersManager = component.getUsersManager()
+    private val regionManager = component.getRegionManager()
 
     private var _user: UserDbModel? = null
     private val user: UserDbModel
@@ -33,7 +34,7 @@ class FavouritesQueryTest {
     @Before
     fun registerUser() {
         runBlocking {
-            _user = usersManager.logIn("Даниил", "123456").getOrThrow()
+            _user = usersManager.logIn("Test User", "123456").getOrThrow()
         }
     }
 
@@ -72,11 +73,17 @@ class FavouritesQueryTest {
                 longitude = 3f
             )
         )
-        countries.forEach { db.saveCountry(it) }
+
+        val countriesIds = countries.map { db.saveCountry(it).getOrThrow() }
         cities.forEach { db.saveCity(it) }
         db.addToFavourites(user.id, cities[0].id)
         db.addToFavourites(user.id, cities[1].id)
         val result = db.getFavouriteCities(user.id).getOrThrow()
+        cities.forEach {
+            db.removeFromFavourites(user.id, it.id)
+            regionManager.deleteCity(it.id)
+        }
+        countriesIds.forEach { regionManager.deleteCountry(it) }
 
         assert(result.size == 2)
         cmp(cities[0], result[0])
@@ -112,11 +119,17 @@ class FavouritesQueryTest {
                 longitude = 3f
             )
         )
-        db.saveCountry(country)
+
+        val countryId = db.saveCountry(country).getOrThrow()
         cities.forEach { db.saveCity(it) }
         db.addToFavourites(user.id, cities[0].id)
         db.addToFavourites(user.id, cities[1].id)
         val result = db.getFavouriteCities(user.id).getOrThrow()
+        cities.forEach {
+            db.removeFromFavourites(user.id, it.id)
+            regionManager.deleteCity(it.id)
+        }
+        regionManager.deleteCountry(countryId)
 
         assert(result.size == 2)
         cmp(cities[0], result[0])
@@ -136,10 +149,13 @@ class FavouritesQueryTest {
             latitude = 12f,
             longitude = 39f
         )
-        db.saveCountry(country)
+        val countryId = db.saveCountry(country).getOrThrow()
         db.saveCity(city)
         db.addToFavourites(user.id, city.id)
         val result = db.getFavouriteCities(user.id).getOrThrow()
+        db.removeFromFavourites(user.id, city.id)
+        regionManager.deleteCity(city.id)
+        regionManager.deleteCity(countryId)
 
         assert(result.size == 1)
         cmp(city, result[0])
@@ -158,11 +174,14 @@ class FavouritesQueryTest {
             latitude = 12f,
             longitude = 39f
         )
+
         db.saveCountry(country)
         db.saveCity(city)
         db.addToFavourites(user.id, city.id)
         db.removeFromFavourites(user.id, city.id)
         val result = db.getFavouriteCities(user.id).getOrThrow()
+        regionManager.deleteCity(city.id)
+        regionManager.deleteCountry(country.id)
 
         assert(result.isEmpty())
     }
@@ -181,9 +200,9 @@ class FavouritesQueryTest {
             longitude = 39f
         )
         val extraCity = CityDbModel(
-            id = 1,
+            id = 2,
             name = "Peter",
-            countryId = 2,
+            countryId = 1,
             latitude = 3f,
             longitude = -4.5f
         )
@@ -193,6 +212,11 @@ class FavouritesQueryTest {
         db.addToFavourites(user.id, city.id)
         db.removeFromFavourites(user.id + "1", city.id)
         val result = db.getFavouriteCities(user.id).getOrThrow()
+        db.removeFromFavourites(user.id, city.id)
+        db.removeFromFavourites(user.id, extraCity.id)
+        regionManager.deleteCity(city.id)
+        regionManager.deleteCity(extraCity.id)
+        regionManager.deleteCountry(country.id)
 
         assert(result.size == 1)
         cmp(city, result[0])
@@ -246,6 +270,9 @@ class FavouritesQueryTest {
         }
         val emptyResult = db.getFavouriteCities(user.id + "1").getOrThrow()
         val result = db.getFavouriteCities(user.id).getOrThrow()
+        cities.forEach {
+            db.removeFromFavourites(user.id, it.id)
+        }
 
         assert(emptyResult.isEmpty())
         assert(result.size == 3)
@@ -304,10 +331,11 @@ class FavouritesQueryTest {
         db.addToFavourites(user.id, cities[2].id)
         db.addToFavourites(user.id, cities[3].id)
         val result = db.getFavouriteCities(user.id).getOrThrow()
+        cities.forEach { db.removeFromFavourites(user.id, it.id) }
 
         assert(result.size == 2)
         cmp(cities[0], result[0])
-        cmp(cities[2], result[2])
+        cmp(cities[2], result[1])
     }
 
     @Test
@@ -327,6 +355,8 @@ class FavouritesQueryTest {
         db.saveCountry(country)
         db.addToFavourites(user.id, city.id)
         val result = db.getFavouriteCities(user.id).getOrThrow()
+        db.removeFromFavourites(user.id, city.id)
+        regionManager.deleteCountry(country.id)
 
         assert(result.isEmpty())
     }
