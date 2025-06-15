@@ -6,6 +6,10 @@ import com.softcat.database.facade.DatabaseFacade
 import com.softcat.database.facade.DatabaseProxy
 import com.softcat.database.internal.CursorMapper
 import com.softcat.database.internal.CursorMapperInterface
+import com.softcat.database.internal.sqlExecutor.SQLiteExecutor
+import com.softcat.database.internal.sqlExecutor.SQLiteInterface
+import com.softcat.database.managers.local.PlotManager
+import com.softcat.database.managers.local.PlotManagerImpl
 import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.local.region.RegionManagerImpl
 import com.softcat.database.managers.local.weather.WeatherManager
@@ -19,6 +23,10 @@ import dagger.Module
 
 @Module
 interface DatabaseModule {
+
+    @ApplicationScope
+    @Binds
+    fun bindSQLiteExecutor(impl: SQLiteExecutor): SQLiteInterface
 
     @ApplicationScope
     @Binds
@@ -47,4 +55,8 @@ interface DatabaseModule {
     @ApplicationScope
     @Binds
     fun bindCursorMapperInterface(impl: CursorMapper): CursorMapperInterface
+
+    @ApplicationScope
+    @Binds
+    fun bindPlotManager(impl: PlotManagerImpl): PlotManager
 }

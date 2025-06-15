@@ -4,12 +4,15 @@ import android.content.ContentValues
 import android.database.Cursor
 import com.softcat.database.internal.DatabaseRules
 import com.softcat.database.internal.DbHelper
+import com.softcat.database.internal.queries.DeleteQueries
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_CITY
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_COUNTRY
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_CURRENT_WEATHER
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_WEATHER
+import com.softcat.database.internal.queries.DeleteQueries.DELETE_WEATHER_TYPE
 import com.softcat.database.internal.queries.GetDataQueries
 import com.softcat.database.internal.queries.GetDataQueries.GET_WEATHER_TYPE
+import com.softcat.database.internal.queries.InsertQueries
 import com.softcat.database.internal.queries.InsertQueries.INSERT_CITY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_COUNTRY
 import com.softcat.database.internal.queries.InsertQueries.INSERT_CURRENT_WEATHER
@@ -17,6 +20,7 @@ import com.softcat.database.internal.queries.InsertQueries.INSERT_WEATHER
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.PlotDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 import java.util.Locale
@@ -25,6 +29,30 @@ import javax.inject.Inject
 class SQLiteExecutor @Inject constructor(
     private val dbHelper: DbHelper
 ): SQLiteInterface {
+
+    override fun getPlots(userId: String): Cursor {
+        val query = GetDataQueries.GET_USER_PLOTS.format(userId)
+        return dbHelper.readableDatabase.rawQuery(query, null)
+    }
+
+    override fun insertPlot(model: PlotDbModel) {
+        val query = InsertQueries.INSERT_PLOT.format(
+            model.id,
+            model.parameter,
+            model.values,
+            model.time,
+            model.cityId,
+            model.authorId,
+            model.description
+        )
+        dbHelper.writableDatabase.execSQL(query)
+    }
+
+    override fun deletePlot(plotId: Int) {
+        val query = DeleteQueries.DELETE_PLOT.format(plotId)
+        dbHelper.writableDatabase.execSQL(query)
+    }
+
     override fun getCities(): Cursor {
         return dbHelper.readableDatabase.rawQuery(GetDataQueries.GET_CITIES, null)
     }
@@ -79,6 +107,10 @@ class SQLiteExecutor @Inject constructor(
             null,
             values
         )
+    }
+
+    override fun deleteWeatherType(code: Int) {
+        dbHelper.writableDatabase.execSQL(DELETE_WEATHER_TYPE.format(code))
     }
 
     override fun getWeatherType(code: Int): Cursor {

@@ -10,13 +10,16 @@ import com.softcat.database.commands.GetCountriesCommand
 import com.softcat.database.commands.GetCurrentWeatherCommand
 import com.softcat.database.commands.GetDayWeatherCommand
 import com.softcat.database.commands.GetFavouriteCitiesCommand
+import com.softcat.database.commands.GetPlotCommand
 import com.softcat.database.commands.GetWeatherTypesCommand
 import com.softcat.database.commands.IsFavouriteCommand
 import com.softcat.database.commands.RemoveFromFavouritesCommand
+import com.softcat.database.commands.SavePlotCommand
 import com.softcat.database.commands.SearchCityCommand
 import com.softcat.database.commands.UpdateCountriesCommand
 import com.softcat.database.commands.UpdateWeatherTypesCommand
 import com.softcat.database.commands.VerifyUserCommand
+import com.softcat.database.managers.local.PlotManager
 import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.local.weather.WeatherManager
 import com.softcat.database.managers.remote.favourites.FavouritesManager
@@ -24,6 +27,7 @@ import com.softcat.database.managers.remote.user.UsersManager
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.PlotDbModel
 import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -34,7 +38,12 @@ class CommandFactory @Inject constructor(
     private val favouritesManager: FavouritesManager,
     private val regionManager: RegionManager,
     private val weatherManager: WeatherManager,
+    private val plotManager: PlotManager
 ): CommandFactoryInterface {
+
+    override fun savePlotCommand(model: PlotDbModel) = SavePlotCommand(model, plotManager)
+
+    override fun getPlotCommand(userId: String) = GetPlotCommand(userId, plotManager)
 
     override fun searchCityCommand(query: String): SearchCityCommand {
         return SearchCityCommand(regionManager, query)

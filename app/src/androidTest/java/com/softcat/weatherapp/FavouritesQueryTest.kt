@@ -15,7 +15,7 @@ import kotlin.math.abs
 class FavouritesQueryTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
     private val component = DaggerUnitTestsComponent.factory().create(context)
-    private val db = component.getDatabase()
+    private val db = component.getDatabaseImpl()
     private val usersManager = component.getUsersManager()
 
     private var _user: UserDbModel? = null

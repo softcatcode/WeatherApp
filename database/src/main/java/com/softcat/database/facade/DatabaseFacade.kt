@@ -3,11 +3,18 @@ package com.softcat.database.facade
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.PlotDbModel
 import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 
 interface DatabaseFacade {
+
+    suspend fun savePlot(model: PlotDbModel): Result<Unit>
+
+    suspend fun deletePlot(model: PlotDbModel): Result<Unit>
+
+    suspend fun getPlots(userId: String): Result<List<PlotDbModel>>
 
     suspend fun searchCity(query: String): Result<List<CityDbModel>>
 

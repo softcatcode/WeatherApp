@@ -7,6 +7,7 @@ import com.softcat.database.di.DatabaseComponent
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.PlotDbModel
 import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -27,6 +28,24 @@ class DatabaseProxy @Inject constructor(
     }
 
     private var userRole: String? = null
+
+    override suspend fun savePlot(model: PlotDbModel): Result<Unit> {
+        if (userRole == UserDbModel.ROLE_PREMIUM)
+            return database.savePlot(model)
+        throw SecurityException()
+    }
+
+    override suspend fun deletePlot(model: PlotDbModel): Result<Unit> {
+        if (userRole == UserDbModel.ROLE_PREMIUM)
+            return database.deletePlot(model)
+        throw SecurityException()
+    }
+
+    override suspend fun getPlots(userId: String): Result<List<PlotDbModel>> {
+        if (userRole == UserDbModel.ROLE_PREMIUM)
+            return database.getPlots(userId)
+        throw SecurityException()
+    }
 
     override suspend fun searchCity(query: String): Result<List<CityDbModel>> {
         return database.searchCity(query)

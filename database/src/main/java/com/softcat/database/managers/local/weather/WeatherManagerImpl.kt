@@ -2,7 +2,7 @@ package com.softcat.database.managers.local.weather
 
 import android.icu.util.Calendar
 import com.softcat.database.internal.CursorMapperInterface
-import com.softcat.database.internal.sqlExecutor.SQLiteExecutor
+import com.softcat.database.internal.sqlExecutor.SQLiteInterface
 import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -10,7 +10,7 @@ import java.util.Date
 import javax.inject.Inject
 
 class WeatherManagerImpl @Inject constructor(
-    private val executor: SQLiteExecutor,
+    private val executor: SQLiteInterface,
     private val mapper: CursorMapperInterface
 ): WeatherManager {
 
@@ -21,6 +21,15 @@ class WeatherManagerImpl @Inject constructor(
 
         return try {
             executor.insertWeather(model)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override fun removeWeather(model: WeatherDbModel): Result<Unit> {
+        return try {
+            executor.deleteWeather(model.cityId, model.timeEpoch)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -40,10 +49,30 @@ class WeatherManagerImpl @Inject constructor(
         }
     }
 
+    override fun removeHourlyWeather(model: CurrentWeatherDbModel): Result<Unit> {
+        return try {
+            executor.deleteCurrentWeather(model.cityId, model.timeEpoch)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override fun updateWeatherTypes(types: List<WeatherTypeDbModel>): Result<Unit> {
         return try {
             types.forEach {
                 executor.insertWeatherType(it)
+            }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override fun removeWeatherTypes(types: List<WeatherTypeDbModel>): Result<Unit> {
+        return try {
+            types.forEach {
+                executor.deleteWeatherType(it.code)
             }
             Result.success(Unit)
         } catch (e: Exception) {

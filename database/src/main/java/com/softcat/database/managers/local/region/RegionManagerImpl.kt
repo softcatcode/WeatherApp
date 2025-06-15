@@ -1,13 +1,13 @@
 package com.softcat.database.managers.local.region
 
 import com.softcat.database.internal.CursorMapperInterface
-import com.softcat.database.internal.sqlExecutor.SQLiteExecutor
+import com.softcat.database.internal.sqlExecutor.SQLiteInterface
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import javax.inject.Inject
 
 class RegionManagerImpl @Inject constructor(
-    private val executor: SQLiteExecutor,
+    private val executor: SQLiteInterface,
     private val mapper: CursorMapperInterface
 ): RegionManager {
 

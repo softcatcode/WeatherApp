@@ -22,5 +22,5 @@ interface CursorMapperInterface {
 
     fun toWeatherType(cursor: Cursor): WeatherTypeDbModel
 
-    fun toPlot(cursor: Cursor): PlotDbModel
+    fun toPlots(cursor: Cursor): List<PlotDbModel>
 }

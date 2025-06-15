@@ -23,6 +23,6 @@ object InsertQueries {
 
     const val INSERT_PLOT = """
         insert into $PLOT_TABLE_NAME values
-            (null, '%s', '%s', '%s', %d, '%s', '%s');
+            (%d, '%s', '%s', '%s', %d, '%s', '%s');
     """
 }
