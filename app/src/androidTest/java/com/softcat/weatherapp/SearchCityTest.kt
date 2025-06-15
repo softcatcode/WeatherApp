@@ -22,7 +22,8 @@ class SearchCityTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
     private val component = DaggerUnitTestsComponent.factory().create(context)
-    private val db = component.getDatabase()
+    private val db = component.getDatabaseImpl()
+    private val regionManager = component.getRegionManager()
 
     private fun cmp(a: CityDbModel, b: CityDbModel) {
         assert(a.id == b.id)
@@ -73,10 +74,12 @@ class SearchCityTest {
                 longitude = 3f
             )
         )
-        countries.forEach { db.saveCountry(it) }
+        val countryIds = countries.map { db.saveCountry(it).getOrThrow() }
         cities.forEach { db.saveCity(it) }
-
         val result = db.searchCity("o").getOrThrow()
+        cities.forEach { regionManager.deleteCity(it.id) }
+        countryIds.forEach { regionManager.deleteCity(it) }
+
         assert(result.size == 2)
         cmp(cities[0], result[0])
         cmp(cities[1], result[1])
@@ -117,10 +120,12 @@ class SearchCityTest {
                 longitude = 3f
             )
         )
-        countries.forEach { db.saveCountry(it) }
+        val countryIds = countries.map { db.saveCountry(it).getOrThrow() }
         cities.forEach { db.saveCity(it) }
-
         val result = db.searchCity("Mos").getOrThrow()
+        cities.forEach { regionManager.deleteCity(it.id) }
+        countryIds.forEach { regionManager.deleteCity(it) }
+
         assert(result.size == 1)
         cmp(cities[0], result[0])
     }
@@ -160,10 +165,12 @@ class SearchCityTest {
                 longitude = 3f
             )
         )
-        countries.forEach { db.saveCountry(it) }
+        val countryIds = countries.map { db.saveCountry(it).getOrThrow() }
         cities.forEach { db.saveCity(it) }
-
         val result = db.searchCity("Unknown").getOrThrow()
+        cities.forEach { regionManager.deleteCity(it.id) }
+        countryIds.forEach { regionManager.deleteCity(it) }
+
         assert(result.isEmpty())
     }
 
@@ -202,10 +209,12 @@ class SearchCityTest {
                 longitude = 3f
             )
         )
-        countries.forEach { db.saveCountry(it) }
+        val countryIds = countries.map { db.saveCountry(it).getOrThrow() }
         cities.forEach { db.saveCity(it) }
-
         val result = db.searchCity("").getOrThrow()
+        cities.forEach { regionManager.deleteCity(it.id) }
+        countryIds.forEach { regionManager.deleteCity(it) }
+
         assert(result.isEmpty())
     }
 
