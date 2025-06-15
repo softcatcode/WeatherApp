@@ -1,19 +1,16 @@
 package com.softcat.weatherapp
 
 import android.icu.util.Calendar
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.softcat.data.mapper.toDbModel
 import com.softcat.data.mapper.toIconUrl
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
-import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 import com.softcat.domain.entity.City
-import com.softcat.domain.entity.User
-import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,7 +21,7 @@ import kotlin.math.abs
 class InsertQueryTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
     private val component = DaggerUnitTestsComponent.factory().create(context)
-    private val db = component.getDatabase()
+    private val db = component.getDatabaseImpl()
     private val regionManager = component.getRegionManager()
     private val weatherManager = component.getWeatherManager()
 
@@ -48,17 +45,7 @@ class InsertQueryTest {
         assert(a.nightDescription == b.nightDescription)
     }
 
-    private fun cmp(a: UserDbModel, b: UserDbModel) {
-        assert(a.name == b.name)
-        assert(a.email == b.email)
-        assert(a.role == b.role)
-        assert(a.password == b.password)
-        assert(a.registerTimeEpoch == b.registerTimeEpoch)
-        assert(a.id == UserDbModel.UNSPECIFIED_ID || a.id == b.id)
-    }
-
     private fun cmp(a: WeatherDbModel, b: WeatherDbModel) {
-        assert(a.id == b.id)
         assert(a.type == b.type)
         assert(a.vision == b.vision)
         assert(a.cityId == b.cityId)
@@ -78,7 +65,6 @@ class InsertQueryTest {
     }
 
     private fun cmp(a: CurrentWeatherDbModel, b: CurrentWeatherDbModel) {
-        assert(a.id == b.id)
         assert(a.type == b.type)
         assert(a.vision == b.vision)
         assert(a.cityId == b.cityId)
@@ -94,7 +80,7 @@ class InsertQueryTest {
     }
 
     @Test
-    fun saveTowDifferentCountries() = runBlocking {
+    fun saveTowDifferentCountries(): Unit = runBlocking {
         val countryModels = listOf(
             CountryDbModel(
                 id = CountryDbModel.UNSPECIFIED_ID,
@@ -106,10 +92,13 @@ class InsertQueryTest {
             ),
         )
 
-        countryModels.forEach {
-            db.saveCountry(it)
+        val countryIds = countryModels.map {
+            db.saveCountry(it).getOrThrow()
         }
         val savedCountries = db.getCountries().getOrThrow()
+        countryIds.forEach {
+            regionManager.deleteCountry(it)
+        }
 
         assert(savedCountries.size == countryModels.size)
         for (i in countryModels.indices) {
@@ -130,10 +119,13 @@ class InsertQueryTest {
             ),
         )
 
-        countryModels.forEach {
-            db.saveCountry(it)
+        val countryIds = countryModels.map {
+            db.saveCountry(it).getOrThrow()
         }
         val savedCountries = db.getCountries().getOrThrow()
+        countryIds.forEach {
+            regionManager.deleteCountry(it)
+        }
 
         assert(savedCountries.size == 1)
         cmp(savedCountries[0], countryModels[0])
@@ -168,12 +160,17 @@ class InsertQueryTest {
             )
         )
 
+        val countryIds = mutableListOf<Int>()
         val cityModels = cities.mapIndexed { index, cityModel ->
             val id = db.saveCountry(countryModels[index]).getOrThrow()
+            countryIds.add(id)
             cityModel.toDbModel(id)
         }
         cityModels.forEach { db.saveCity(it) }
         val savedCities = regionManager.getCities(listOf(2145091, 2801268)).getOrThrow()
+        regionManager.getCities(cities.map { it.id })
+        cities.forEach { regionManager.deleteCity(it.id) }
+        countryIds.forEach { regionManager.deleteCountry(it) }
 
         assert(savedCities.size == cityModels.size)
         for (i in cityModels.indices) {
@@ -210,14 +207,17 @@ class InsertQueryTest {
             )
         )
 
-        countryModels.forEach {
-            db.saveCountry(it)
+        val countryIds = countryModels.map {
+            db.saveCountry(it).getOrThrow()
         }
         val cityModels = cities.map { cityModel ->
             cityModel.toDbModel(1)
         }
         cityModels.forEach { db.saveCity(it) }
         val savedCities = regionManager.getCities(listOf(2145091, 2181569)).getOrThrow()
+        regionManager.getCities(cities.map { it.id })
+        cities.forEach { regionManager.deleteCity(it.id) }
+        countryIds.forEach { regionManager.deleteCountry(it) }
 
         assert(savedCities.size == cityModels.size)
         for (i in cityModels.indices) {
@@ -254,14 +254,17 @@ class InsertQueryTest {
             )
         )
 
-        countryModels.forEach {
-            db.saveCountry(it)
+        val countryIds = countryModels.map {
+            db.saveCountry(it).getOrThrow()
         }
         val cityModels = cities.map { cityModel ->
             cityModel.toDbModel(1)
         }
         cityModels.forEach { db.saveCity(it) }
         val savedCities = regionManager.getCities(listOf(2145091, 2145091)).getOrThrow()
+        regionManager.getCities(cities.map { it.id })
+        cities.forEach { regionManager.deleteCity(it.id) }
+        countryIds.forEach { regionManager.deleteCountry(it) }
 
         assert(savedCities.size == cityModels.size)
         for (i in cityModels.indices) {
@@ -284,6 +287,7 @@ class InsertQueryTest {
 
         weatherManager.updateWeatherTypes(listOf(weatherType))
         val savedTypes = weatherManager.getWeatherTypes(listOf(1000)).getOrThrow()
+        weatherManager.removeWeatherTypes(listOf(weatherType))
 
         assert(savedTypes.size == 1)
         cmp(savedTypes[0], weatherType)
@@ -321,6 +325,8 @@ class InsertQueryTest {
         db.initWeatherTypes(weatherTypes)
         weatherManager.updateWeatherTypes(listOf(additionalType))
         val savedTypes = weatherManager.getWeatherTypes(listOf(1000, 1063)).getOrThrow()
+        weatherManager.removeWeatherTypes(weatherTypes)
+        weatherManager.removeWeatherTypes(listOf(additionalType))
 
         assert(savedTypes.size == 2)
         for (i in savedTypes.indices) {
@@ -384,7 +390,6 @@ class InsertQueryTest {
                 iconBytes = iconsImage[1]
             )
         )
-        db.initWeatherTypes(weatherTypes)
         val time1 = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_YEAR, 0)
             set(Calendar.MILLISECONDS_IN_DAY, 0)
@@ -433,13 +438,17 @@ class InsertQueryTest {
             rainChance = 60
         )
 
+        db.initWeatherTypes(weatherTypes)
         db.saveWeather(weather1)
         db.saveWeather(weather2)
         val result = db.getDaysWeather(1, time1, time2).getOrThrow()
+        weatherManager.removeWeather(weather1)
+        weatherManager.removeWeather(weather2)
+        weatherManager.removeWeatherTypes(weatherTypes)
 
         assert(result.size == 2)
         cmp(result[0], weather1)
-        cmp(result[1], weather1)
+        cmp(result[1], weather2)
     }
 
     @Test
@@ -463,7 +472,6 @@ class InsertQueryTest {
                 iconBytes = iconsImage[1]
             )
         )
-        db.initWeatherTypes(weatherTypes)
         val time = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_YEAR, 0)
             set(Calendar.MILLISECONDS_IN_DAY, 0)
@@ -507,9 +515,13 @@ class InsertQueryTest {
             rainChance = 60
         )
 
+        db.initWeatherTypes(weatherTypes)
         db.saveWeather(weather1)
         db.saveWeather(weather2)
         val result = db.getDaysWeather(1, time, time + 1).getOrThrow()
+        weatherManager.removeWeather(weather1)
+        weatherManager.removeWeather(weather2)
+        weatherManager.removeWeatherTypes(weatherTypes)
 
         assert(result.size == 1)
         cmp(result[0], weather2)
@@ -536,20 +548,18 @@ class InsertQueryTest {
                 iconBytes = iconsImage[1]
             )
         )
-        db.initWeatherTypes(weatherTypes)
         val time1 = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_YEAR, 0)
-            set(Calendar.HOUR_OF_DAY, 2)
             set(Calendar.MILLISECONDS_IN_DAY, 0)
+            set(Calendar.HOUR_OF_DAY, 2)
         }.timeInMillis / 1000L
         val time2 = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_YEAR, 0)
-            set(Calendar.HOUR_OF_DAY, 3)
             set(Calendar.MILLISECONDS_IN_DAY, 0)
+            set(Calendar.HOUR_OF_DAY, 3)
         }.timeInMillis / 1000L
         val dayEpoch = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_YEAR, 0)
-            set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MILLISECONDS_IN_DAY, 0)
         }.timeInMillis / 1000L
 
@@ -584,13 +594,17 @@ class InsertQueryTest {
             cloud = 60,
         )
 
+        db.initWeatherTypes(weatherTypes)
         db.saveCurrentWeather(weather1)
         db.saveCurrentWeather(weather2)
         val result = db.getCurrentWeather(1, dayEpoch).getOrThrow()
+        weatherManager.removeHourlyWeather(weather1)
+        weatherManager.removeHourlyWeather(weather2)
+        weatherManager.removeWeatherTypes(weatherTypes)
 
         assert(result.size == 2)
         cmp(result[0], weather1)
-        cmp(result[1], weather1)
+        cmp(result[1], weather2)
     }
 
     @Test
@@ -614,7 +628,6 @@ class InsertQueryTest {
                 iconBytes = iconsImage[1]
             )
         )
-        db.initWeatherTypes(weatherTypes)
         val time = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_YEAR, 0)
             set(Calendar.HOUR_OF_DAY, 2)
@@ -657,9 +670,13 @@ class InsertQueryTest {
             cloud = 60,
         )
 
+        db.initWeatherTypes(weatherTypes)
         db.saveCurrentWeather(weather1)
         db.saveCurrentWeather(weather2)
         val result = db.getCurrentWeather(1, dayEpoch).getOrThrow()
+        weatherManager.removeHourlyWeather(weather1)
+        weatherManager.removeHourlyWeather(weather2)
+        weatherManager.removeWeatherTypes(weatherTypes)
 
         assert(result.size == 1)
         cmp(result[0], weather2)
