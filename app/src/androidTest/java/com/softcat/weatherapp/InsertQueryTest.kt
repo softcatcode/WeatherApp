@@ -8,14 +8,17 @@ import com.softcat.data.mapper.toIconUrl
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 import com.softcat.domain.entity.City
+import com.softcat.domain.entity.User
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.net.URL
 import kotlin.math.abs
+import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
 class InsertQueryTest {
@@ -24,6 +27,14 @@ class InsertQueryTest {
     private val db = component.getDatabaseImpl()
     private val regionManager = component.getRegionManager()
     private val weatherManager = component.getWeatherManager()
+
+    private fun cmp(a: UserDbModel, b: UserDbModel) {
+        assert(a.name == b.name)
+        assert(a.password == b.password)
+        assert(a.email == b.email)
+        assert(a.registerTimeEpoch == b.registerTimeEpoch)
+        assert(a.role == b.role)
+    }
 
     private fun cmp(a: CountryDbModel, b: CountryDbModel) {
         assert(a.name == b.name)
@@ -334,40 +345,23 @@ class InsertQueryTest {
         }
     }
 
-//    @Test
-//    fun createUserWithIllegalPasswordTest() = runBlocking {
-//        val user = UserDbModel(
-//            name = "Batman",
-//            email = "betsy.thebat@gmail.com",
-//            password = "bat",
-//            role = User.Status.Regular.name,
-//            registerTimeEpoch = Calendar.getInstance().timeInMillis / 1000L,
-//            id = UserDbModel.UNSPECIFIED_ID
-//        )
-//
-//        val registerResult = db.createUser(user).getOrNull()
-//        val verifiedUser = db.verifyUser(user.name, user.password).getOrNull()
-//
-//        assertNull(registerResult)
-//        assertNull(verifiedUser)
-//    }
-//
-//    @Test
-//    fun createUserWithSpaceInNameTest() = runBlocking {
-//        val user = UserDbModel(
-//            name = "Spider man",
-//            email = "spider.man@gmail.com",
-//            password = "Spider",
-//            role = User.Status.Regular.name,
-//            registerTimeEpoch = Calendar.getInstance().timeInMillis / 1000L,
-//            id = UserDbModel.UNSPECIFIED_ID
-//        )
-//
-//        db.createUser(user)
-//        val verifiedUser = db.verifyUser(user.name, user.password).getOrThrow()
-//
-//        cmp(user, verifiedUser)
-//    }
+    @Test
+    fun createUserWithSpaceInNameTest() = runBlocking {
+        val randomNumber = Random.nextInt(1, 100000)
+        val user = UserDbModel(
+            name = "Spider man ($randomNumber)",
+            email = "spider.$randomNumber.man@gmail.com",
+            password = "Spider_$randomNumber",
+            role = User.Status.Regular.name,
+            registerTimeEpoch = Calendar.getInstance().timeInMillis / 1000L,
+            id = UserDbModel.UNSPECIFIED_ID
+        )
+
+        db.createUser(user)
+        val verifiedUser = db.verifyUser(user.name, user.password).getOrThrow()
+
+        cmp(user, verifiedUser)
+    }
 
     @Test
     fun insertWeatherTest(): Unit = runBlocking {
