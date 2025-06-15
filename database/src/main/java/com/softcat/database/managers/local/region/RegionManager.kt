@@ -4,6 +4,9 @@ import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 
 interface RegionManager {
+
+    suspend fun searchCity(query: String): Result<List<CityDbModel>>
+
     suspend fun getCities(ids: List<Int>): Result<List<CityDbModel>>
 
     suspend fun getCountries(): Result<List<CountryDbModel>>

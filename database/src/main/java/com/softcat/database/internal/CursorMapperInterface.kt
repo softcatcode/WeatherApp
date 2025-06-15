@@ -12,7 +12,7 @@ interface CursorMapperInterface {
 
     fun toCityModels(cursor: Cursor): List<CityDbModel>
 
-    fun toCountriesModels(cursor: Cursor): List<CountryDbModel>
+    fun toCountryModels(cursor: Cursor): List<CountryDbModel>
 
     fun toInt(cursor: Cursor): Int
 
@@ -22,5 +22,5 @@ interface CursorMapperInterface {
 
     fun toWeatherType(cursor: Cursor): WeatherTypeDbModel
 
-    fun toPlot(cursor: Cursor): PlotDbModel
+    fun toPlots(cursor: Cursor): List<PlotDbModel>
 }

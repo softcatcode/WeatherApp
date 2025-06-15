@@ -3,13 +3,14 @@ package com.softcat.database.internal.queries
 import com.softcat.database.internal.DatabaseRules.CITIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.COUNTRIES_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.CURRENT_WEATHER_TABLE_NAME
+import com.softcat.database.internal.DatabaseRules.PLOT_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.WEATHER_TABLE_NAME
 import com.softcat.database.internal.DatabaseRules.WEATHER_TYPE_TABLE_NAME
 
 internal object GetDataQueries {
-    const val GET_CITIES = "select * from $CITIES_TABLE_NAME where 1;"
+    const val GET_CITIES = "select * from $CITIES_TABLE_NAME;"
 
-    const val GET_COUNTRIES = "select * from $COUNTRIES_TABLE_NAME where 1;"
+    const val GET_COUNTRIES = "select * from $COUNTRIES_TABLE_NAME;"
 
     const val GET_CITY = "select * from $CITIES_TABLE_NAME where id = %d;"
 
@@ -27,5 +28,9 @@ internal object GetDataQueries {
 
     const val GET_WEATHER_TYPE = """
         select * from $WEATHER_TYPE_TABLE_NAME where code = %d;
+    """
+
+    const val GET_USER_PLOTS = """
+        select * from $PLOT_TABLE_NAME where authorId = '%s';
     """
 }

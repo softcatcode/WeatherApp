@@ -135,7 +135,7 @@ fun SearchContent(component: SearchComponent) {
                     )
                 }
 
-                SearchStore.State.SearchState.Error -> {
+                is SearchStore.State.SearchState.Error -> {
                     Text(
                         text = stringResource(id = R.string.title_empty_search_result),
                         textAlign = TextAlign.Center,

@@ -1,15 +1,39 @@
 package com.softcat.database.managers.local.region
 
 import com.softcat.database.internal.CursorMapperInterface
-import com.softcat.database.internal.sqlExecutor.SQLiteExecutor
+import com.softcat.database.internal.sqlExecutor.SQLiteInterface
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import javax.inject.Inject
 
 class RegionManagerImpl @Inject constructor(
-    private val executor: SQLiteExecutor,
+    private val executor: SQLiteInterface,
     private val mapper: CursorMapperInterface
 ): RegionManager {
+
+    private fun match(query: String, name: String): Boolean {
+        val q = query.lowercase()
+        val s = name.lowercase()
+        val lastInd = s.length - q.length
+        for (i in 0..lastInd) {
+            if (s.substring(i, i + q.length) == q)
+                return true
+        }
+        return false
+    }
+
+    override suspend fun searchCity(query: String): Result<List<CityDbModel>> {
+        if (query.isBlank())
+            return Result.success(emptyList())
+        val cities = try {
+            val cursor = executor.getCities()
+            mapper.toCityModels(cursor)
+        } catch (e: Exception) {
+            return Result.failure(e)
+        }
+        val result = cities.filter { match(query, it.name) }
+        return Result.success(result)
+    }
 
     override suspend fun getCities(ids: List<Int>): Result<List<CityDbModel>> {
         return try {
@@ -25,7 +49,7 @@ class RegionManagerImpl @Inject constructor(
 
     override suspend fun getCountries(): Result<List<CountryDbModel>> {
         return try {
-            val result = mapper.toCountriesModels(executor.getCountries())
+            val result = mapper.toCountryModels(executor.getCountries())
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
@@ -53,16 +77,17 @@ class RegionManagerImpl @Inject constructor(
 
     @Synchronized
     override fun saveCountry(country: CountryDbModel): Result<Int> {
-        return try {
-            val countries =
-                mapper.toCountriesModels(executor.getCountries())
-            if (countries.find { it.name == country.name } == null) {
-                val id = mapper.toInt(executor.insertCountry(country))
-                Result.success(id)
-            } else {
-                val id = mapper.toInt(executor.getCountryId(country.name))
-                Result.success(id)
+        try {
+            val duplicateCountryId = try {
+                mapper.toInt(executor.getCountryId(country.name))
+            } catch (_: Exception) {
+                null
             }
+            duplicateCountryId?.let {
+                return Result.success(it)
+            }
+            val id = mapper.toInt(executor.insertCountry(country))
+            return Result.success(id)
         } catch (e: Exception) {
             return Result.failure(e)
         }

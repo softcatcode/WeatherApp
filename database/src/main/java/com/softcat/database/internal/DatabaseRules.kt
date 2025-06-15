@@ -10,5 +10,5 @@ object DatabaseRules {
     const val CITIES_TABLE_NAME = "City"
     const val PLOT_TABLE_NAME = "Plot"
     const val TIMEOUT = 5000L
-    const val VERSION = 10
+    const val VERSION = 15
 }

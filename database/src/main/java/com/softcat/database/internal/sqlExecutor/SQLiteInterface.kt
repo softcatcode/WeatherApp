@@ -4,10 +4,18 @@ import android.database.Cursor
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.PlotDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
 
 interface SQLiteInterface {
+
+    fun getPlots(userId: String): Cursor
+
+    fun insertPlot(model: PlotDbModel)
+
+    fun deletePlot(plotId: Int)
+
     fun getCities(): Cursor
 
     fun getCountries(): Cursor
@@ -25,6 +33,8 @@ interface SQLiteInterface {
     fun insertCity(model: CityDbModel)
 
     fun insertWeatherType(model: WeatherTypeDbModel)
+
+    fun deleteWeatherType(code: Int)
 
     fun getWeatherType(code: Int): Cursor
 

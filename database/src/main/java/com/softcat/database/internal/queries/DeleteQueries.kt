@@ -16,7 +16,7 @@ internal object DeleteQueries {
 
     const val DELETE_COUNTRY = "delete from $COUNTRIES_TABLE_NAME where id = %d;"
 
-    const val DROP_PLOTS = "drop table if exists $PLOT_TABLE_NAME$;"
+    const val DROP_PLOTS = "drop table if exists $PLOT_TABLE_NAME;"
 
     const val DELETE_CITY = "delete from $CITIES_TABLE_NAME where id = %d;"
 
@@ -32,5 +32,13 @@ internal object DeleteQueries {
 
     const val DELETE_CURRENT_WEATHER = """
         delete from $CURRENT_WEATHER_TABLE_NAME where cityId = %d and timeEpoch = %d;
+    """
+
+    const val DELETE_PLOT = """
+        delete from $PLOT_TABLE_NAME where id = %d;
+    """
+
+    const val DELETE_WEATHER_TYPE = """
+        delete from $WEATHER_TYPE_TABLE_NAME where code = %d;
     """
 }

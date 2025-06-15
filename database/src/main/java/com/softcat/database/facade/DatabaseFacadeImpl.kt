@@ -5,6 +5,7 @@ import com.softcat.database.exceptions.NoCommandResultException
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
+import com.softcat.database.model.PlotDbModel
 import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -13,6 +14,30 @@ import javax.inject.Inject
 class DatabaseFacadeImpl @Inject constructor(
     private val factory: CommandFactoryInterface
 ): DatabaseFacade {
+
+    override suspend fun savePlot(model: PlotDbModel): Result<Unit> {
+        val cmd = factory.savePlotCommand(model)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun deletePlot(model: PlotDbModel): Result<Unit> {
+        val cmd = factory.savePlotCommand(model)
+        cmd.rollback()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun getPlots(userId: String): Result<List<PlotDbModel>> {
+        val cmd = factory.getPlotCommand(userId)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
+
+    override suspend fun searchCity(query: String): Result<List<CityDbModel>> {
+        val cmd = factory.searchCityCommand(query)
+        cmd.execute()
+        return cmd.result ?: Result.failure(NoCommandResultException())
+    }
 
     override suspend fun createUser(user: UserDbModel): Result<UserDbModel> {
         val cmd = factory.createUserCommand(user)

@@ -1,4 +1,4 @@
-package com.softcat.weatherapp.di.annotations
+package com.softcat.database.di
 
 import javax.inject.Scope
 

@@ -30,7 +30,7 @@ class CursorMapper @Inject constructor(): CursorMapperInterface {
         return cities
     }
 
-    override fun toCountriesModels(cursor: Cursor): List<CountryDbModel> {
+    override fun toCountryModels(cursor: Cursor): List<CountryDbModel> {
         val countries = mutableListOf<CountryDbModel>()
         cursor.use {
             while (it.moveToNext()) {
@@ -118,18 +118,24 @@ class CursorMapper @Inject constructor(): CursorMapperInterface {
         }
     }
 
-    override fun toPlot(cursor: Cursor): PlotDbModel {
-        cursor.moveToNext()
-        return with (cursor) {
-            PlotDbModel(
-                id = getInt(0),
-                parameter = getString(1),
-                values = getString(2),
-                time = getString(3),
-                cityId = getInt(4),
-                authorId = getString(5),
-                description = getString(6)
-            )
+    override fun toPlots(cursor: Cursor): List<PlotDbModel> {
+        return cursor.use {
+            val result = mutableListOf<PlotDbModel>()
+            while (cursor.moveToNext()) {
+                val model = with(cursor) {
+                    PlotDbModel(
+                        id = getInt(0),
+                        parameter = getString(1),
+                        values = getString(2),
+                        time = getString(3),
+                        cityId = getInt(4),
+                        authorId = getString(5),
+                        description = getString(6)
+                    )
+                }
+                result.add(model)
+            }
+            result
         }
     }
 }

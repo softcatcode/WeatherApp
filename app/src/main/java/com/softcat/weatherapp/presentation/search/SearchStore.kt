@@ -32,7 +32,7 @@ interface SearchStore: Store<SearchStore.Intent, SearchStore.State, SearchStore.
 
             data object Loading: SearchState
 
-            data object Error: SearchState
+            data class Error(val error: Throwable): SearchState
 
             data object EmptyResult: SearchState
 
