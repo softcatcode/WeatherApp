@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task
 import com.softcat.domain.interfaces.LocationRepository
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.NullPointerException
 
 class LocationRepositoryImpl @Inject constructor(
     private val geocoder: Geocoder
@@ -47,8 +48,12 @@ class LocationRepositoryImpl @Inject constructor(
             CancellationTokenSource().token
         )
         getLocationTaskResult.addOnCompleteListener {
-            Timber.i("Fused location client replied: ${it.result}.")
-            onLocationLoaded(it.result)
+            try {
+                Timber.i("Fused location client replied: ${it.result}.")
+                onLocationLoaded(it.result)
+            } catch (e: NullPointerException) {
+                Timber.i("Location is undefined: fused location client returned null.")
+            }
         }
     }
 
