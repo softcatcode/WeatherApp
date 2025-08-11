@@ -54,7 +54,6 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.softcat.data.mapper.toCalendar
-import com.softcat.domain.entity.CurrentWeather
 import com.softcat.domain.entity.Forecast
 import com.softcat.domain.entity.Weather
 import com.softcat.domain.entity.WeatherParameters.Companion.MAX_TEMPERATURE

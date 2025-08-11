@@ -25,7 +25,7 @@ class AuthorizationStoreFactory @Inject constructor(
         initialState = AuthorizationStore.State(
             login = "",
             password = "",
-            type = AuthorizationStore.State.ScreenType.LogIn
+            type = AuthorizationStore.State.ScreenType.Initial
         ),
         executorFactory = ::Executor,
         reducer = ReducerImpl,
@@ -35,17 +35,24 @@ class AuthorizationStoreFactory @Inject constructor(
     private inner class BootstrapperImpl: CoroutineBootstrapper<Action>() {
         override fun invoke() {
             scope.launch {
-                authUseCase.getLastUser()?.let {
-                    authUseCase.logIn(it.name, it.password).onSuccess {
-                        dispatch(Action.UserAlreadyAuthorized(it))
-                    }
-                }
+                val user = authUseCase.getLastUser()
+                launchWeatherAppScreen(user)
+            }
+        }
+
+        private fun launchWeatherAppScreen(user: User?) {
+            if (user != null) {
+                dispatch(Action.UserAlreadyAuthorized(user))
+            } else {
+                dispatch(Action.UserNotAuthorized)
             }
         }
     }
 
     private sealed interface Action {
         data class UserAlreadyAuthorized(val user: User): Action
+
+        data object UserNotAuthorized: Action
     }
 
     sealed interface Msg {
@@ -61,6 +68,8 @@ class AuthorizationStoreFactory @Inject constructor(
 
         data object LoadingStarted: Msg
         data object LoadingFinished: Msg
+
+        data object UserNotAuthorized: Msg
     }
 
     private inner class Executor: CoroutineExecutor<
@@ -102,6 +111,9 @@ class AuthorizationStoreFactory @Inject constructor(
             when (action) {
                 is Action.UserAlreadyAuthorized ->
                     publish(AuthorizationStore.Label.UserAlreadyAuthorized(action.user))
+
+                Action.UserNotAuthorized ->
+                    dispatch(Msg.UserNotAuthorized)
             }
         }
 
@@ -177,6 +189,7 @@ class AuthorizationStoreFactory @Inject constructor(
                 is Msg.Error -> copy(error = msg.error)
                 Msg.LoadingStarted -> copy(isLoading = true, error = null)
                 Msg.LoadingFinished -> copy(isLoading = false, error = null)
+                Msg.UserNotAuthorized -> copy(type = AuthorizationStore.State.ScreenType.LogIn)
             }
             Timber.i("${this::class.simpleName} NEW_STATE: $result.")
             return result
