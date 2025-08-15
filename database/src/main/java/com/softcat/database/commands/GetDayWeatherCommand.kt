@@ -6,8 +6,8 @@ import com.softcat.database.model.WeatherDbModel
 
 class GetDayWeatherCommand(
     private val cityId: Int,
-    private val startMillis: Long,
-    private val endMillis: Long,
+    private val startSeconds: Long,
+    private val endSeconds: Long,
     private val weatherManager: WeatherManager
 ): Command {
 
@@ -15,7 +15,7 @@ class GetDayWeatherCommand(
         private set
 
     override suspend fun execute() {
-        result = weatherManager.getDaysWeather(cityId, startMillis, endMillis)
+        result = weatherManager.getDaysWeather(cityId, startSeconds, endSeconds)
     }
 
     override suspend fun rollback() {

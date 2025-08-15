@@ -7,13 +7,15 @@ import com.softcat.domain.entity.WeatherParameters
 import com.softcat.domain.entity.WeatherType
 import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.data.network.api.ApiService
+import com.softcat.database.facade.DatabaseFacade
 import com.softcat.domain.entity.weatherTypeOf
 import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
 
 class CalendarRepositoryImpl @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val database: DatabaseFacade
 ): CalendarRepository {
 
     override suspend fun selectYearDays(
@@ -22,62 +24,115 @@ class CalendarRepositoryImpl @Inject constructor(
         selectedYear: Int
     ): Result<List<Set<Int>>> {
         Timber.i("${this::class.simpleName}.selectYearDays($params, $city, $selectedYear)")
-        val nextWeatherList: List<Weather>
-        val prevWeatherList: List<Weather>
-        try {
-            val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-            nextWeatherList = if (currentYear == selectedYear)
-                getWeatherForecast(10, city.id)
-            else
-                emptyList()
-            prevWeatherList = if (currentYear > selectedYear)
-                getPreviousWeather(selectedYear, city.id)
-            else
-                emptyList()
-        } catch (e: Exception) {
-            return Result.failure(e)
-        }
+        val weatherList = getWeatherForYear(selectedYear, city.id)
         val monthsDays = List<MutableSet<Int>>(12) { mutableSetOf() }
 
-        (nextWeatherList + prevWeatherList).filter { weather ->
-            val type = weatherTypeOf(weather.conditionCode)
-            (params.weatherType == WeatherType.Any || params.weatherType == type) &&
+        weatherList.filter { weather ->
+            matches(weather, params)
+        }.forEach { weather ->
+            val month = weather.date.get(Calendar.MONTH)
+            val day = weather.date.get(Calendar.DAY_OF_MONTH)
+            monthsDays[month].add(day)
+        }
+        return Result.success(monthsDays)
+    }
+
+    private fun matches(weather: Weather, params: WeatherParameters): Boolean {
+        val type = weatherTypeOf(weather.conditionCode)
+        return (params.weatherType == WeatherType.Any || params.weatherType == type) &&
             weather.avgTemp in params.temperature &&
             weather.humidity in params.humidity &&
             weather.precipitations in params.precipitations &&
             weather.windSpeed in params.windSpeed &&
             weather.snowVolume in params.snowVolume
-        }.forEach { weather ->
-            val date = weather.formattedDate
-            val year = date.substringBefore('-', "0").toInt()
-            if (year == selectedYear) {
-                val month = date.substring(
-                    date.indexOfFirst { it == '-' } + 1,
-                    date.indexOfLast { it == '-' }
-                ).toInt()
-                val day = date.substring(date.indexOfLast { it == '-' } + 1).toInt()
-                monthsDays[month - 1].add(day)
-            }
+    }
+
+    private fun getYearStartEpoch(year: Int): Long {
+        val millis = Calendar.getInstance().apply {
+            set(Calendar.YEAR, year)
+            set(Calendar.DAY_OF_YEAR, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.timeInMillis
+        return millis / 1000L
+    }
+
+    private suspend fun loadWeatherFromInternet(
+        year: Int,
+        cityId: Int
+    ): List<Weather> {
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+        if (year > currentYear)
+            return emptyList()
+
+        if (year < currentYear) {
+            val forecast = apiService.loadWeatherHistory(
+                query = WeatherRepositoryImpl.cityIdToQuery(cityId),
+                startDate = "$currentYear-01-01",
+                endDate = "$currentYear-12-31"
+            ).toEntity()
+            return forecast.upcoming ?: emptyList()
         }
-        return Result.success(monthsDays)
+
+        val month = calendar.get(Calendar.MONTH) + 1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val first = try {
+            apiService.loadWeatherHistory(
+                query = WeatherRepositoryImpl.cityIdToQuery(cityId),
+                startDate = "$year-01-01",
+                endDate = "$year-%02d-%02d".format(month, day)
+            ).toEntity().upcoming ?: emptyList()
+        } catch (_: Exception) {
+            emptyList()
+        }
+
+        val second = try {
+            apiService.loadForecast(
+                query = WeatherRepositoryImpl.cityIdToQuery(cityId),
+                dayCount = 10
+            ).toEntity().upcoming ?: emptyList()
+        } catch (_: Exception) {
+            emptyList()
+        }
+
+        return first + second
     }
 
-    private suspend fun getWeatherForecast(daysCount: Int, cityId: Int): List<Weather> {
-        Timber.i("${this::class.simpleName}.getWeatherForecast($daysCount, $cityId)")
-        val forecast = apiService.loadForecast(
-            query = WeatherRepositoryImpl.cityIdToQuery(cityId),
-            dayCount = daysCount
-        ).toEntity()
-        return forecast.upcoming!!
+    private suspend fun loadWeatherFromDatabase(year: Int, cityId: Int): List<Weather> {
+        val dbWeather = database.getDaysWeather(
+            cityId = cityId,
+            startSeconds = getYearStartEpoch(year),
+            endSeconds = getYearStartEpoch(year + 1) - 1L
+        ).getOrNull() ?: emptyList()
+
+        val typeModels = database.getWeatherTypes(
+            typeCodes = dbWeather.map { it.type }
+        ).getOrNull() ?: return emptyList()
+
+        return dbWeather.mapIndexed { index, item ->
+            item.toEntity(typeModels[index])
+        }
     }
 
-    private suspend fun getPreviousWeather(currentYear: Int, cityId: Int): List<Weather> {
-        Timber.i("${this::class.simpleName}.getPreviousWeather($currentYear, $cityId)")
-        val forecast = apiService.loadWeatherHistory(
-            query = WeatherRepositoryImpl.cityIdToQuery(cityId),
-            startDate = "$currentYear-01-01",
-            endDate = "$currentYear-12-31"
-        ).toEntity()
-        return forecast.upcoming!!
+    private fun mergeWeatherData(first: List<Weather>, second: List<Weather>): List<Weather> {
+        val epoch: (Weather) -> Long = { it.date.timeInMillis / 1000L }
+        val m = mutableMapOf<Long, Weather>()
+        second.forEach {
+            m[epoch(it)] = it
+        }
+        first.forEach {
+            m[epoch(it)] = it
+        }
+        return m.values.toList()
+    }
+
+    private suspend fun getWeatherForYear(year: Int, cityId: Int): List<Weather> {
+        val dbWeather = loadWeatherFromDatabase(year, cityId)
+        val loadedWeather = loadWeatherFromInternet(year, cityId)
+        return mergeWeatherData(loadedWeather, dbWeather)
     }
 }
