@@ -182,6 +182,9 @@ class FavouritesStoreFactory @Inject constructor(
                 FavouritesStore.Intent.SearchClicked -> {
                     publish(FavouritesStore.Label.SearchClicked)
                 }
+                FavouritesStore.Intent.ProfileClicked -> {
+                    publish(FavouritesStore.Label.ProfileClicked)
+                }
                 is FavouritesStore.Intent.ReloadCities -> {
                     loadCities(intent.cities)
                 }
