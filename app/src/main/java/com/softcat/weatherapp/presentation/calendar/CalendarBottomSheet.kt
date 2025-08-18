@@ -3,6 +3,7 @@ package com.softcat.weatherapp.presentation.calendar
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,15 +16,19 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.softcat.domain.entity.WeatherParameters.Companion.MAX_HUMIDITY
 import com.softcat.domain.entity.WeatherParameters.Companion.MAX_PRECIPITATIONS
 import com.softcat.domain.entity.WeatherParameters.Companion.MAX_SNOW_VOLUME
+import com.softcat.domain.entity.WeatherParameters.Companion.MAX_TEMPERATURE
 import com.softcat.domain.entity.WeatherParameters.Companion.MAX_WIND_SPEED
 import com.softcat.domain.entity.WeatherParameters.Companion.MIN_HUMIDITY
 import com.softcat.domain.entity.WeatherParameters.Companion.MIN_PRECIPITATIONS
 import com.softcat.domain.entity.WeatherParameters.Companion.MIN_SNOW_VOLUME
+import com.softcat.domain.entity.WeatherParameters.Companion.MIN_TEMPERATURE
 import com.softcat.domain.entity.WeatherParameters.Companion.MIN_WIND_SPEED
 import com.softcat.domain.entity.WeatherType
 import com.softcat.weatherapp.R
@@ -38,9 +43,8 @@ private fun LazyListScope.temperatureSelector(
 ) {
     item {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp),
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             WeatherTypeSelector(
                 modifier = Modifier
@@ -59,9 +63,7 @@ private fun LazyListScope.temperatureSelector(
             )
             Spacer(Modifier.width(20.dp))
             TemperatureRangeInput(
-                modifier = Modifier
-                    .weight(3f)
-                    .fillMaxHeight(),
+                modifier = Modifier.weight(4f),
                 minValue = minTemperature,
                 maxValue = maxTemperature,
                 onMinValueChange = onMinTempChange,
@@ -73,25 +75,26 @@ private fun LazyListScope.temperatureSelector(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Preview(showBackground = true)
 fun CalendarBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(),
-    isExpanded: Boolean,
-    onDismiss: () -> Unit,
-    currentWeatherType: WeatherType,
-    minTemperature: String,
-    maxTemperature: String,
-    windSpeed: IntRange,
-    humidity: IntRange,
-    precipitations: IntRange,
-    snowVolume: IntRange,
-    onMinTempChange: (String) -> Unit,
-    onMaxTempChange: (String) -> Unit,
-    onWeatherTypeSelected: (WeatherType) -> Unit,
-    onWindSpeedValueChange: (IntRange) -> Unit,
-    onHumidityValueChange: (IntRange) -> Unit,
-    onPrecipitationsValueChange: (IntRange) -> Unit,
-    onSnowVolumeValueChange: (IntRange) -> Unit,
+    isExpanded: Boolean = true,
+    onDismiss: () -> Unit = {},
+    currentWeatherType: WeatherType = WeatherType.Any,
+    minTemperature: String = MIN_TEMPERATURE.toString(),
+    maxTemperature: String = MAX_TEMPERATURE.toString(),
+    windSpeed: IntRange = MIN_WIND_SPEED..MAX_WIND_SPEED,
+    humidity: IntRange = MIN_HUMIDITY..MAX_HUMIDITY,
+    precipitations: IntRange = MIN_PRECIPITATIONS..MAX_PRECIPITATIONS,
+    snowVolume: IntRange = MIN_SNOW_VOLUME..MAX_SNOW_VOLUME,
+    onMinTempChange: (String) -> Unit = {},
+    onMaxTempChange: (String) -> Unit = {},
+    onWeatherTypeSelected: (WeatherType) -> Unit = {},
+    onWindSpeedValueChange: (IntRange) -> Unit = {},
+    onHumidityValueChange: (IntRange) -> Unit = {},
+    onPrecipitationsValueChange: (IntRange) -> Unit = {},
+    onSnowVolumeValueChange: (IntRange) -> Unit = {},
 ) {
     if (isExpanded) {
         ModalBottomSheet(
@@ -108,7 +111,7 @@ fun CalendarBottomSheet(
             dragHandle = { BottomSheetDragHandle() }
         ) {
             LazyColumn(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+                modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp)
             ) {
                 temperatureSelector(
                     currentWeatherType = currentWeatherType,

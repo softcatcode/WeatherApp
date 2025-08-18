@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import kotlin.math.abs
 
 @RunWith(AndroidJUnit4::class)
-class FavouritesQueryTest {
+class MainQueryTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
     private val component = DaggerUnitTestsComponent.factory().create(context)
     private val db = component.getDatabaseImpl()

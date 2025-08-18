@@ -59,4 +59,6 @@
     <string name="log_in">Войти</string>
     <string name="or">ИЛИ</string>
     <string name="auth_title">Авторизация</string>
+
+    <string name="loading_auth">Загрузка погоды…</string>
 </resources>

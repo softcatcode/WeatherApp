@@ -22,6 +22,7 @@ class FavouritesComponentImpl @AssistedInject constructor(
     @Assisted("onCityItemClickedCallback") private val onCityItemClickedCallback: (User, City) -> Unit,
     @Assisted("onAddToFavouritesClickCallback") private val onAddToFavouritesClickCallback: () -> Unit,
     @Assisted("onSearchClickCallback") private val onSearchClickCallback: () -> Unit,
+    @Assisted("onProfileClickCallback") private val onProfileClickCallback: () -> Unit,
 ): FavouritesComponent, ComponentContext by componentContext {
 
     private val store: FavouritesStore = instanceKeeper.getStore { storeFactory.create(user) }
@@ -39,6 +40,7 @@ class FavouritesComponentImpl @AssistedInject constructor(
             FavouritesStore.Label.AddFavouritesClicked -> onAddToFavouritesClickCallback()
             is FavouritesStore.Label.CityItemClicked -> onCityItemClickedCallback(user, label.city)
             FavouritesStore.Label.SearchClicked -> onSearchClickCallback()
+            FavouritesStore.Label.ProfileClicked -> onProfileClickCallback()
         }
     }
 
@@ -48,6 +50,11 @@ class FavouritesComponentImpl @AssistedInject constructor(
     override fun onSearchClick() {
         Timber.i("${this::class.simpleName}.onSearchClick()")
         store.accept(FavouritesStore.Intent.SearchClicked)
+    }
+
+    override fun onProfileClick() {
+        Timber.i("${this::class.simpleName}.onProfileClick()")
+        store.accept(FavouritesStore.Intent.ProfileClicked)
     }
 
     override fun onAddToFavouritesClick() {
@@ -74,6 +81,7 @@ class FavouritesComponentImpl @AssistedInject constructor(
             @Assisted("onCityItemClickedCallback") onCityItemClickedCallback: (User, City) -> Unit,
             @Assisted("onAddToFavouritesClickCallback") onAddToFavouritesClickCallback: () -> Unit,
             @Assisted("onSearchClickCallback") onSearchClickCallback: () -> Unit,
+            @Assisted("onProfileClickCallback") onProfileClickCallback: () -> Unit,
         ): FavouritesComponentImpl
     }
 }

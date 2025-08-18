@@ -139,12 +139,12 @@ class DatabaseProxy @Inject constructor(
 
     override suspend fun getDaysWeather(
         cityId: Int,
-        startMillis: Long,
-        endMillis: Long
+        startSeconds: Long,
+        endSeconds: Long
     ): Result<List<WeatherDbModel>> {
 
         if (userRole == UserDbModel.ROLE_PREMIUM)
-            return database.getDaysWeather(cityId, startMillis, endMillis)
+            return database.getDaysWeather(cityId, startSeconds, endSeconds)
 
         val yesterdayTime = Calendar.getInstance().apply {
             set(Calendar.DAY_OF_YEAR, get(Calendar.DAY_OF_YEAR) - 1)
@@ -152,7 +152,7 @@ class DatabaseProxy @Inject constructor(
         }.timeInMillis / 1000L
 
         if (userRole == UserDbModel.ROLE_FOLLOWER)
-            return database.getDaysWeather(cityId, max(yesterdayTime, startMillis), endMillis)
+            return database.getDaysWeather(cityId, max(yesterdayTime, startSeconds), endSeconds)
 
         val tomorrowTime by lazy {
             Calendar.getInstance().apply {
@@ -163,8 +163,8 @@ class DatabaseProxy @Inject constructor(
 
         return database.getDaysWeather(
             cityId,
-            max(yesterdayTime, startMillis),
-            min(tomorrowTime, endMillis)
+            max(yesterdayTime, startSeconds),
+            min(tomorrowTime, endSeconds)
         )
     }
 

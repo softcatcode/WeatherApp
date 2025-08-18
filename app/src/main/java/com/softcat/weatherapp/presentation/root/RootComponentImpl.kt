@@ -16,6 +16,7 @@ import com.softcat.weatherapp.presentation.calendar.CalendarComponentImpl
 import com.softcat.weatherapp.presentation.details.DetailsComponentImpl
 import com.softcat.weatherapp.presentation.favourite.FavouritesComponentImpl
 import com.softcat.weatherapp.presentation.hourly.HourlyWeatherComponentImpl
+import com.softcat.weatherapp.presentation.profile.ProfileComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchOpenReason
 import dagger.assisted.Assisted
@@ -31,6 +32,7 @@ class RootComponentImpl @AssistedInject constructor(
     private val calendarComponentFactory: CalendarComponentImpl.Factory,
     private val hourlyWeatherComponentFactory: HourlyWeatherComponentImpl.Factory,
     private val authComponentFactory: AuthorizationComponentImpl.Factory,
+    private val profileComponentFactory: ProfileComponentImpl.Factory,
     @Assisted("componentContext") componentContext: ComponentContext,
 ): RootComponent, ComponentContext by componentContext {
 
@@ -90,6 +92,9 @@ class RootComponentImpl @AssistedInject constructor(
                     onSearchClickCallback = {
                         navigation.push(Config.Search(config.user, SearchOpenReason.RegularSearch))
                     },
+                    onProfileClickCallback = {
+                        navigation.push(Config.Profile(config.user))
+                    },
                     onCityItemClickedCallback = { user, city ->
                         navigation.push(Config.Details(user, city))
                     }
@@ -124,6 +129,18 @@ class RootComponentImpl @AssistedInject constructor(
                 )
                 RootComponent.Child.Authorization(component)
             }
+
+            is Config.Profile -> {
+                val component = profileComponentFactory.create(
+                    user = config.user,
+                    componentContext = componentContext,
+                    backClickCallback = { navigation.pop() },
+                    settingsClickCallback = { navigation.push(Config.Settings) }
+                )
+                RootComponent.Child.Profile(component)
+            }
+
+            Config.Settings -> TODO()
         }
         Timber.i("Result child: $result.")
         return result
@@ -150,6 +167,12 @@ class RootComponentImpl @AssistedInject constructor(
 
         @Parcelize
         data object Authorization: Config
+
+        @Parcelize
+        data class Profile(val user: User): Config
+
+        @Parcelize
+        data object Settings: Config
     }
 
     @AssistedFactory

@@ -28,6 +28,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -45,8 +46,10 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
+import com.softcat.weatherapp.presentation.root.RootComponent
 import com.softcat.weatherapp.presentation.ui.theme.Orange
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
+import com.softcat.weatherapp.presentation.utils.MainBottomBar
 import kotlin.math.abs
 
 @Composable
@@ -56,28 +59,43 @@ fun FavouritesContent(component: FavouritesComponent) {
         if (abs(panChange.x) > 150f)
             component.reloadCities()
     }
-    LazyVerticalGrid(
-        modifier = Modifier
-            .fillMaxSize()
-            .transformable(transformableState),
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item(span = { GridItemSpan(2) }) {
-            SearchCard { component.onSearchClick() }
+
+    Scaffold(
+        bottomBar = {
+            MainBottomBar(
+                selection = RootComponent.MainScreenSelection.Favourites,
+                onClick = { selection ->
+                    if (selection == RootComponent.MainScreenSelection.Profile)
+                        component.onProfileClick()
+                }
+            )
         }
-        itemsIndexed(
-            items = state.cityItems,
-            key = { _, item -> item.city.id }
-        ) { index, item ->
-            CityCard(cityItem = item, index = index) { component.onCityItemClick(item.city) }
-        }
-        item {
-            AddFavouriteCityCard { component.onAddToFavouritesClick() }
+    ) { paddingValues ->
+        LazyVerticalGrid(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .transformable(transformableState),
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item(span = { GridItemSpan(2) }) {
+                SearchCard { component.onSearchClick() }
+            }
+            itemsIndexed(
+                items = state.cityItems,
+                key = { _, item -> item.city.id }
+            ) { index, item ->
+                CityCard(cityItem = item, index = index) { component.onCityItemClick(item.city) }
+            }
+            item {
+                AddFavouriteCityCard { component.onAddToFavouritesClick() }
+            }
         }
     }
+
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)

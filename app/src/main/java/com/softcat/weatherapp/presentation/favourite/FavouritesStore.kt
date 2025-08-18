@@ -14,6 +14,8 @@ interface FavouritesStore: Store<FavouritesStore.Intent, FavouritesStore.State, 
 
         data object SearchClicked: Intent
 
+        data object ProfileClicked: Intent
+
         data class ReloadCities(
             val cities: List<City>
         ): Intent
@@ -50,5 +52,7 @@ interface FavouritesStore: Store<FavouritesStore.Intent, FavouritesStore.State, 
         data object AddFavouritesClicked: Label
 
         data object SearchClicked: Label
+
+        data object ProfileClicked: Label
     }
 }

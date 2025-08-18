@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,9 +14,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -26,8 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,20 +36,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.softcat.domain.entity.WeatherParameters.Companion.MAX_TEMPERATURE
+import com.softcat.domain.entity.WeatherParameters.Companion.MIN_TEMPERATURE
 import com.softcat.domain.entity.WeatherType
 import com.softcat.domain.entity.toIconResId
 import com.softcat.domain.entity.toTitleResId
@@ -236,7 +233,7 @@ fun WeatherParameter(
         )
         Text(
             modifier = Modifier
-                .weight(2f)
+                .weight(2.2f)
                 .padding(start = 10.dp),
             text = title,
             fontSize = 12.sp,
@@ -304,6 +301,48 @@ fun WeatherTypeSelector(
 }
 
 @Composable
+@Preview(showBackground = true)
+fun TemperatureInput(
+    selectedTemp: String = "20",
+    onTempSelected: (String) -> Unit = {}
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val tempRange = MIN_TEMPERATURE.toInt()..MAX_TEMPERATURE.toInt()
+    Box(
+        modifier = Modifier.wrapContentSize().padding(3.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = selectedTemp,
+            fontSize = 24.sp,
+            fontFamily = exo2FontFamily,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        DropdownMenu(
+            modifier = Modifier,
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            tempRange.forEach { temp ->
+                Button(
+                    onClick = {
+                        onTempSelected(temp.toString())
+                        expanded = false
+                    }
+                ) {
+                    Text(
+                        text = temp.toString(),
+                        fontSize = 24.sp,
+                        fontFamily = exo2FontFamily,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun TemperatureInputField(
     modifier: Modifier = Modifier,
     value: String,
@@ -311,45 +350,24 @@ private fun TemperatureInputField(
     labelText: String
 ) {
     Row(
-        modifier = modifier,
+        modifier = Modifier.wrapContentHeight().then(modifier),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(start = 5.dp),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            Text(
-                text = labelText,
-                fontFamily = exo2FontFamily,
-                color = MaterialTheme.colorScheme.secondary,
-                fontSize = 16.sp,
-            )
-        }
-        TextField(
-            modifier = Modifier,
-            value = value,
-            onValueChange = onValueChange,
-            singleLine = true,
-            textStyle = TextStyle.Default.copy(
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                fontFamily = exo2FontFamily,
-                color = MaterialTheme.colorScheme.onBackground
-            ),
-            colors = TextFieldDefaults.colors().copy(
-                focusedContainerColor = Transparent,
-                unfocusedContainerColor = Transparent,
-                cursorColor = MaterialTheme.colorScheme.tertiary,
-            ),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number
-            )
+        Text(
+            text = labelText,
+            fontFamily = exo2FontFamily,
+            color = MaterialTheme.colorScheme.secondary,
+            fontSize = 18.sp,
+        )
+        Spacer(Modifier.width(10.dp))
+        TemperatureInput(
+            selectedTemp = value,
+            onTempSelected = onValueChange
         )
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun TemperatureRangeInput(
     modifier: Modifier = Modifier,
@@ -363,13 +381,17 @@ fun TemperatureRangeInput(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         TemperatureInputField(
-            modifier = Modifier.fillMaxWidth(0.5f),
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(horizontal = 10.dp),
             value = minValue,
             onValueChange = onMinValueChange,
             labelText = stringResource(id = R.string.from_label),
         )
         TemperatureInputField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(horizontal = 10.dp),
             value = maxValue,
             onValueChange = onMaxValueChange,
             labelText = stringResource(id = R.string.to_label),

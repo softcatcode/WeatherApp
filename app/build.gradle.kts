@@ -112,6 +112,10 @@ dependencies {
     implementation(libs.androidx.glance)
     implementation(libs.androidx.glance.appwidget)
 
+    // gifs and images
+    implementation(libs.coil.gif)
+    implementation(libs.coil.compose)
+
     testImplementation(libs.mockito)
     androidTestImplementation(libs.mockito.android)
     androidTestImplementation(libs.mockito)

@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,6 +65,7 @@ import com.softcat.weatherapp.presentation.extensions.toTemperatureString
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
 import com.softcat.weatherapp.presentation.utils.ErrorDialog
+import com.softcat.weatherapp.presentation.utils.defaultWeather
 
 @Composable
 private fun Initial() {
@@ -96,16 +98,22 @@ private fun Loading() {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
+@Preview(showBackground = true)
 private fun Loaded(
-    forecast: Forecast,
-    onWeatherItemClicked: (Int) -> Unit
+    forecast: Forecast = Forecast(
+        hourly = emptyList(),
+        upcoming = emptyList(),
+        weather = defaultWeather
+    ),
+    onWeatherItemClicked: (Int) -> Unit = {}
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.weight(1f))
         Text(
+            modifier = Modifier.weight(0.5f),
             text = forecast.weather?.conditionText.orEmpty(),
             style = MaterialTheme.typography.titleLarge
         )
