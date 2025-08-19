@@ -8,5 +8,7 @@ interface ProfileComponent {
 
     fun openSettings()
 
+    fun clearWeatherData()
+
     fun back()
 }

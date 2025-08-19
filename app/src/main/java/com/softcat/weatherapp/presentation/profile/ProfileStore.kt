@@ -9,6 +9,8 @@ interface ProfileStore: Store<ProfileStore.Intent, ProfileStore.State, ProfileSt
         data object BackClicked: Intent
 
         data object SettingsClicked: Intent
+
+        data object ClearWeatherDataClicked: Intent
     }
 
     sealed interface State {

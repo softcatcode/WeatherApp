@@ -5,6 +5,7 @@ import com.softcat.database.commands.AddCountryCommand
 import com.softcat.database.commands.AddCurrentWeatherCommand
 import com.softcat.database.commands.AddToFavouritesCommand
 import com.softcat.database.commands.AddWeatherCommand
+import com.softcat.database.commands.ClearWeatherDataCommand
 import com.softcat.database.commands.CreateUserCommand
 import com.softcat.database.commands.GetCountriesCommand
 import com.softcat.database.commands.GetCurrentWeatherCommand
@@ -66,4 +67,6 @@ interface CommandFactoryInterface {
     fun getDaysWeatherCommand(cityId: Int, startMillis: Long, endMillis: Long): GetDayWeatherCommand
 
     fun getWeatherTypesCommand(typeCodes: List<Int>): GetWeatherTypesCommand
+
+    fun getClearWeatherDataCommand(): ClearWeatherDataCommand
 }

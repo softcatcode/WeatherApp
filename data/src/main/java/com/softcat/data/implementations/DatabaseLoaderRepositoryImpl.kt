@@ -126,4 +126,8 @@ class DatabaseLoaderRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun clearWeatherData(): Result<Unit> {
+        return database.clearWeatherData()
+    }
 }

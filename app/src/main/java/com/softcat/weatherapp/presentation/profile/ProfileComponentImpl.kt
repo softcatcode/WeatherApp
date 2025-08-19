@@ -48,6 +48,11 @@ class ProfileComponentImpl @AssistedInject constructor(
         store.accept(ProfileStore.Intent.SettingsClicked)
     }
 
+    override fun clearWeatherData() {
+        Timber.i("${this::class.simpleName}.clearWeatherData()")
+        store.accept(ProfileStore.Intent.ClearWeatherDataClicked)
+    }
+
     @AssistedFactory
     interface Factory {
         fun create(

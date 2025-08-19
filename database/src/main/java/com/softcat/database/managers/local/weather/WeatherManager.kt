@@ -22,4 +22,6 @@ interface WeatherManager {
     fun getHourlyForecast(cityId: Int, dayTimeEpoch: Long): Result<List<CurrentWeatherDbModel>>
 
     fun getDaysWeather(cityId: Int, startTime: Long, endTime: Long): Result<List<WeatherDbModel>>
+
+    fun clearWeatherData(): Result<Unit>
 }
