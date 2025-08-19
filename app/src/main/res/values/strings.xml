@@ -33,6 +33,7 @@
     <string name="back">Back</string>
     <string name="exit">Exit</string>
     <string name="clear">Clear data</string>
+    <string name="send_logs">Send logs</string>
     <string name="settings">Settings</string>
     <string name="today">Today</string>
 

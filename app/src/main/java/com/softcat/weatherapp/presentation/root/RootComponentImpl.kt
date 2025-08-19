@@ -19,6 +19,7 @@ import com.softcat.weatherapp.presentation.hourly.HourlyWeatherComponentImpl
 import com.softcat.weatherapp.presentation.profile.ProfileComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchOpenReason
+import com.softcat.weatherapp.presentation.settings.SettingsComponentImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -33,6 +34,7 @@ class RootComponentImpl @AssistedInject constructor(
     private val hourlyWeatherComponentFactory: HourlyWeatherComponentImpl.Factory,
     private val authComponentFactory: AuthorizationComponentImpl.Factory,
     private val profileComponentFactory: ProfileComponentImpl.Factory,
+    private val settingsComponentFactory: SettingsComponentImpl.Factory,
     @Assisted("componentContext") componentContext: ComponentContext,
 ): RootComponent, ComponentContext by componentContext {
 
@@ -140,7 +142,13 @@ class RootComponentImpl @AssistedInject constructor(
                 RootComponent.Child.Profile(component)
             }
 
-            Config.Settings -> TODO()
+            Config.Settings -> {
+                val component = settingsComponentFactory.create(
+                    componentContext = componentContext,
+                    backClickCallback = { navigation.pop() }
+                )
+                RootComponent.Child.Settings(component)
+            }
         }
         Timber.i("Result child: $result.")
         return result
