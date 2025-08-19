@@ -49,4 +49,6 @@ interface DatabaseFacade {
     suspend fun getDaysWeather(cityId: Int, startSeconds: Long, endSeconds: Long): Result<List<WeatherDbModel>>
 
     suspend fun getWeatherTypes(typeCodes: List<Int>): Result<List<WeatherTypeDbModel>>
+
+    suspend fun clearWeatherData(): Result<Unit>
 }

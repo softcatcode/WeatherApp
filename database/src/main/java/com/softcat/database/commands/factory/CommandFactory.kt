@@ -5,6 +5,7 @@ import com.softcat.database.commands.AddCountryCommand
 import com.softcat.database.commands.AddCurrentWeatherCommand
 import com.softcat.database.commands.AddToFavouritesCommand
 import com.softcat.database.commands.AddWeatherCommand
+import com.softcat.database.commands.ClearWeatherDataCommand
 import com.softcat.database.commands.CreateUserCommand
 import com.softcat.database.commands.GetCountriesCommand
 import com.softcat.database.commands.GetCurrentWeatherCommand
@@ -117,4 +118,6 @@ class CommandFactory @Inject constructor(
     ) = GetDayWeatherCommand(cityId, startMillis, endMillis, weatherManager)
 
     override fun getWeatherTypesCommand(typeCodes: List<Int>) = GetWeatherTypesCommand(typeCodes, weatherManager)
+
+    override fun getClearWeatherDataCommand() = ClearWeatherDataCommand(weatherManager)
 }

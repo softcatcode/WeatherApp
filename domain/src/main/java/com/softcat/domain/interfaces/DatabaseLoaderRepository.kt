@@ -20,4 +20,6 @@ interface DatabaseLoaderRepository {
     suspend fun updateDayWeatherData(cityId: Int, daysWeather: List<Weather>)
 
     suspend fun loadWeatherTypesToDatabase(): Result<Unit>
+
+    suspend fun clearWeatherData(): Result<Unit>
 }

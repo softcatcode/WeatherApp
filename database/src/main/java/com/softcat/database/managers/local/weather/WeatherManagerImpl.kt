@@ -118,4 +118,13 @@ class WeatherManagerImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override fun clearWeatherData(): Result<Unit> {
+        return try {
+            executor.clearWeatherData()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

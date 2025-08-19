@@ -141,4 +141,10 @@ class DatabaseFacadeImpl @Inject constructor(
         cmd.execute()
         return cmd.result ?: Result.failure(NoCommandResultException())
     }
+
+    override suspend fun clearWeatherData(): Result<Unit> {
+        val cmd = factory.getClearWeatherDataCommand()
+        cmd.execute()
+        return cmd.result
+    }
 }

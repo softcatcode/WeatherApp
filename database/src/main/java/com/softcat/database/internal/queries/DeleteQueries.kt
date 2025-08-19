@@ -41,4 +41,9 @@ internal object DeleteQueries {
     const val DELETE_WEATHER_TYPE = """
         delete from $WEATHER_TYPE_TABLE_NAME where code = %d;
     """
+
+    const val CLEAR_WEATHER_DATA_COMMAND = """
+        delete from $WEATHER_TABLE_NAME where 1;
+        delete from $CURRENT_WEATHER_TABLE_NAME where 1;
+    """
 }

@@ -5,6 +5,7 @@ import android.database.Cursor
 import com.softcat.database.internal.DatabaseRules
 import com.softcat.database.internal.DbHelper
 import com.softcat.database.internal.queries.DeleteQueries
+import com.softcat.database.internal.queries.DeleteQueries.CLEAR_WEATHER_DATA_COMMAND
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_CITY
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_COUNTRY
 import com.softcat.database.internal.queries.DeleteQueries.DELETE_CURRENT_WEATHER
@@ -161,5 +162,9 @@ class SQLiteExecutor @Inject constructor(
     override fun getDaysWeather(cityId: Int, start: Long, end: Long): Cursor {
         val query = GetDataQueries.GET_WEATHER.format(cityId, start, end)
         return dbHelper.readableDatabase.rawQuery(query, null)
+    }
+
+    override fun clearWeatherData() {
+        dbHelper.writableDatabase.execSQL(CLEAR_WEATHER_DATA_COMMAND)
     }
 }
