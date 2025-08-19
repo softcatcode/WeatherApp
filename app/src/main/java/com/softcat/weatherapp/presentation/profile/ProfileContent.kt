@@ -1,7 +1,9 @@
 package com.softcat.weatherapp.presentation.profile
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,15 +17,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,9 +41,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -155,6 +167,71 @@ fun SettingsButton(
 }
 
 @Composable
+fun ProfileScreenButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    icon: ImageVector,
+    onClick: () -> Unit = {}
+) {
+    OutlinedButton(
+        modifier = modifier,
+        onClick = onClick,
+        shape = RoundedCornerShape(30),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.weight(1f),
+                text = text,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Icon(
+                modifier = Modifier.size(32.dp),
+                imageVector = icon,
+                contentDescription = null,
+                tint = Color.Red
+            )
+        }
+
+    }
+}
+
+@Composable
+fun OptionPanel(
+    modifier: Modifier = Modifier,
+    onExitClick: () -> Unit,
+    onSettingsClick: () -> Unit
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        ProfileScreenButton(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            icon = Icons.AutoMirrored.Filled.ExitToApp,
+            text = stringResource(R.string.exit),
+            onClick = onExitClick
+        )
+        ProfileScreenButton(
+            modifier = Modifier.fillMaxWidth(),
+            icon = Icons.Outlined.Delete,
+            text = stringResource(R.string.clear),
+            onClick = onExitClick
+        )
+    }
+
+}
+
+@Composable
 @Preview(showBackground = true)
 fun UserInfoScreen(
     user: User = User(
@@ -164,21 +241,30 @@ fun UserInfoScreen(
         email = "test@email.com",
         password = "12345"
     ),
-    onSettingsClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {},
+    onExitClick: () -> Unit = {}
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        UserTextData(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(32.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
-            user = user,
-        )
+        Column {
+            UserTextData(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(32.dp)
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                user = user,
+            )
+            OptionPanel(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onExitClick = onExitClick,
+                onSettingsClick = onSettingsClick
+            )
+        }
         AvatarCard(
             modifier = Modifier.wrapContentSize()
         )

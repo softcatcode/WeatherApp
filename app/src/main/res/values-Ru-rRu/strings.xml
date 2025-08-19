@@ -30,6 +30,8 @@
     <string name="unknown_parameter_value">Неизвестно</string>
 
     <string name="back">Назад</string>
+    <string name="exit">Выход</string>
+    <string name="clear">Удалить погоду</string>
     <string name="settings">Настройки</string>
     <string name="today">Сегодня</string>
 
