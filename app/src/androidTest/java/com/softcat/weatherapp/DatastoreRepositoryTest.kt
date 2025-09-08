@@ -1,5 +1,6 @@
 package com.softcat.weatherapp
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.domain.interfaces.DatastoreRepository
@@ -8,7 +9,9 @@ import com.softcat.weatherapp.TestDataCreator.getTestUser
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class DatastoreRepositoryTest {
 
     private val applicationContext = InstrumentationRegistry

@@ -1,5 +1,6 @@
 package com.softcat.weatherapp
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.softcat.domain.interfaces.FavouriteRepository
 import com.softcat.weatherapp.TestDataCreator.getCityList
@@ -9,7 +10,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class FavouriteRepositoryTest {
 
     private val applicationContext = InstrumentationRegistry

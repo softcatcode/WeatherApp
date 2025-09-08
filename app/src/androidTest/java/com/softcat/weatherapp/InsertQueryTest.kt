@@ -2,7 +2,7 @@ package com.softcat.weatherapp
 
 import android.icu.util.Calendar
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.softcat.data.mapper.toDbModel
 import com.softcat.data.mapper.toIconUrl
 import com.softcat.database.model.CityDbModel
@@ -23,7 +23,8 @@ import kotlin.random.Random
 @RunWith(AndroidJUnit4::class)
 class InsertQueryTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
-    private val component = DaggerUnitTestsComponent.factory().create(context)
+    private val application = context as WeatherApplication
+    private val component = DaggerUnitTestsComponent.factory().create(context, application.dataStore)
     private val db = component.getDatabaseImpl()
     private val regionManager = component.getRegionManager()
     private val weatherManager = component.getWeatherManager()
