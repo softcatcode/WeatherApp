@@ -1,4 +1,4 @@
-package com.softcat.weatherapp
+package com.softcat.weatherapp.di.components
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.database.di.ApplicationScope
-import com.softcat.database.di.DatabaseModule
+import com.softcat.database.facade.DatabaseFacade
 import com.softcat.database.facade.DatabaseFacadeImpl
 import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.local.weather.WeatherManager
@@ -16,7 +16,7 @@ import dagger.BindsInstance
 import dagger.Component
 
 @ApplicationScope
-@Component(modules = [DataModule::class, DatabaseModule::class])
+@Component(modules = [DataModule::class])
 interface UnitTestsComponent {
 
     fun getDatastoreRepository(): DatastoreRepositoryImpl
@@ -36,6 +36,7 @@ interface UnitTestsComponent {
         fun create(
             @BindsInstance context: Context,
             @BindsInstance dataStore: DataStore<Preferences>,
+            @BindsInstance database: DatabaseFacade
         ): UnitTestsComponent
     }
 }

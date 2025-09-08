@@ -2,10 +2,12 @@ package com.softcat.weatherapp
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.domain.interfaces.DatastoreRepository
+import com.softcat.weatherapp.MockCreator.getDataStoreMock
+import com.softcat.weatherapp.MockCreator.getDatabaseMock
 import com.softcat.weatherapp.TestDataCreator.getCityName
 import com.softcat.weatherapp.TestDataCreator.getTestUser
+import com.softcat.weatherapp.di.components.DaggerUnitTestsComponent
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -14,13 +16,11 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class DatastoreRepositoryTest {
 
-    private val applicationContext = InstrumentationRegistry
+    private val context = InstrumentationRegistry
         .getInstrumentation().targetContext.applicationContext
 
-    private val application = applicationContext as WeatherApplication
-
     private val component = DaggerUnitTestsComponent
-        .factory().create(applicationContext, application.dataStore)
+        .factory().create(context, getDataStoreMock(), getDatabaseMock())
 
     private lateinit var repository: DatastoreRepository
 
@@ -31,7 +31,6 @@ class DatastoreRepositoryTest {
 
     @Test
     fun saveAndGetCity() = runBlocking {
-        val repository = DatastoreRepositoryImpl(application.dataStore)
         val savedCity = getCityName()
 
         repository.saveCityToDatastore(savedCity)
@@ -44,7 +43,6 @@ class DatastoreRepositoryTest {
 
     @Test
     fun saveAndGetUser() = runBlocking {
-        val repository = DatastoreRepositoryImpl(application.dataStore)
         val savedUser = getTestUser()
 
         repository.saveLastUser(savedUser)

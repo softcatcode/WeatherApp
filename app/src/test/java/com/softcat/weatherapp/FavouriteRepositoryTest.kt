@@ -3,9 +3,12 @@ package com.softcat.weatherapp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.softcat.domain.interfaces.FavouriteRepository
+import com.softcat.weatherapp.MockCreator.getDatabaseMock
+import com.softcat.weatherapp.MockCreator.getDataStoreMock
 import com.softcat.weatherapp.TestDataCreator.getCityList
 import com.softcat.weatherapp.TestDataCreator.getTestCity
 import com.softcat.weatherapp.TestDataCreator.getUserId
+import com.softcat.weatherapp.di.components.DaggerUnitTestsComponent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -15,13 +18,11 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FavouriteRepositoryTest {
 
-    private val applicationContext = InstrumentationRegistry
+    private val context = InstrumentationRegistry
         .getInstrumentation().targetContext.applicationContext
 
-    private val application = applicationContext as WeatherApplication
-
     private val component = DaggerUnitTestsComponent
-        .factory().create(applicationContext, application.dataStore)
+        .factory().create(context, getDataStoreMock(), getDatabaseMock())
 
     private lateinit var repository: FavouriteRepository
 

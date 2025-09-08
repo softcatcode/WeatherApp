@@ -4,6 +4,7 @@ import com.softcat.domain.entity.City
 import com.softcat.domain.entity.User
 
 object TestDataCreator {
+
     fun getCityName() = "London"
 
     fun getTestUser() = User(
