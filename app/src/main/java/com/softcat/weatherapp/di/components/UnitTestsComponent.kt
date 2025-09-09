@@ -7,6 +7,7 @@ import com.softcat.data.implementations.AuthorizationRepositoryImpl
 import com.softcat.data.implementations.DatabaseLoaderRepositoryImpl
 import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.data.implementations.FavouriteRepositoryImpl
+import com.softcat.data.implementations.SearchRepositoryImpl
 import com.softcat.data.network.api.ApiService
 import com.softcat.data.network.api.DocsApiService
 import com.softcat.database.di.ApplicationScope
@@ -31,6 +32,8 @@ interface UnitTestsComponent {
     fun getAuthorizationRepository(): AuthorizationRepositoryImpl
 
     fun getDatabaseLoaderRepository(): DatabaseLoaderRepositoryImpl
+
+    fun getSearchRepository(): SearchRepositoryImpl
 
     fun getDatabaseImpl(): DatabaseFacadeImpl
 

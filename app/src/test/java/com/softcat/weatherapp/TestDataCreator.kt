@@ -1,5 +1,6 @@
 package com.softcat.weatherapp
 
+import com.softcat.data.network.dto.CityDto
 import com.softcat.data.network.dto.ConditionDto
 import com.softcat.data.network.dto.WeatherTypeInfoDto
 import com.softcat.domain.entity.AstrologicalParameters
@@ -55,6 +56,36 @@ object TestDataCreator {
             country = "Netherlands",
             latitude = 0.236f,
             longitude = 80.5f
+        )
+    )
+
+    fun getCityDtoList() = listOf(
+        CityDto(
+            id = 1852,
+            name = "Moscow",
+            country = "England",
+            latitude = 5.26f,
+            longitude = -14f,
+            region = "unknown",
+            url = "https://weather_api/cities/Moscow",
+        ),
+        CityDto(
+            id = 1852,
+            name = "London",
+            country = "England",
+            latitude = -3.51f,
+            longitude = 0f,
+            region = "unknown",
+            url = "https://weather_api/cities/Moscow",
+        ),
+        CityDto(
+            id = 1852,
+            name = "Amsterdam",
+            country = "Netherlands",
+            latitude = 0.236f,
+            longitude = 80.5f,
+            region = "unknown",
+            url = "https://weather_api/cities/Moscow",
         )
     )
 

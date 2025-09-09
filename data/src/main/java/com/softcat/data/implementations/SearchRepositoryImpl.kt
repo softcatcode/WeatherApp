@@ -20,7 +20,7 @@ class SearchRepositoryImpl @Inject constructor(
         val cities = apiService.searchCity(query).toEntities()
 
         database.updateCountries(
-            countries = cities.map { CountryDbModel(0, it.country) }
+            countries = cities.map { CountryDbModel(CountryDbModel.UNSPECIFIED_ID, it.country) }
         ).onSuccess { countryIds ->
             cities.mapIndexed { index, city ->
                 city.toDbModel(countryIds[index])
