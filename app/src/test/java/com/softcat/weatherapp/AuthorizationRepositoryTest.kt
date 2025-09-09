@@ -8,6 +8,8 @@ import com.softcat.database.model.UserDbModel
 import com.softcat.domain.interfaces.AuthorizationRepository
 import com.softcat.weatherapp.MockCreator.getDataStoreMock
 import com.softcat.weatherapp.MockCreator.getDatabaseMock
+import com.softcat.weatherapp.MockCreator.getDocsApiMock
+import com.softcat.weatherapp.MockCreator.getWeatherApiMock
 import com.softcat.weatherapp.TestDataCreator.getTestUser
 import com.softcat.weatherapp.di.components.DaggerUnitTestsComponent
 import com.softcat.weatherapp.di.components.UnitTestsComponent
@@ -34,7 +36,8 @@ class AuthorizationRepositoryTest {
     @Before
     fun initRepository() {
         database = getDatabaseMock()
-        component = DaggerUnitTestsComponent.factory().create(context, getDataStoreMock(), database)
+        component = DaggerUnitTestsComponent.factory()
+            .create(context, getDataStoreMock(), database, getDocsApiMock(), getWeatherApiMock())
         repository = component.getAuthorizationRepository()
     }
 

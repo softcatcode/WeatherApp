@@ -6,6 +6,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import com.softcat.data.network.api.ApiService
+import com.softcat.data.network.api.DocsApiService
 import com.softcat.database.facade.DatabaseFacade
 import kotlinx.coroutines.runBlocking
 import org.mockito.Mockito.any
@@ -75,4 +77,8 @@ object MockCreator {
         }
         return@runBlocking db
     }
+
+    fun getDocsApiMock() = mock(DocsApiService::class.java)
+
+    fun getWeatherApiMock() = mock(ApiService::class.java)
 }

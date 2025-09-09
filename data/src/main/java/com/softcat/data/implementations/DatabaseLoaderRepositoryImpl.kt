@@ -24,10 +24,10 @@ class DatabaseLoaderRepositoryImpl @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    private fun getCurrentDayTime(dayBias: Int): Long {
+    private fun getCurrentDayTime(dayOffset: Int): Long {
         val calendar = Calendar.getInstance().apply {
             set(Calendar.MILLISECONDS_IN_DAY, 0)
-            add(Calendar.DATE, dayBias)
+            add(Calendar.DATE, dayOffset)
         }
         return calendar.timeInMillis / 1000L
     }
@@ -45,9 +45,9 @@ class DatabaseLoaderRepositoryImpl @Inject constructor(
 
     override suspend fun tryGetHourlyWeather(
         cityId: Int,
-        dayBias: Int
+        dayOffset: Int
     ): Result<List<CurrentWeather>> {
-        val timeEpoch = getCurrentDayTime(dayBias)
+        val timeEpoch = getCurrentDayTime(dayOffset)
         return try {
             val hoursWeather = database.getCurrentWeather(cityId, timeEpoch).getOrThrow()
             val typeCodes = hoursWeather.map { it.type }
