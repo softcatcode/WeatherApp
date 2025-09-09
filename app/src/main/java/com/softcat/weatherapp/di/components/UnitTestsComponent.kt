@@ -3,6 +3,7 @@ package com.softcat.weatherapp.di.components
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.softcat.data.implementations.AuthorizationRepositoryImpl
 import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.database.di.ApplicationScope
@@ -22,6 +23,8 @@ interface UnitTestsComponent {
     fun getDatastoreRepository(): DatastoreRepositoryImpl
 
     fun getFavouriteRepository(): FavouriteRepositoryImpl
+
+    fun getAuthorizationRepository(): AuthorizationRepositoryImpl
 
     fun getDatabaseImpl(): DatabaseFacadeImpl
 
