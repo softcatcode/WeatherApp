@@ -1,38 +1,27 @@
 package com.softcat.weatherapp
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import com.softcat.domain.interfaces.FavouriteRepository
+import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.weatherapp.MockCreator.getDatabaseMock
-import com.softcat.weatherapp.MockCreator.getDataStoreMock
-import com.softcat.weatherapp.MockCreator.getDocsApiMock
-import com.softcat.weatherapp.MockCreator.getWeatherApiMock
 import com.softcat.weatherapp.TestDataCreator.getCityList
 import com.softcat.weatherapp.TestDataCreator.getTestCity
 import com.softcat.weatherapp.TestDataCreator.getUserId
-import com.softcat.weatherapp.di.components.DaggerUnitTestsComponent
-import com.softcat.weatherapp.di.components.UnitTestsComponent
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.reset
 
 @RunWith(AndroidJUnit4::class)
 class FavouriteRepositoryTest {
 
-    private val context = InstrumentationRegistry
-        .getInstrumentation().targetContext.applicationContext
-
-    private lateinit var component: UnitTestsComponent
-
-    private lateinit var repository: FavouriteRepository
+    private val database = getDatabaseMock()
+    private val repository = FavouriteRepositoryImpl(database)
 
     @Before
-    fun initRepository() {
-        component = DaggerUnitTestsComponent.factory()
-            .create(context, getDataStoreMock(), getDatabaseMock(), getDocsApiMock(), getWeatherApiMock())
-        repository = component.getFavouriteRepository()
+    fun resetMocks() {
+        reset(database)
     }
 
     @Test

@@ -1,35 +1,25 @@
 package com.softcat.weatherapp
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import com.softcat.domain.interfaces.DatastoreRepository
+import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.weatherapp.MockCreator.getDataStoreMock
-import com.softcat.weatherapp.MockCreator.getDatabaseMock
-import com.softcat.weatherapp.MockCreator.getDocsApiMock
-import com.softcat.weatherapp.MockCreator.getWeatherApiMock
 import com.softcat.weatherapp.TestDataCreator.getCityName
 import com.softcat.weatherapp.TestDataCreator.getTestUser
-import com.softcat.weatherapp.di.components.DaggerUnitTestsComponent
-import com.softcat.weatherapp.di.components.UnitTestsComponent
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.kotlin.reset
 
 @RunWith(AndroidJUnit4::class)
 class DatastoreRepositoryTest {
 
-    private val context = InstrumentationRegistry
-        .getInstrumentation().targetContext.applicationContext
-
-    private lateinit var component: UnitTestsComponent
-    private lateinit var repository: DatastoreRepository
+    private val datastore = getDataStoreMock()
+    private val repository = DatastoreRepositoryImpl(datastore)
 
     @Before
-    fun initRepository() {
-        component = DaggerUnitTestsComponent.factory()
-            .create(context, getDataStoreMock(), getDatabaseMock(), getDocsApiMock(), getWeatherApiMock())
-        repository = component.getDatastoreRepository()
+    fun resetMocks() {
+       reset(datastore)
     }
 
     @Test

@@ -1,54 +1,39 @@
 package com.softcat.weatherapp
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
+import com.softcat.data.implementations.DatabaseLoaderRepositoryImpl
 import com.softcat.data.mapper.toDbModel
-import com.softcat.data.network.api.DocsApiService
-import com.softcat.database.facade.DatabaseFacade
 import com.softcat.database.model.WeatherTypeDbModel
-import com.softcat.domain.interfaces.DatabaseLoaderRepository
-import com.softcat.weatherapp.MockCreator.getDataStoreMock
 import com.softcat.weatherapp.MockCreator.getDatabaseMock
 import com.softcat.weatherapp.MockCreator.getDocsApiMock
-import com.softcat.weatherapp.MockCreator.getWeatherApiMock
 import com.softcat.weatherapp.TestDataCreator.getCityList
 import com.softcat.weatherapp.TestDataCreator.getCityQuery
 import com.softcat.weatherapp.TestDataCreator.getTestConditions
 import com.softcat.weatherapp.TestDataCreator.getTestForecast
-import com.softcat.weatherapp.di.components.DaggerUnitTestsComponent
-import com.softcat.weatherapp.di.components.UnitTestsComponent
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito.anyString
+import org.mockito.Mockito.reset
 import org.mockito.Mockito.times
 import org.mockito.Mockito.`when`
-import org.mockito.kotlin.capture
 import org.mockito.kotlin.verify
 import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
 class DatabaseLoaderRepositoryTest {
 
-    private val context = InstrumentationRegistry
-        .getInstrumentation().targetContext.applicationContext
-
-    private lateinit var database: DatabaseFacade
-    private lateinit var docsApi: DocsApiService
-    private lateinit var component: UnitTestsComponent
-    private lateinit var repository: DatabaseLoaderRepository
+    private val database = getDatabaseMock()
+    private val docsApi = getDocsApiMock()
+    private val repository = DatabaseLoaderRepositoryImpl(database, docsApi)
 
     @Before
-    fun initRepository() {
-        database = getDatabaseMock()
-        docsApi = getDocsApiMock()
-        component = DaggerUnitTestsComponent.factory()
-            .create(context, getDataStoreMock(), database, getDocsApiMock(), getWeatherApiMock())
-        repository = component.getDatabaseLoaderRepository()
+    fun resetMocks() {
+        reset(database)
+        reset(docsApi)
     }
 
     @Test

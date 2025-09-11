@@ -1,23 +1,18 @@
 package com.softcat.weatherapp
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
+import com.softcat.data.implementations.AuthorizationRepositoryImpl
 import com.softcat.database.exceptions.AuthorizationFailedException
 import com.softcat.database.facade.DatabaseFacade
 import com.softcat.database.model.UserDbModel
-import com.softcat.domain.interfaces.AuthorizationRepository
-import com.softcat.weatherapp.MockCreator.getDataStoreMock
 import com.softcat.weatherapp.MockCreator.getDatabaseMock
-import com.softcat.weatherapp.MockCreator.getDocsApiMock
-import com.softcat.weatherapp.MockCreator.getWeatherApiMock
 import com.softcat.weatherapp.TestDataCreator.getTestUser
-import com.softcat.weatherapp.di.components.DaggerUnitTestsComponent
-import com.softcat.weatherapp.di.components.UnitTestsComponent
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.reset
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.times
@@ -26,19 +21,12 @@ import org.mockito.kotlin.verify
 @RunWith(AndroidJUnit4::class)
 class AuthorizationRepositoryTest {
 
-    private val context = InstrumentationRegistry
-        .getInstrumentation().targetContext.applicationContext
-
-    private lateinit var database: DatabaseFacade
-    private lateinit var component: UnitTestsComponent
-    private lateinit var repository: AuthorizationRepository
+    private val database: DatabaseFacade = getDatabaseMock()
+    private val repository = AuthorizationRepositoryImpl(database)
 
     @Before
-    fun initRepository() {
-        database = getDatabaseMock()
-        component = DaggerUnitTestsComponent.factory()
-            .create(context, getDataStoreMock(), database, getDocsApiMock(), getWeatherApiMock())
-        repository = component.getAuthorizationRepository()
+    fun resetMocks() {
+        reset(database)
     }
 
     @Test

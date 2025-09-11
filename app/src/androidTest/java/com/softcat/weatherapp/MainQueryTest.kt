@@ -15,7 +15,7 @@ import kotlin.math.abs
 class MainQueryTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
     private val application = context as WeatherApplication
-    private val component = DaggerUnitTestsComponent.factory().create(context, application.dataStore)
+    private val component = DaggerAndroidTestsComponent.factory().create(context, application.dataStore)
     private val db = component.getDatabaseImpl()
     private val usersManager = component.getUsersManager()
     private val regionManager = component.getRegionManager()
