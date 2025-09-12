@@ -1,7 +1,6 @@
 package com.softcat.weatherapp
 
 import com.softcat.data.network.dto.CityDto
-import com.softcat.data.network.dto.ConditionDto
 import com.softcat.data.network.dto.WeatherTypeInfoDto
 import com.softcat.domain.entity.AstrologicalParameters
 import com.softcat.domain.entity.City
@@ -91,6 +90,49 @@ object TestDataCreator {
 
     fun getCityQuery() = "random-query-${Random.nextInt(1000, 10000)}"
 
+    fun getTestCurrentWeatherList(): List<CurrentWeather> {
+        return List(24) { i ->
+            CurrentWeather(
+                timeEpoch = 1757538000L + i * 3600L,
+                tempC = Random.nextInt(18, 25).toFloat(),
+                feelsLike = Random.nextInt(17, 27),
+                isDay = i in 6..21,
+                conditionCode = 100,
+                conditionUrl = "https://sunny_condition.png",
+                conditionText = "Sunny and no clouds",
+                windSpeed = Random.nextInt(1, 3),
+                precipitations = Random.nextInt(0, 1),
+                snow = 0,
+                humidity = Random.nextInt(15, 25),
+                cloud = Random.nextInt(5, 30),
+                vision = 1f
+            )
+        }
+    }
+
+    fun getTestWeather() = Weather(
+        avgTemp = 20f,
+        conditionCode = 200,
+        conditionText = "Cloudy",
+        conditionUrl = "https://cloudy_condition.png",
+        date = Calendar.getInstance().apply { time = Date(1757488236000L) },
+        formattedDate = "10.09.2025",
+        vision = Random.nextInt(3, 10).toFloat() / 10f,
+        humidity = Random.nextInt(5, 20),
+        windSpeed = Random.nextInt(0, 5),
+        snowVolume = 0,
+        precipitations = Random.nextInt(0, 5),
+        astrologicalParams = AstrologicalParameters(
+            sunriseTime = 1757473200,
+            sunsetTime = 1757529000,
+            moonriseTime = 1757547000,
+            moonsetTime = 1757553720,
+            moonPhase = "Full",
+            moonIllumination = Random.nextInt(20, 70)
+        ),
+        rainChance = 20
+    )
+
     fun getTestForecast() = Forecast(
         weather = CurrentWeather(
             timeEpoch = 1757412500,
@@ -107,64 +149,8 @@ object TestDataCreator {
             cloud = 15,
             vision = 1f
         ),
-        hourly = listOf(
-            listOf(
-                CurrentWeather(
-                    timeEpoch = 1757412500,
-                    tempC = 22f,
-                    feelsLike = 22,
-                    isDay = true,
-                    conditionCode = 100,
-                    conditionUrl = "https://sunny_condition.png",
-                    conditionText = "Sunny and no clouds",
-                    windSpeed = 1,
-                    precipitations = 0,
-                    snow = 0,
-                    humidity = 20,
-                    cloud = 10,
-                    vision = 1f
-                ),
-                CurrentWeather(
-                    timeEpoch = 1757412500,
-                    tempC = 25f,
-                    feelsLike = 22,
-                    isDay = true,
-                    conditionCode = 100,
-                    conditionUrl = "https://sunny_condition.png",
-                    conditionText = "Sunny and no clouds",
-                    windSpeed = 1,
-                    precipitations = 0,
-                    snow = 0,
-                    humidity = 20,
-                    cloud = 5,
-                    vision = 1f
-                )
-            )
-        ),
-        upcoming = listOf(
-            Weather(
-                avgTemp = 20f,
-                conditionCode = 200,
-                conditionText = "Cloudy",
-                conditionUrl = "https://cloudy_condition.png",
-                date = Calendar.getInstance().apply { time = Date(1757488236000L) },
-                formattedDate = "10.09.2025",
-                vision = 0.6f,
-                humidity = 30,
-                windSpeed = 3,
-                snowVolume = 0,
-                precipitations = 0,
-                astrologicalParams = AstrologicalParameters(
-                    sunriseTime = 1757473200,
-                    sunsetTime = 1757529000,
-                    moonriseTime = 1757547000,
-                    moonsetTime = 1757553720,
-                    moonPhase = "Full",
-                    moonIllumination = 60
-                ),
-                rainChance = 20
-            )
-        )
+        hourly = List(3) { getTestCurrentWeatherList() },
+        upcoming = List(3) { getTestWeather() }
     )
 
     fun getTestConditions() = listOf(
