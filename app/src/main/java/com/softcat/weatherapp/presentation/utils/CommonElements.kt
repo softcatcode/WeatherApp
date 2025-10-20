@@ -36,7 +36,6 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.calendar.exo2FontFamily
-import com.softcat.weatherapp.presentation.root.RootComponent
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPink
 
 @Composable
@@ -137,22 +136,22 @@ fun NavigationButton(
 
 @Composable
 fun MainBottomBar(
-    onClick: (RootComponent.MainScreenSelection) -> Unit = {},
-    selection: RootComponent.MainScreenSelection
+    onSelectIndex: (Int) -> Unit = {},
+    currentIndex: Int
 ) {
     BottomAppBar(
         actions = {
             NavigationButton(
                 icon = Icons.Filled.Home,
                 width = 0.5f,
-                isActive = selection == RootComponent.MainScreenSelection.Favourites,
-                onClick = { onClick(RootComponent.MainScreenSelection.Favourites) }
+                isActive = currentIndex == 0,
+                onClick = { onSelectIndex(0) }
             )
             NavigationButton(
                 icon = Icons.Filled.Person,
                 width = 1f,
-                isActive = selection == RootComponent.MainScreenSelection.Profile,
-                onClick = { onClick(RootComponent.MainScreenSelection.Profile) }
+                isActive = currentIndex == 1,
+                onClick = { onSelectIndex(1) }
             )
         },
         containerColor = MaterialTheme.colorScheme.primary
