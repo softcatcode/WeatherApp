@@ -116,7 +116,7 @@ dependencies {
     implementation(libs.coil.gif)
     implementation(libs.coil.compose)
 
-    testImplementation(libs.mockito)
-    androidTestImplementation(libs.mockito.android)
-    androidTestImplementation(libs.mockito)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
+    testImplementation(libs.mockito.kotlin)
 }

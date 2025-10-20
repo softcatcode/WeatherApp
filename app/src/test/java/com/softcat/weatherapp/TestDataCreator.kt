@@ -1,7 +1,9 @@
 package com.softcat.weatherapp
 
+import com.google.firebase.util.nextAlphanumericString
 import com.softcat.data.network.dto.CityDto
 import com.softcat.data.network.dto.WeatherTypeInfoDto
+import com.softcat.database.model.UserDbModel
 import com.softcat.domain.entity.AstrologicalParameters
 import com.softcat.domain.entity.City
 import com.softcat.domain.entity.CurrentWeather
@@ -14,79 +16,65 @@ import kotlin.random.Random
 
 object TestDataCreator {
 
-    fun getCityName() = "London"
+    private fun getRandomEmail(): String {
+        val name = listOf("Billy", "Lisa", "Mark", "Bob")[Random.nextInt(0, 4)]
+        val service = listOf("gmail", "mail", "yandex", "google")[Random.nextInt(0, 4)]
+        val end = listOf("ru", "com", "org")[Random.nextInt(0, 3)]
+        return "$name@$service.$end"
+    }
 
-    fun getTestUser() = User(
-        id = "0495128357",
-        name = "Bill",
+    private fun getRandomPassword() = Random.nextInt(10000, 100000).toString()
+
+    fun getRandomUserId() = Random.nextAlphanumericString(10)
+
+    private fun getRandomUserName() = listOf("John", "Mike", "Bill", "Bob", "Peter")[Random.nextInt(0, 5)]
+
+    fun getRandomUserDbModel() = UserDbModel(
+        name = getRandomUserName(),
+        email = getRandomEmail(),
+        password = getRandomPassword(),
+        role = User.Status.entries[Random.nextInt(0, User.Status.entries.size)].toString(),
+        registerTimeEpoch = 1726157981,
+        id = getRandomUserId()
+    )
+
+    fun getRandomUser() = User(
+        id = getRandomUserId(),
+        name = getRandomUserName(),
         role = User.Status.Premium,
-        email = "billy@gmail.com",
-        password = "1_Pw90fVC"
+        email = getRandomEmail(),
+        password = getRandomPassword()
     )
 
-    fun getUserId() = "user-38517-ttt"
+    fun getRandomCityName() = listOf(
+        "London", "Paris", "Moscow", "Amsterdam", "Rostov", "Novgorod"
+    )[Random.nextInt(0, 6)]
 
-    fun getTestCity() = City(
+    private fun getRandomCountry() = listOf(
+        "Russia", "England", "Netherlands", "USA", "Norway", "France"
+    )[Random.nextInt(0, 6)]
+
+    fun getRandomCity() = City(
         id = 1852,
-        name = "London",
-        country = "England",
-        latitude = 5.26f,
-        longitude = -14f
+        name = getRandomCityName(),
+        country = getRandomCountry(),
+        latitude = Random.nextInt(-90, 90) / 100f,
+        longitude = Random.nextInt(-90, 90) / 100f
     )
 
-    fun getCityList() = listOf(
-        City(
-            id = 1852,
-            name = "Moscow",
-            country = "England",
-            latitude = 5.26f,
-            longitude = -14f
-        ),
-        City(
-            id = 1852,
-            name = "London",
-            country = "England",
-            latitude = -3.51f,
-            longitude = 0f
-        ),
-        City(
-            id = 1852,
-            name = "Amsterdam",
-            country = "Netherlands",
-            latitude = 0.236f,
-            longitude = 80.5f
-        )
+    fun getRandomCityDto() = CityDto(
+        id = Random.nextInt(1000, 10000),
+        name = getRandomCityName(),
+        country = getRandomCountry(),
+        latitude = Random.nextInt(-90, 90) / 100f,
+        longitude = Random.nextInt(-90, 90) / 100f,
+        region = getRandomCountry(),
+        url = "https://weather_api/cities/this",
     )
 
-    fun getCityDtoList() = listOf(
-        CityDto(
-            id = 1852,
-            name = "Moscow",
-            country = "England",
-            latitude = 5.26f,
-            longitude = -14f,
-            region = "unknown",
-            url = "https://weather_api/cities/Moscow",
-        ),
-        CityDto(
-            id = 1852,
-            name = "London",
-            country = "England",
-            latitude = -3.51f,
-            longitude = 0f,
-            region = "unknown",
-            url = "https://weather_api/cities/Moscow",
-        ),
-        CityDto(
-            id = 1852,
-            name = "Amsterdam",
-            country = "Netherlands",
-            latitude = 0.236f,
-            longitude = 80.5f,
-            region = "unknown",
-            url = "https://weather_api/cities/Moscow",
-        )
-    )
+    fun getCityList(size: Int = 3) = List(size) { getRandomCity() }
+
+    fun getCityDtoList(size: Int = 3) = List(size) { getRandomCityDto() }
 
     fun getCityQuery() = "random-query-${Random.nextInt(1000, 10000)}"
 

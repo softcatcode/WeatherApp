@@ -1,6 +1,5 @@
 package com.softcat.weatherapp
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.softcat.data.implementations.DatabaseLoaderRepositoryImpl
 import com.softcat.data.mapper.toDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -13,7 +12,6 @@ import com.softcat.weatherapp.TestDataCreator.getTestForecast
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito.anyString
@@ -23,7 +21,6 @@ import org.mockito.Mockito.`when`
 import org.mockito.kotlin.verify
 import kotlin.random.Random
 
-@RunWith(AndroidJUnit4::class)
 class DatabaseLoaderRepositoryTest {
 
     private val database = getDatabaseMock()
@@ -37,7 +34,7 @@ class DatabaseLoaderRepositoryTest {
     }
 
     @Test
-    fun searchCities() = runBlocking {
+    fun searchCities(): Unit = runBlocking {
         val cities = getCityList().mapIndexed { i, elem -> elem.toDbModel(i) }
         `when`(database.searchCity(anyString())).thenReturn(Result.success(cities))
         val query = getCityQuery()
@@ -50,31 +47,34 @@ class DatabaseLoaderRepositoryTest {
     }
 
     @Test
-    fun searchCitiesEmptyResult() = runBlocking {
+    fun searchCitiesEmptyResult(): Unit = runBlocking {
         `when`(database.searchCity(anyString())).thenReturn(Result.success(emptyList()))
+        `when`(database.getCountries()).thenReturn(Result.success(emptyList()))
         val query = getCityQuery()
 
         val result = repository.searchCities(query)
 
-        verify(database.searchCity(query), times(1))
+        verify(database, times(1))
+            .searchCity(query)
         assert(result.isSuccess)
         assert(result.getOrThrow().isEmpty())
     }
 
     @Test
-    fun getHourlyWeather() = runBlocking {
+    fun getHourlyWeather(): Unit = runBlocking {
         val cityId = Random.nextInt(100, 1000)
         val day = Random.nextInt(0, 360)
 
         val result = repository.tryGetHourlyWeather(cityId, day)
 
-        verify(database.getCurrentWeather(cityId, anyLong()), times(1))
+        verify(database, times(1))
+            .getCurrentWeather(cityId, anyLong())
         assert(result.isSuccess)
         assert(result.getOrThrow().isEmpty())
     }
 
     @Test
-    fun getUpcomingWeather() = runBlocking {
+    fun getUpcomingWeather(): Unit = runBlocking {
         val cityId = Random.nextInt(100, 1000)
         val dayCount = Random.nextInt(1, 5)
 
@@ -86,7 +86,7 @@ class DatabaseLoaderRepositoryTest {
     }
 
     @Test
-    fun updateForecast() = runBlocking {
+    fun updateForecast(): Unit = runBlocking {
         val cityId = Random.nextInt(100, 1000)
         val forecast = getTestForecast()
 
@@ -103,7 +103,7 @@ class DatabaseLoaderRepositoryTest {
     }
 
     @Test
-    fun updateHourlyWeather() = runBlocking {
+    fun updateHourlyWeather(): Unit = runBlocking {
         val cityId = Random.nextInt(100, 1000)
         val hourlyWeather = getTestForecast().hourly.first()!!
 
@@ -115,7 +115,7 @@ class DatabaseLoaderRepositoryTest {
     }
 
     @Test
-    fun updateDayWeather() = runBlocking {
+    fun updateDayWeather(): Unit = runBlocking {
         val cityId = Random.nextInt(100, 1000)
         val weather = getTestForecast().upcoming!!
 
@@ -127,7 +127,7 @@ class DatabaseLoaderRepositoryTest {
     }
 
     @Test
-    fun loadWeatherTypesToDatabase() = runBlocking {
+    fun loadWeatherTypesToDatabase(): Unit = runBlocking {
         val conditions = getTestConditions()
         `when`(docsApi.loadWeatherConditions()).thenReturn(conditions)
         `when`(database.initWeatherTypes(anyList())).thenAnswer { invocation ->
@@ -142,7 +142,7 @@ class DatabaseLoaderRepositoryTest {
     }
 
     @Test
-    fun clearWeatherData() = runBlocking {
+    fun clearWeatherData(): Unit = runBlocking {
         repository.clearWeatherData()
 
         verify(database.clearWeatherData(), times(1))

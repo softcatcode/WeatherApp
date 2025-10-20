@@ -4,8 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.weatherapp.MockCreator.getDatabaseMock
 import com.softcat.weatherapp.TestDataCreator.getCityList
-import com.softcat.weatherapp.TestDataCreator.getTestCity
-import com.softcat.weatherapp.TestDataCreator.getUserId
+import com.softcat.weatherapp.TestDataCreator.getRandomCity
+import com.softcat.weatherapp.TestDataCreator.getRandomUserId
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -26,8 +26,8 @@ class FavouriteRepositoryTest {
 
     @Test
     fun addToFavourites() = runBlocking {
-        val userId = getUserId()
-        val savedCity = getTestCity()
+        val userId = getRandomUserId()
+        val savedCity = getRandomCity()
 
         repository.addToFavourite(userId, savedCity)
         val answer1 = repository.observeIsFavourite(userId, savedCity.id).first()
@@ -44,8 +44,8 @@ class FavouriteRepositoryTest {
 
     @Test
     fun doubleAddToFavourites() = runBlocking {
-        val userId = getUserId()
-        val savedCity = getTestCity()
+        val userId = getRandomUserId()
+        val savedCity = getRandomCity()
 
         repository.addToFavourite(userId, savedCity)
         repository.addToFavourite(userId, savedCity)
@@ -63,8 +63,8 @@ class FavouriteRepositoryTest {
 
     @Test
     fun removeFromFavourites() = runBlocking {
-        val userId = getUserId()
-        val savedCity = getTestCity()
+        val userId = getRandomUserId()
+        val savedCity = getRandomCity()
 
         repository.addToFavourite(userId, savedCity)
         repository.removeFromFavourite(userId, savedCity.id)
@@ -81,7 +81,7 @@ class FavouriteRepositoryTest {
 
     @Test
     fun getFavouriteCities() = runBlocking {
-        val userId = getUserId()
+        val userId = getRandomUserId()
         val cities = getCityList()
 
         cities.forEach { city ->
@@ -100,7 +100,7 @@ class FavouriteRepositoryTest {
 
     @Test
     fun getFavouriteCitiesUnknownUser() = runBlocking {
-        val userId = getUserId()
+        val userId = getRandomUserId()
         val cities = getCityList()
 
         cities.forEach { city ->
@@ -116,7 +116,7 @@ class FavouriteRepositoryTest {
 
     @Test
     fun getFavouriteCitiesWhenEmpty() = runBlocking {
-        val userId = getUserId()
+        val userId = getRandomUserId()
         val cities = getCityList()
 
         cities.forEach { city ->
@@ -132,7 +132,7 @@ class FavouriteRepositoryTest {
 
     @Test
     fun getFavouriteCitiesWhenTwoOfThreeRemoved() = runBlocking {
-        val userId = getUserId()
+        val userId = getRandomUserId()
         val cities = getCityList()
 
         cities.forEach { city ->

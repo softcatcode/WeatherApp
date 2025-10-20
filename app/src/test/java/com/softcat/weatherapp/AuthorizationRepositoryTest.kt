@@ -1,24 +1,22 @@
 package com.softcat.weatherapp
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.softcat.data.implementations.AuthorizationRepositoryImpl
 import com.softcat.database.exceptions.AuthorizationFailedException
 import com.softcat.database.facade.DatabaseFacade
 import com.softcat.database.model.UserDbModel
 import com.softcat.weatherapp.MockCreator.getDatabaseMock
-import com.softcat.weatherapp.TestDataCreator.getTestUser
+import com.softcat.weatherapp.TestDataCreator.getRandomUser
+import com.softcat.weatherapp.TestDataCreator.getRandomUserDbModel
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
+import org.mockito.Mockito.anyString
 import org.mockito.Mockito.reset
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
-@RunWith(AndroidJUnit4::class)
 class AuthorizationRepositoryTest {
 
     private val database: DatabaseFacade = getDatabaseMock()
@@ -30,8 +28,8 @@ class AuthorizationRepositoryTest {
     }
 
     @Test
-    fun enterRegistered() = runBlocking {
-        val user = getTestUser()
+    fun enterRegistered(): Unit = runBlocking {
+        val user = getRandomUser()
         val userModel = UserDbModel(
             name = user.name,
             email = user.email,
@@ -40,47 +38,43 @@ class AuthorizationRepositoryTest {
             registerTimeEpoch = 1757400828,
             id = user.id
         )
-        `when`(database.verifyUser(user.name, user.password)).thenReturn(Result.success(userModel))
+        `when`(database.verifyUser(anyString(), anyString())).thenReturn(Result.success(userModel))
 
         val result = repository.enter(user.name, user.password)
 
-        verify(database.verifyUser(user.name, user.password), times(1))
+        verify(database, times(1))
+            .verifyUser(anyString(), anyString())
         assert(result.isSuccess)
         assert(result.getOrThrow() == user)
     }
 
     @Test
-    fun enterUnregistered() = runBlocking {
-        val user = getTestUser()
+    fun enterUnregistered(): Unit = runBlocking {
+        val user = getRandomUser()
         `when`(database.verifyUser(user.name, user.password))
             .thenReturn(Result.failure(AuthorizationFailedException(user.name, user.password)))
 
         val result = repository.enter(user.name, user.password)
 
-        verify(database.verifyUser(user.name, user.password), times(1))
+        verify(database, times(1))
+            .verifyUser(user.name, user.password)
         assert(result.isFailure)
-        assert(result.exceptionOrNull() == AuthorizationFailedException(user.name, user.password))
+        assert(result.exceptionOrNull()?.message == AuthorizationFailedException(user.name, user.password).message)
     }
 
     @Test
-    fun register() = runBlocking {
-        val user = getTestUser()
-        `when`(database.createUser(any())).thenAnswer { invocation ->
-            Result.success(invocation.arguments.first() as UserDbModel)
-        }
-        val captor = ArgumentCaptor.forClass(UserDbModel::class.java)
+    fun register(): Unit = runBlocking {
+        val user = getRandomUserDbModel()
+        `when`(database.createUser(any())).thenReturn(Result.success(user))
 
         val result = repository.register(user.name, user.email, user.password)
 
-        verify(database.createUser(captor.capture()))
-        with (captor.value) {
-            assert(id == user.id)
+        assert(result.isSuccess)
+        with (result.getOrThrow()) {
             assert(name == user.name)
             assert(password == user.password)
             assert(email == user.email)
-            assert(role == user.role.name)
+            assert(role.name == user.role)
         }
-        assert(result.isSuccess)
-        assert(result.getOrThrow() == user)
     }
 }

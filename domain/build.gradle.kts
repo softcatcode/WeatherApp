@@ -44,7 +44,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    testImplementation(libs.mockito)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
     implementation(libs.dagger.core)
     ksp(libs.dagger.compiler)
 }

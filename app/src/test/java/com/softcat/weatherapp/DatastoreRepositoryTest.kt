@@ -3,8 +3,8 @@ package com.softcat.weatherapp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.weatherapp.MockCreator.getDataStoreMock
-import com.softcat.weatherapp.TestDataCreator.getCityName
-import com.softcat.weatherapp.TestDataCreator.getTestUser
+import com.softcat.weatherapp.TestDataCreator.getRandomCityName
+import com.softcat.weatherapp.TestDataCreator.getRandomUser
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +24,7 @@ class DatastoreRepositoryTest {
 
     @Test
     fun saveAndGetCity() = runBlocking {
-        val savedCity = getCityName()
+        val savedCity = getRandomCityName()
 
         repository.saveCityToDatastore(savedCity)
         val city1 = repository.getLastCityFromDatastore()
@@ -36,7 +36,7 @@ class DatastoreRepositoryTest {
 
     @Test
     fun saveAndGetUser() = runBlocking {
-        val savedUser = getTestUser()
+        val savedUser = getRandomUser()
 
         repository.saveLastUser(savedUser)
         val user1 = repository.getLastUser()
