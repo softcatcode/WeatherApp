@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gsonConverter)
     implementation(libs.okhttp)
+    implementation(libs.converter.scalars)
 
     implementation(libs.play.services.location)
     implementation(libs.datastore)

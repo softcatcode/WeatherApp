@@ -11,6 +11,7 @@ import com.softcat.weatherapp.presentation.profile.ProfileContent
 import com.softcat.weatherapp.presentation.search.SearchContent
 import com.softcat.weatherapp.presentation.settings.SettingsScreen
 import com.softcat.weatherapp.presentation.ui.theme.WeatherAppTheme
+import com.softcat.weatherapp.presentation.web.WebScreen
 
 @Composable
 fun RootContent(component: RootComponent) {
@@ -25,6 +26,7 @@ fun RootContent(component: RootComponent) {
                 is RootComponent.Child.HourlyWeather -> HourlyWeatherContent(instance.component)
                 is RootComponent.Child.Authorization -> AuthorizationScreen(instance.component)
                 is RootComponent.Child.Settings -> SettingsScreen(instance.component)
+                is RootComponent.Child.Web -> WebScreen(instance.component)
             }
         }
     }

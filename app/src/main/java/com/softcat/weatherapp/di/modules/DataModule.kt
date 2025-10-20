@@ -14,6 +14,8 @@ import com.softcat.data.network.api.ApiFactory
 import com.softcat.data.network.api.ApiService
 import com.softcat.data.network.api.DocsApiFactory
 import com.softcat.data.network.api.DocsApiService
+import com.softcat.data.network.api.NewWeatherApiFactory
+import com.softcat.data.network.api.NewWeatherApiService
 import com.softcat.database.di.ApplicationScope
 import com.softcat.domain.interfaces.AuthorizationRepository
 import com.softcat.domain.interfaces.CalendarRepository
@@ -72,6 +74,10 @@ interface DataModule {
         @ApplicationScope
         @Provides
         fun provideDocsApiService(): DocsApiService = DocsApiFactory.apiService
+
+        @ApplicationScope
+        @Provides
+        fun provideNewWeatherApiService(): NewWeatherApiService = NewWeatherApiFactory.apiService
 
         @ApplicationScope
         @Provides

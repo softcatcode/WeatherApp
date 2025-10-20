@@ -20,6 +20,7 @@ import com.softcat.weatherapp.presentation.profile.ProfileComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchComponentImpl
 import com.softcat.weatherapp.presentation.search.SearchOpenReason
 import com.softcat.weatherapp.presentation.settings.SettingsComponentImpl
+import com.softcat.weatherapp.presentation.web.WebComponentImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -35,6 +36,7 @@ class RootComponentImpl @AssistedInject constructor(
     private val authComponentFactory: AuthorizationComponentImpl.Factory,
     private val profileComponentFactory: ProfileComponentImpl.Factory,
     private val settingsComponentFactory: SettingsComponentImpl.Factory,
+    private val webComponentFactory: WebComponentImpl.Factory,
     @Assisted("componentContext") componentContext: ComponentContext,
 ): RootComponent, ComponentContext by componentContext {
 
@@ -149,6 +151,14 @@ class RootComponentImpl @AssistedInject constructor(
                 )
                 RootComponent.Child.Settings(component)
             }
+
+            Config.Web -> {
+                val component = webComponentFactory.create(
+                    componentContext = componentContext,
+                    onBackClick = { navigation.pop() }
+                )
+                RootComponent.Child.Web(component)
+            }
         }
         Timber.i("Result child: $result.")
         return result
@@ -181,6 +191,9 @@ class RootComponentImpl @AssistedInject constructor(
 
         @Parcelize
         data object Settings: Config
+
+        @Parcelize
+        data object Web: Config
     }
 
     @AssistedFactory

@@ -10,6 +10,7 @@ import com.softcat.weatherapp.presentation.hourly.HourlyWeatherComponent
 import com.softcat.weatherapp.presentation.profile.ProfileComponent
 import com.softcat.weatherapp.presentation.search.SearchComponent
 import com.softcat.weatherapp.presentation.settings.SettingsComponent
+import com.softcat.weatherapp.presentation.web.WebComponent
 
 interface RootComponent {
 
@@ -37,5 +38,7 @@ interface RootComponent {
         data class Profile(val component: ProfileComponent): Child
 
         data class Settings(val component: SettingsComponent): Child
+
+        data class Web(val component: WebComponent): Child
     }
 }
