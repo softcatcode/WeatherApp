@@ -9,7 +9,7 @@ interface DatabaseLoaderRepository {
 
     suspend fun searchCities(query: String): Result<List<City>>
 
-    suspend fun tryGetHourlyWeather(cityId: Int, dayBias: Int): Result<List<CurrentWeather>>
+    suspend fun tryGetHourlyWeather(cityId: Int, dayOffset: Int): Result<List<CurrentWeather>>
 
     suspend fun tryLoadUpcomingDaysWeather(cityId: Int, dayCount: Int): Result<List<Weather>>
 

@@ -1,7 +1,7 @@
 package com.softcat.weatherapp
 
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.UserDbModel
@@ -14,7 +14,8 @@ import kotlin.math.abs
 @RunWith(AndroidJUnit4::class)
 class MainQueryTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
-    private val component = DaggerUnitTestsComponent.factory().create(context)
+    private val application = context as WeatherApplication
+    private val component = DaggerAndroidTestsComponent.factory().create(context, application.dataStore)
     private val db = component.getDatabaseImpl()
     private val usersManager = component.getUsersManager()
     private val regionManager = component.getRegionManager()

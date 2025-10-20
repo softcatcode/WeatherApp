@@ -1,6 +1,13 @@
 package com.softcat.weatherapp
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.softcat.data.implementations.AuthorizationRepositoryImpl
+import com.softcat.data.implementations.DatabaseLoaderRepositoryImpl
+import com.softcat.data.implementations.DatastoreRepositoryImpl
+import com.softcat.data.implementations.FavouriteRepositoryImpl
+import com.softcat.data.implementations.SearchRepositoryImpl
 import com.softcat.database.di.ApplicationScope
 import com.softcat.database.di.DatabaseModule
 import com.softcat.database.facade.DatabaseFacadeImpl
@@ -13,7 +20,17 @@ import dagger.Component
 
 @ApplicationScope
 @Component(modules = [DataModule::class, DatabaseModule::class])
-interface UnitTestsComponent {
+interface AndroidTestsComponent {
+
+    fun getDatastoreRepository(): DatastoreRepositoryImpl
+
+    fun getFavouriteRepository(): FavouriteRepositoryImpl
+
+    fun getAuthorizationRepository(): AuthorizationRepositoryImpl
+
+    fun getDatabaseLoaderRepository(): DatabaseLoaderRepositoryImpl
+
+    fun getSearchRepository(): SearchRepositoryImpl
 
     fun getDatabaseImpl(): DatabaseFacadeImpl
 
@@ -27,6 +44,7 @@ interface UnitTestsComponent {
     interface Factory {
         fun create(
             @BindsInstance context: Context,
-        ): UnitTestsComponent
+            @BindsInstance dataStore: DataStore<Preferences>
+        ): AndroidTestsComponent
     }
 }

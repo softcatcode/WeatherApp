@@ -46,11 +46,11 @@ interface DatabaseModule {
 
     @ApplicationScope
     @Binds
-    fun bindManagerFactory(impl: RegionManagerImpl): RegionManager
+    fun bindRegionManager(impl: RegionManagerImpl): RegionManager
 
     @ApplicationScope
     @Binds
-    fun bindWeatherManagerFactory(impl: WeatherManagerImpl): WeatherManager
+    fun bindWeatherManager(impl: WeatherManagerImpl): WeatherManager
 
     @ApplicationScope
     @Binds

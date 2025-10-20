@@ -46,10 +46,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
-import com.softcat.weatherapp.presentation.root.RootComponent
 import com.softcat.weatherapp.presentation.ui.theme.Orange
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
-import com.softcat.weatherapp.presentation.utils.MainBottomBar
 import kotlin.math.abs
 
 @Composable
@@ -60,17 +58,7 @@ fun FavouritesContent(component: FavouritesComponent) {
             component.reloadCities()
     }
 
-    Scaffold(
-        bottomBar = {
-            MainBottomBar(
-                selection = RootComponent.MainScreenSelection.Favourites,
-                onClick = { selection ->
-                    if (selection == RootComponent.MainScreenSelection.Profile)
-                        component.onProfileClick()
-                }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxSize()

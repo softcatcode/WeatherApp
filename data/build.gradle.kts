@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gsonConverter)
     implementation(libs.okhttp)
+    implementation(libs.converter.scalars)
 
     implementation(libs.play.services.location)
     implementation(libs.datastore)
@@ -68,6 +69,8 @@ dependencies {
     testImplementation(project(":data"))
     androidTestImplementation(project(":data"))
 
-    testImplementation(libs.mockito)
-    androidTestImplementation(libs.mockito)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.mockito.kotlin)
+    androidTestImplementation(libs.mockito.core)
 }

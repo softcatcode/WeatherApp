@@ -13,7 +13,8 @@ import kotlin.math.abs
 class SearchCityTest {
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
-    private val component = DaggerUnitTestsComponent.factory().create(context)
+    private val application = context as WeatherApplication
+    private val component = DaggerAndroidTestsComponent.factory().create(context, application.dataStore)
     private val db = component.getDatabaseImpl()
     private val regionManager = component.getRegionManager()
 

@@ -8,8 +8,6 @@ interface FavouritesComponent {
 
     fun onSearchClick()
 
-    fun onProfileClick()
-
     fun onAddToFavouritesClick()
 
     fun onCityItemClick(city: City)
