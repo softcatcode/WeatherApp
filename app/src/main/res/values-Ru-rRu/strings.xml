@@ -33,6 +33,8 @@
     <string name="exit">Выход</string>
     <string name="clear">Удалить погоду</string>
     <string name="send_logs">Отправить логи</string>
+    <string name="tech_interface">Технологический интерфейс</string>
+    <string name="swagger_interface">Swagger интерфейс</string>
     <string name="settings">Настройки</string>
     <string name="today">Сегодня</string>
 

@@ -8,5 +8,7 @@ interface SettingsComponent {
 
     fun sendLogs()
 
+    fun swaggerInterface()
+
     fun back()
 }

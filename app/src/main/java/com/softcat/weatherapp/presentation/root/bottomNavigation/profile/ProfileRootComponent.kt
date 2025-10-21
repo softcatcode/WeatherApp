@@ -4,6 +4,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.softcat.weatherapp.presentation.profile.ProfileComponent
 import com.softcat.weatherapp.presentation.settings.SettingsComponent
+import com.softcat.weatherapp.presentation.swagger.SwaggerComponent
 
 interface ProfileRootComponent {
     val stack: Value<ChildStack<*, Child>>
@@ -12,5 +13,7 @@ interface ProfileRootComponent {
         data class Profile(val component: ProfileComponent): Child
 
         data class Settings(val component: SettingsComponent): Child
+
+        data class SwaggerUI(val component: SwaggerComponent): Child
     }
 }

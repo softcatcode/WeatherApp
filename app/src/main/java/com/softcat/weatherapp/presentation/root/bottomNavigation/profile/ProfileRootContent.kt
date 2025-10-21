@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.jetpack.stack.Children
 import com.softcat.weatherapp.presentation.profile.ProfileContent
 import com.softcat.weatherapp.presentation.settings.SettingsScreen
+import com.softcat.weatherapp.presentation.swagger.SwaggerScreen
 
 @Composable
 fun ProfileRootContent(component: ProfileRootComponent) {
@@ -11,6 +12,7 @@ fun ProfileRootContent(component: ProfileRootComponent) {
         when (val instance = it.instance) {
             is ProfileRootComponent.Child.Profile -> ProfileContent(instance.component)
             is ProfileRootComponent.Child.Settings -> SettingsScreen(instance.component)
+            is ProfileRootComponent.Child.SwaggerUI -> SwaggerScreen(instance.component)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.softcat.weatherapp.di.modules
 
 import android.content.Context
 import android.location.Geocoder
+import com.softcat.data.implementations.AppInfoRepositoryImpl
 import com.softcat.data.implementations.AuthorizationRepositoryImpl
 import com.softcat.data.implementations.CalendarRepositoryImpl
 import com.softcat.data.implementations.DatabaseLoaderRepositoryImpl
@@ -17,6 +18,7 @@ import com.softcat.data.network.api.DocsApiService
 import com.softcat.data.network.api.NewWeatherApiFactory
 import com.softcat.data.network.api.NewWeatherApiService
 import com.softcat.database.di.ApplicationScope
+import com.softcat.domain.interfaces.AppInfoRepository
 import com.softcat.domain.interfaces.AuthorizationRepository
 import com.softcat.domain.interfaces.CalendarRepository
 import com.softcat.domain.interfaces.DatabaseLoaderRepository
@@ -64,6 +66,10 @@ interface DataModule {
     @ApplicationScope
     @Binds
     fun bindDatabaseLoaderRepository(impl: DatabaseLoaderRepositoryImpl): DatabaseLoaderRepository
+
+    @ApplicationScope
+    @Binds
+    fun bindAppInfoRepository(impl: AppInfoRepositoryImpl): AppInfoRepository
 
     companion object {
 
