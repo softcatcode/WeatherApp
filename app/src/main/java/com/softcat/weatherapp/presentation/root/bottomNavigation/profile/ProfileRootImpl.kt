@@ -13,6 +13,7 @@ import com.softcat.weatherapp.presentation.profile.ProfileComponentImpl
 import com.softcat.weatherapp.presentation.root.bottomNavigation.profile.ProfileRootComponent.Child.*
 import com.softcat.weatherapp.presentation.settings.SettingsComponentImpl
 import com.softcat.weatherapp.presentation.swagger.SwaggerComponentImpl
+import com.softcat.weatherapp.presentation.tech_interface.TechIntComponentImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -23,8 +24,9 @@ class ProfileRootImpl @AssistedInject constructor(
     private val profileComponentFactory: ProfileComponentImpl.Factory,
     private val settingsComponentFactory: SettingsComponentImpl.Factory,
     private val swaggerComponentFactory: SwaggerComponentImpl.Factory,
+    private val techIntComponentFactory: TechIntComponentImpl.Factory,
     @Assisted("context") componentContext: ComponentContext,
-    @Assisted("user") user: User
+    @Assisted("user") private val user: User
 ): ProfileRootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -54,7 +56,8 @@ class ProfileRootImpl @AssistedInject constructor(
                 val component = settingsComponentFactory.create(
                     componentContext = componentContext,
                     backClickCallback = { navigation.pop() },
-                    openSwaggerUICallback = { navigation.push(Config.SwaggerUI) }
+                    openSwaggerUICallback = { navigation.push(Config.SwaggerUI) },
+                    openTechInterfaceCallback = { navigation.push(Config.TechInterface) }
                 )
                 Settings(component)
             }
@@ -65,6 +68,15 @@ class ProfileRootImpl @AssistedInject constructor(
                     onBackClick = { navigation.pop() }
                 )
                 SwaggerUI(component)
+            }
+
+            is Config.TechInterface -> {
+                val component = techIntComponentFactory.create(
+                    componentContext = componentContext,
+                    userId = user.id,
+                    onBackClicked = { navigation.pop() }
+                )
+                TechInt(component)
             }
         }
     }
@@ -79,13 +91,16 @@ class ProfileRootImpl @AssistedInject constructor(
 
         @Parcelize
         data object SwaggerUI: Config
+
+        @Parcelize
+        data object TechInterface: Config
     }
 
     @AssistedFactory
     interface Factory {
         fun create(
             @Assisted("context") componentContext: ComponentContext,
-            @Assisted("user") user: User
+            @Assisted("user") user: User,
         ): ProfileRootImpl
     }
 }

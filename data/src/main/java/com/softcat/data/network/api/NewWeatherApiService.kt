@@ -41,6 +41,7 @@ interface NewWeatherApiService {
     fun getSwaggerUI(): Call<ResponseBody>
 
     companion object {
-        const val BASE_URL = "http://192.168.0.104:8080/"
+        //const val BASE_URL = "http://192.168.0.104:8080/"
+        const val BASE_URL = "http://10.140.41.2:8080/"
     }
 }

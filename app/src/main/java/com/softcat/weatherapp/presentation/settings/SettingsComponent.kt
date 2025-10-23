@@ -10,5 +10,7 @@ interface SettingsComponent {
 
     fun swaggerInterface()
 
+    fun techInterface()
+
     fun back()
 }

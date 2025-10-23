@@ -10,6 +10,8 @@ interface SettingsStore: Store<SettingsStore.Intent, SettingsStore.State, Settin
         data object SendLogs: Intent
 
         data object OpenSwaggerUI: Intent
+
+        data object TechInterface: Intent
     }
 
     sealed interface State {
@@ -20,5 +22,7 @@ interface SettingsStore: Store<SettingsStore.Intent, SettingsStore.State, Settin
         data object BackClick: Label
 
         data object OpenSwaggerUiClicked: Label
+
+        data object TechInterface: Label
     }
 }

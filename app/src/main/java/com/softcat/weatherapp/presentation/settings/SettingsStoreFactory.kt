@@ -37,6 +37,10 @@ class SettingsStoreFactory @Inject constructor(
                 SettingsStore.Intent.OpenSwaggerUI -> {
                     publish(SettingsStore.Label.OpenSwaggerUiClicked)
                 }
+
+                SettingsStore.Intent.TechInterface -> {
+                    publish(SettingsStore.Label.TechInterface)
+                }
             }
         }
     }

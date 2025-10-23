@@ -24,7 +24,6 @@ fun SettingsScreen(component: SettingsComponent) {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val context = LocalContext.current.applicationContext
         TextIconButton(
             modifier = Modifier,
             text = stringResource(R.string.send_logs),
@@ -35,6 +34,11 @@ fun SettingsScreen(component: SettingsComponent) {
             text = stringResource(R.string.swagger_interface),
             icon = Icons.Default.Web,
             onClick = { component.swaggerInterface() }
+        )
+        TextIconButton(
+            text = stringResource(R.string.tech_interface),
+            icon = Icons.Default.Adb,
+            onClick = { component.techInterface() }
         )
     }
 }

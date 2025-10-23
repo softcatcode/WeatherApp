@@ -17,7 +17,8 @@ class SettingsComponentImpl @AssistedInject constructor(
     storeFactory: SettingsStoreFactory,
     @Assisted("context") componentContext: ComponentContext,
     @Assisted("back") private val backClickCallback: () -> Unit,
-    @Assisted("swagger") private val openSwaggerUICallback: () -> Unit
+    @Assisted("swagger") private val openSwaggerUICallback: () -> Unit,
+    @Assisted("tech") private val openTechInterfaceCallback: () -> Unit
 ): SettingsComponent, ComponentContext by componentContext {
 
     @AssistedFactory
@@ -25,7 +26,8 @@ class SettingsComponentImpl @AssistedInject constructor(
         fun create(
             @Assisted("context") componentContext: ComponentContext,
             @Assisted("back") backClickCallback: () -> Unit,
-            @Assisted("swagger") openSwaggerUICallback: () -> Unit
+            @Assisted("swagger") openSwaggerUICallback: () -> Unit,
+            @Assisted("tech") openTechInterfaceCallback: () -> Unit
         ): SettingsComponentImpl
     }
 
@@ -45,6 +47,7 @@ class SettingsComponentImpl @AssistedInject constructor(
         when (label) {
             SettingsStore.Label.BackClick -> backClickCallback()
             SettingsStore.Label.OpenSwaggerUiClicked -> openSwaggerUICallback()
+            SettingsStore.Label.TechInterface -> openTechInterfaceCallback()
         }
     }
 
@@ -54,8 +57,13 @@ class SettingsComponentImpl @AssistedInject constructor(
     }
 
     override fun swaggerInterface() {
-        Timber.i("${this::class.simpleName}.sendLogs()")
+        Timber.i("${this::class.simpleName}.swaggerInterface()")
         store.accept(SettingsStore.Intent.OpenSwaggerUI)
+    }
+
+    override fun techInterface() {
+        Timber.i("${this::class.simpleName}.techInterface()")
+        store.accept(SettingsStore.Intent.TechInterface)
     }
 
     override fun back() {
