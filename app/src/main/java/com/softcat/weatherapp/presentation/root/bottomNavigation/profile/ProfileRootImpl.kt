@@ -10,7 +10,10 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.softcat.domain.entity.User
 import com.softcat.weatherapp.presentation.profile.ProfileComponentImpl
+import com.softcat.weatherapp.presentation.root.bottomNavigation.profile.ProfileRootComponent.Child.*
 import com.softcat.weatherapp.presentation.settings.SettingsComponentImpl
+import com.softcat.weatherapp.presentation.swagger.SwaggerComponentImpl
+import com.softcat.weatherapp.presentation.tech_interface.TechIntComponentImpl
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -20,15 +23,17 @@ import timber.log.Timber
 class ProfileRootImpl @AssistedInject constructor(
     private val profileComponentFactory: ProfileComponentImpl.Factory,
     private val settingsComponentFactory: SettingsComponentImpl.Factory,
+    private val swaggerComponentFactory: SwaggerComponentImpl.Factory,
+    private val techIntComponentFactory: TechIntComponentImpl.Factory,
     @Assisted("context") componentContext: ComponentContext,
-    @Assisted("user") user: User
+    @Assisted("user") private val user: User
 ): ProfileRootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
 
     override val stack: Value<ChildStack<*, ProfileRootComponent.Child>> = childStack(
         source = navigation,
-        initialConfiguration = Config.Profile(user),
+        initialConfiguration = Config.ProfileInfo(user),
         handleBackButton = true,
         childFactory = ::child
     )
@@ -37,22 +42,41 @@ class ProfileRootImpl @AssistedInject constructor(
         Timber.i("${this::class.simpleName}.child($config, $componentContext)")
         return when (config) {
 
-            is Config.Profile -> {
+            is Config.ProfileInfo -> {
                 val component = profileComponentFactory.create(
                     user = config.user,
                     componentContext = componentContext,
                     backClickCallback = { navigation.pop() },
                     settingsClickCallback = { navigation.push(Config.Settings) }
                 )
-                ProfileRootComponent.Child.Profile(component)
+                Profile(component)
             }
 
             Config.Settings -> {
                 val component = settingsComponentFactory.create(
                     componentContext = componentContext,
-                    backClickCallback = { navigation.pop() }
+                    backClickCallback = { navigation.pop() },
+                    openSwaggerUICallback = { navigation.push(Config.SwaggerUI) },
+                    openTechInterfaceCallback = { navigation.push(Config.TechInterface) }
                 )
-                ProfileRootComponent.Child.Settings(component)
+                Settings(component)
+            }
+
+            Config.SwaggerUI -> {
+                val component = swaggerComponentFactory.create(
+                    componentContext = componentContext,
+                    onBackClick = { navigation.pop() }
+                )
+                SwaggerUI(component)
+            }
+
+            is Config.TechInterface -> {
+                val component = techIntComponentFactory.create(
+                    componentContext = componentContext,
+                    userId = user.id,
+                    onBackClicked = { navigation.pop() }
+                )
+                TechInt(component)
             }
         }
     }
@@ -60,17 +84,23 @@ class ProfileRootImpl @AssistedInject constructor(
     sealed interface Config: Parcelable {
 
         @Parcelize
-        data class Profile(val user: User): Config
+        data class ProfileInfo(val user: User): Config
 
         @Parcelize
         data object Settings: Config
+
+        @Parcelize
+        data object SwaggerUI: Config
+
+        @Parcelize
+        data object TechInterface: Config
     }
 
     @AssistedFactory
     interface Factory {
         fun create(
             @Assisted("context") componentContext: ComponentContext,
-            @Assisted("user") user: User
+            @Assisted("user") user: User,
         ): ProfileRootImpl
     }
 }

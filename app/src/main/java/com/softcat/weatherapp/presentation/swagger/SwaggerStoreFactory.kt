@@ -1,24 +1,29 @@
-package com.softcat.weatherapp.presentation.web
+package com.softcat.weatherapp.presentation.swagger
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import com.softcat.domain.useCases.GetSwaggerUIUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class WebStoreFactory @Inject constructor(
+class SwaggerStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,
+    private val swaggerUseCase: GetSwaggerUIUseCase
 ) {
 
-    fun create(): WebStore =
+    fun create(): SwaggerStore =
         object:
-            WebStore,
-            Store<WebStore.Intent, WebStore.State, WebStore.Label>
+            SwaggerStore,
+            Store<SwaggerStore.Intent, SwaggerStore.State, SwaggerStore.Label>
         by
             storeFactory.create(
                 name = this::class.simpleName,
-                initialState = WebStore.State.Loading,
+                initialState = SwaggerStore.State.Content(swaggerUseCase.getSwaggerLink()),
                 executorFactory = ::Executor,
                 reducer = ReducerImpl
             ) {}
@@ -35,15 +40,15 @@ class WebStoreFactory @Inject constructor(
         ): Msg
     }
 
-    private inner class Executor: CoroutineExecutor<WebStore.Intent, Action, WebStore.State, Msg, WebStore.Label>() {
-        override fun executeIntent(intent: WebStore.Intent, getState: () -> WebStore.State) {
+    private inner class Executor: CoroutineExecutor<SwaggerStore.Intent, Action, SwaggerStore.State, Msg, SwaggerStore.Label>() {
+        override fun executeIntent(intent: SwaggerStore.Intent, getState: () -> SwaggerStore.State) {
             Timber.i("${this::class.simpleName} INTENT $intent is caught.")
             return when (intent) {
-                WebStore.Intent.BackClick -> publish(WebStore.Label.BackClick)
+                SwaggerStore.Intent.BackClick -> publish(SwaggerStore.Label.BackClick)
             }
         }
 
-        override fun executeAction(action: Action, getState: () -> WebStore.State) {
+        override fun executeAction(action: Action, getState: () -> SwaggerStore.State) {
             Timber.i("${this::class.simpleName} ACTION $action is caught.")
             return when (action) {
                 is Action.HtmlContentLoaded -> dispatch(Msg.Loaded(action.data))
@@ -51,11 +56,11 @@ class WebStoreFactory @Inject constructor(
         }
     }
 
-    private object ReducerImpl: Reducer<WebStore.State, Msg> {
-        override fun WebStore.State.reduce(msg: Msg): WebStore.State {
+    private object ReducerImpl: Reducer<SwaggerStore.State, Msg> {
+        override fun SwaggerStore.State.reduce(msg: Msg): SwaggerStore.State {
             Timber.i("${this::class.simpleName} MSG $msg is caught.")
             return when (msg) {
-                is Msg.Loaded -> WebStore.State.Content(msg.data)
+                is Msg.Loaded -> SwaggerStore.State.Content(msg.data)
             }
         }
     }

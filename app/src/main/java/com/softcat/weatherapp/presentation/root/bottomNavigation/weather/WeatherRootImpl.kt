@@ -66,10 +66,6 @@ class WeatherRootImpl @AssistedInject constructor(
                     openReason = config.openReason,
                     onBackClickCallback = {
                         navigation.pop()
-                        if (config.openReason == SearchOpenReason.RegularSearch) {
-                            navigation.pop()
-                            navigation.push(Config.Favourite(config.user))
-                        }
                     },
                     onOpenForecastCallback = { user, city ->
                         navigation.push(Config.Details(user, city))

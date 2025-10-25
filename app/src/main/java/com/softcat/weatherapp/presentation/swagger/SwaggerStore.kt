@@ -1,21 +1,17 @@
-package com.softcat.weatherapp.presentation.web
+package com.softcat.weatherapp.presentation.swagger
 
 import com.arkivanov.mvikotlin.core.store.Store
 
-interface WebStore: Store<WebStore.Intent, WebStore.State, WebStore.Label> {
+interface SwaggerStore: Store<SwaggerStore.Intent, SwaggerStore.State, SwaggerStore.Label> {
 
     sealed interface Intent {
         data object BackClick: Intent
     }
 
     sealed interface State {
-        data object Loading: State
-
         data class Content(
-            val htmlContent: String
+            val swaggerLink: String
         ): State
-
-        data object Error: State
     }
 
     sealed interface Label {

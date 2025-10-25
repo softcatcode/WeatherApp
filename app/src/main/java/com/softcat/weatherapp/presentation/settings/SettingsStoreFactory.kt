@@ -33,6 +33,14 @@ class SettingsStoreFactory @Inject constructor(
                 SettingsStore.Intent.SendLogs -> {
                     // send logs logic
                 }
+
+                SettingsStore.Intent.OpenSwaggerUI -> {
+                    publish(SettingsStore.Label.OpenSwaggerUiClicked)
+                }
+
+                SettingsStore.Intent.TechInterface -> {
+                    publish(SettingsStore.Label.TechInterface)
+                }
             }
         }
     }

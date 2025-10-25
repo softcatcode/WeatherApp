@@ -4,6 +4,7 @@ import com.softcat.data.network.dto.CityDto
 import com.softcat.data.network.dto.CurrentWeatherResponse
 import com.softcat.data.network.dto.WeatherForecastDto
 import com.softcat.data.network.dto.WeatherTypeInfoDto
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -36,7 +37,11 @@ interface NewWeatherApiService {
     @GET("conditions.json")
     suspend fun loadWeatherConditions(): List<WeatherTypeInfoDto>
 
-    @GET("swagger-ui")
-    fun getSwaggerUI(): Call<String?>?
+    @GET("swagger")
+    fun getSwaggerUI(): Call<ResponseBody>
 
+    companion object {
+        //const val BASE_URL = "http://192.168.0.104:8080/"
+        const val BASE_URL = "http://10.140.41.2:8080/"
+    }
 }

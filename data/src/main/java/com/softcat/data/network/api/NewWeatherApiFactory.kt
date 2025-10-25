@@ -8,9 +8,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 
 object NewWeatherApiFactory {
-
-    private const val BASE_URL = "https://softcat.weather/v1/"
-
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(
             HttpLoggingInterceptor().apply {
@@ -19,7 +16,7 @@ object NewWeatherApiFactory {
         ).build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(NewWeatherApiService.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .addConverterFactory(ScalarsConverterFactory.create())
         .client(okHttpClient)
