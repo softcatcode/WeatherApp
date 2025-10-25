@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class TechIntStoreFactory @Inject constructor(
@@ -58,61 +59,94 @@ class TechIntStoreFactory @Inject constructor(
             getState: () -> TechIntComponentStore.State
         ) {
             when (intent) {
-                is TechIntComponentStore.Intent.AddToFavourites -> {
-                    scope.launch {
-                        val city = searchUseCase(intent.cityName).getOrNull()?.firstOrNull()
-                        city?.let {
-                            addFavouriteUseCase(intent.userId, city)
-                        }
-                    }
-                }
-                TechIntComponentStore.Intent.BackClick -> {
-                    publish(TechIntComponentStore.Label.BackClicked)
-                }
-                is TechIntComponentStore.Intent.GetCurrentWeather -> {
-                    scope.launch {
-                        val city = searchUseCase(intent.cityName).getOrNull()?.firstOrNull()
-                        city?.let {
-                            val result = weatherUseCase(city.id)
-                            withContext(Dispatchers.Main) {
-                                dispatch(AnswerIsReady(result.toString()))
-                            }
-                        }
-                    }
-                }
-                is TechIntComponentStore.Intent.RemoveFromFavourites -> {
-                    scope.launch { removeFavouriteUseCase(intent.userId, intent.cityId) }
-                }
-                is TechIntComponentStore.Intent.SelectUseCase -> {
-                    dispatch(SelectUseCase(intent.index))
-                }
-                is TechIntComponentStore.Intent.GetFavouriteCities -> {
-                    scope.launch {
-                        val result = getFavouriteUseCase(intent.userId).first().toString()
-                        withContext(Dispatchers.Main) {
-                            dispatch(AnswerIsReady(result))
-                        }
-                    }
-                }
-                is TechIntComponentStore.Intent.GetForecast -> {
-                    scope.launch {
-                        val city = searchUseCase(intent.cityName).getOrNull()?.firstOrNull()
-                        city?.let {
-                            val result = forecastUseCase(city.id)
-                            withContext(Dispatchers.Main) {
-                                dispatch(AnswerIsReady(result.toString()))
-                            }
-                        }
-                    }
-                }
+                is TechIntComponentStore.Intent.AddToFavourites -> addToFavourites(intent.cityName, intent.userId)
+                TechIntComponentStore.Intent.BackClick -> publish(TechIntComponentStore.Label.BackClicked)
+                is TechIntComponentStore.Intent.GetCurrentWeather -> getHoursWeather(intent.cityName)
+                is TechIntComponentStore.Intent.RemoveFromFavourites -> removeFromFavourites(intent.userId, intent.cityId)
+                is TechIntComponentStore.Intent.SelectUseCase -> dispatch(SelectUseCase(intent.index))
+                is TechIntComponentStore.Intent.GetFavouriteCities -> getFavourites(intent.userId)
+                is TechIntComponentStore.Intent.GetForecast -> getForecast(intent.cityName)
+                is TechIntComponentStore.Intent.SearchUseCase -> search(intent.query)
+            }
+        }
 
-                is TechIntComponentStore.Intent.SearchUseCase -> {
-                    scope.launch {
-                        val result = searchUseCase(intent.query).toString()
+        private fun search(query: String) {
+            scope.launch {
+                try {
+                    val result = searchUseCase(query).toString()
+                    withContext(Dispatchers.Main) {
+                        dispatch(AnswerIsReady(result))
+                    }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+        }
+
+        private fun getForecast(cityName: String) {
+            scope.launch {
+                try {
+                    val city = searchUseCase(cityName).getOrNull()?.firstOrNull()
+                    city?.let {
+                        val result = forecastUseCase(city.id)
                         withContext(Dispatchers.Main) {
-                            dispatch(AnswerIsReady(result))
+                            dispatch(AnswerIsReady(result.toString()))
                         }
                     }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+        }
+
+        private fun getHoursWeather(cityName: String) {
+            scope.launch {
+                try {
+                    val city = searchUseCase(cityName).getOrNull()?.firstOrNull()
+                    city?.let {
+                        val result = weatherUseCase(city.id)
+                        withContext(Dispatchers.Main) {
+                            dispatch(AnswerIsReady(result.toString()))
+                        }
+                    }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+        }
+
+        private fun addToFavourites(cityName: String, userId: String) {
+            scope.launch {
+                try {
+                    val city = searchUseCase(cityName).getOrNull()?.firstOrNull()
+                    city?.let {
+                        addFavouriteUseCase(userId, city)
+                    }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+        }
+
+        private fun getFavourites(userId: String) {
+            scope.launch {
+                try {
+                    val result = getFavouriteUseCase(userId).first().toString()
+                    withContext(Dispatchers.Main) {
+                        dispatch(AnswerIsReady(result))
+                    }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+        }
+
+        private fun removeFromFavourites(userId: String, cityId: Int) {
+            scope.launch {
+                try {
+                    removeFavouriteUseCase(userId, cityId)
+                } catch (e: Exception) {
+                    Timber.e(e)
                 }
             }
         }
