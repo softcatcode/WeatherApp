@@ -10,11 +10,12 @@ class SelectYearDaysUseCase @Inject constructor(
     private val repository: CalendarRepository
 ) {
     suspend operator fun invoke(
+        userId: String,
         params: WeatherParameters,
         city: City,
         year: Int
     ): Result<List<Set<Int>>> {
         Timber.i("${this::class.simpleName} invoked")
-        return repository.selectYearDays(params, city, year)
+        return repository.selectYearDays(userId, params, city, year)
     }
 }

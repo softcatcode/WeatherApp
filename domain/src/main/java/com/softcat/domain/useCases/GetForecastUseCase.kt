@@ -10,9 +10,9 @@ class GetForecastUseCase @Inject constructor(
     private val repository: WeatherRepository,
     private val databaseRepository: DatabaseLoaderRepository
 ) {
-    suspend operator fun invoke(cityId: Int, dayCount: Int = 2): Forecast {
+    suspend operator fun invoke(userId: String, cityId: Int, dayCount: Int = 2): Forecast {
         Timber.i("${this::class.simpleName} invoked")
-        val apiResponse = repository.getForecast(cityId)
+        val apiResponse = repository.getForecast(userId, cityId)
         apiResponse.onSuccess {
             databaseRepository.updateForecastData(cityId, it)
             return it

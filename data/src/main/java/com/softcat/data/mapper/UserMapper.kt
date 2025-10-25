@@ -1,11 +1,20 @@
 package com.softcat.data.mapper
 
+import com.softcat.data.network.dto.UserDto
 import com.softcat.database.model.UserDbModel
 import com.softcat.domain.entity.User
 import java.util.Calendar
 
 fun UserDbModel.toEntity() = User(
     id = id,
+    name = name,
+    role = role.toUserRole(),
+    email = email,
+    password = password,
+)
+
+fun UserDto.toEntity() = User(
+    id = userId,
     name = name,
     role = role.toUserRole(),
     email = email,

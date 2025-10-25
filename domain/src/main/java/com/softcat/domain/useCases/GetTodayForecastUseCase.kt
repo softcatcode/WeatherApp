@@ -10,9 +10,9 @@ class GetTodayForecastUseCase @Inject constructor(
     private val repository: WeatherRepository,
     private val databaseRepository: DatabaseLoaderRepository
 ) {
-    suspend operator fun invoke(cityId: Int): List<CurrentWeather> {
+    suspend operator fun invoke(userId: String, cityId: Int): List<CurrentWeather> {
         Timber.i("${this::class.simpleName} invoked")
-        val apiResponse = repository.getTodayLocalForecast(cityId)
+        val apiResponse = repository.getTodayLocalForecast(userId, cityId)
         apiResponse.onSuccess {
             databaseRepository.updateHourlyWeatherData(cityId, it)
             return it

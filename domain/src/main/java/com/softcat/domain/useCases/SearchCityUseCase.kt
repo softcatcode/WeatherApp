@@ -21,12 +21,12 @@ class SearchCityUseCase @Inject constructor(
         }
     }
 
-    suspend operator fun invoke(query: String): Result<List<City>> {
+    suspend operator fun invoke(userId: String, query: String): Result<List<City>> {
         Timber.i("${this::class.simpleName} invoked")
         return try {
-            val result = repository.search(query)
+            val result = repository.search(userId, query)
             Result.success(result)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             searchLocally(query)
         }
     }

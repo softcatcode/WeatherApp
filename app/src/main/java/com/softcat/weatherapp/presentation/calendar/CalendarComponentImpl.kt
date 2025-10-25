@@ -19,10 +19,13 @@ class CalendarComponentImpl @AssistedInject constructor(
     private val storeFactory: CalendarStoreFactory,
     @Assisted("componentContext") val componentContext: ComponentContext,
     @Assisted("city") val city: City,
+    @Assisted("userId") val userId: String,
     @Assisted("onBackClicked") val onBackClicked: () -> Unit
 ): CalendarComponent, ComponentContext by componentContext {
 
-    private val store: CalendarStore = instanceKeeper.getStore { storeFactory.create(city) }
+    private val store: CalendarStore = instanceKeeper.getStore {
+        storeFactory.create(userId, city)
+    }
     private val scope = componentScope()
 
     init {
@@ -111,6 +114,7 @@ class CalendarComponentImpl @AssistedInject constructor(
         fun create(
             @Assisted("componentContext") componentContext: ComponentContext,
             @Assisted("city") city: City,
+            @Assisted("userId") userId: String,
             @Assisted("onBackClicked") onBackClicked: () -> Unit,
         ): CalendarComponentImpl
     }

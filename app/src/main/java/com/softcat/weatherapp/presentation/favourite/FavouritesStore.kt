@@ -15,6 +15,7 @@ interface FavouritesStore: Store<FavouritesStore.Intent, FavouritesStore.State, 
         data object SearchClicked: Intent
 
         data class ReloadCities(
+            val userId: String,
             val cities: List<City>
         ): Intent
     }

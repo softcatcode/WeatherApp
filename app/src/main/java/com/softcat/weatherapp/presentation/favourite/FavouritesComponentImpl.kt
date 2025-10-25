@@ -63,7 +63,7 @@ class FavouritesComponentImpl @AssistedInject constructor(
     override fun reloadCities() {
         Timber.i("${this::class.simpleName}.reloadCities()")
         val cities = model.value.cityItems.map { it.city }
-        store.accept(FavouritesStore.Intent.ReloadCities(cities))
+        store.accept(FavouritesStore.Intent.ReloadCities(user.id, cities))
     }
 
     @AssistedFactory

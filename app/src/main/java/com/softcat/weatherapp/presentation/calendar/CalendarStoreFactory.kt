@@ -18,7 +18,7 @@ class CalendarStoreFactory @Inject constructor(
     private val selectYearDaysUseCase: SelectYearDaysUseCase,
     val storeFactory: StoreFactory
 ) {
-    fun create(city: City): CalendarStore =
+    fun create(userId: String, city: City): CalendarStore =
         object: CalendarStore, Store<CalendarStore.Intent, CalendarStore.State, CalendarStore.Label>
         by storeFactory.create(
             name = this::class.simpleName,
@@ -26,7 +26,8 @@ class CalendarStoreFactory @Inject constructor(
                 year = Calendar.getInstance(Locale.getDefault())[Calendar.YEAR],
                 weatherParams = WeatherParameters(),
                 calendarState = CalendarStore.State.CalendarState.Loaded(emptyList()),
-                city = city
+                city = city,
+                userId = userId
             ),
             executorFactory = ::ExecutorImpl,
             reducer = ReducerImpl
@@ -118,7 +119,7 @@ class CalendarStoreFactory @Inject constructor(
                     val state = getState()
                     dispatch(Msg.LoadingStarted)
                     scope.launch {
-                        selectYearDaysUseCase(state.weatherParams, state.city, intent.year)
+                        selectYearDaysUseCase(state.userId, state.weatherParams, state.city, intent.year)
                     }
                     dispatch(Msg.SelectYear(intent.year))
                 }
@@ -130,7 +131,7 @@ class CalendarStoreFactory @Inject constructor(
                     val state = getState()
                     scope.launch {
                         selectYearDaysUseCase(
-                            state.weatherParams, state.city, state.year
+                            state.userId, state.weatherParams, state.city, state.year
                         ).onSuccess { data ->
                             dispatch(Msg.HighlightDays(data))
                         }.onFailure { throwable ->

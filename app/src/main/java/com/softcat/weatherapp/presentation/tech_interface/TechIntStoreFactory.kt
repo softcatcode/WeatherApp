@@ -61,19 +61,19 @@ class TechIntStoreFactory @Inject constructor(
             when (intent) {
                 is TechIntComponentStore.Intent.AddToFavourites -> addToFavourites(intent.cityName, intent.userId)
                 TechIntComponentStore.Intent.BackClick -> publish(TechIntComponentStore.Label.BackClicked)
-                is TechIntComponentStore.Intent.GetCurrentWeather -> getHoursWeather(intent.cityName)
+                is TechIntComponentStore.Intent.GetCurrentWeather -> getHoursWeather(intent.userId, intent.cityName)
                 is TechIntComponentStore.Intent.RemoveFromFavourites -> removeFromFavourites(intent.userId, intent.cityId)
                 is TechIntComponentStore.Intent.SelectUseCase -> dispatch(SelectUseCase(intent.index))
                 is TechIntComponentStore.Intent.GetFavouriteCities -> getFavourites(intent.userId)
-                is TechIntComponentStore.Intent.GetForecast -> getForecast(intent.cityName)
-                is TechIntComponentStore.Intent.SearchUseCase -> search(intent.query)
+                is TechIntComponentStore.Intent.GetForecast -> getForecast(intent.userId, intent.cityName)
+                is TechIntComponentStore.Intent.SearchUseCase -> search(intent.userId, intent.query)
             }
         }
 
-        private fun search(query: String) {
+        private fun search(userId: String, query: String) {
             scope.launch {
                 try {
-                    val result = searchUseCase(query).toString()
+                    val result = searchUseCase(userId, query).toString()
                     withContext(Dispatchers.Main) {
                         dispatch(AnswerIsReady(result))
                     }
@@ -83,12 +83,12 @@ class TechIntStoreFactory @Inject constructor(
             }
         }
 
-        private fun getForecast(cityName: String) {
+        private fun getForecast(userId: String,cityName: String) {
             scope.launch {
                 try {
-                    val city = searchUseCase(cityName).getOrNull()?.firstOrNull()
+                    val city = searchUseCase(userId, cityName).getOrNull()?.firstOrNull()
                     city?.let {
-                        val result = forecastUseCase(city.id)
+                        val result = forecastUseCase(userId, city.id)
                         withContext(Dispatchers.Main) {
                             dispatch(AnswerIsReady(result.toString()))
                         }
@@ -99,12 +99,12 @@ class TechIntStoreFactory @Inject constructor(
             }
         }
 
-        private fun getHoursWeather(cityName: String) {
+        private fun getHoursWeather(userId: String, cityName: String) {
             scope.launch {
                 try {
-                    val city = searchUseCase(cityName).getOrNull()?.firstOrNull()
+                    val city = searchUseCase(userId, cityName).getOrNull()?.firstOrNull()
                     city?.let {
-                        val result = weatherUseCase(city.id)
+                        val result = weatherUseCase(userId, city.id)
                         withContext(Dispatchers.Main) {
                             dispatch(AnswerIsReady(result.toString()))
                         }
@@ -118,7 +118,7 @@ class TechIntStoreFactory @Inject constructor(
         private fun addToFavourites(cityName: String, userId: String) {
             scope.launch {
                 try {
-                    val city = searchUseCase(cityName).getOrNull()?.firstOrNull()
+                    val city = searchUseCase(userId, cityName).getOrNull()?.firstOrNull()
                     city?.let {
                         addFavouriteUseCase(userId, city)
                     }
