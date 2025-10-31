@@ -1,5 +1,6 @@
 package com.softcat.weatherapp.presentation.settings
 
+import com.softcat.domain.entity.WebPageType
 import kotlinx.coroutines.flow.StateFlow
 
 interface SettingsComponent {
@@ -8,7 +9,7 @@ interface SettingsComponent {
 
     fun sendLogs()
 
-    fun swaggerInterface()
+    fun openWebPage(type: WebPageType)
 
     fun techInterface()
 

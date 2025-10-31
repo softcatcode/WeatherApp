@@ -1,9 +1,8 @@
-package com.softcat.weatherapp.presentation.swagger
+package com.softcat.weatherapp.presentation.web
 
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
-fun SwaggerContent(
-    swaggerLink: String,
+fun WebContent(
+    link: String,
     paddings: PaddingValues
 ) {
     AndroidView(
@@ -31,17 +30,17 @@ fun SwaggerContent(
             }
         },
         update = { webView ->
-            webView.loadUrl(swaggerLink)
+            webView.loadUrl(link)
         }
     )
 }
 
 @Composable
-fun SwaggerScreen(component: SwaggerComponent) {
+fun WebScreen(component: WebComponent) {
     val state = component.model.collectAsState().value
     Scaffold { paddings ->
         when (state) {
-            is SwaggerStore.State.Content -> SwaggerContent(state.swaggerLink, paddings)
+            is WebStore.State.Content -> WebContent(state.link, paddings)
         }
     }
 }

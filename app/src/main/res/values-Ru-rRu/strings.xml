@@ -34,6 +34,10 @@
     <string name="clear">Удалить погоду</string>
     <string name="send_logs">Отправить логи</string>
     <string name="tech_interface">Технологический интерфейс</string>
+    <string name="documentation_page">Documentation page</string>
+    <string name="status_page">Status page</string>
+    <string name="statistic_page">Statistic page</string>
+    <string name="admin_page">Admin page</string>
     <string name="swagger_interface">Swagger интерфейс</string>
     <string name="settings">Настройки</string>
     <string name="today">Сегодня</string>

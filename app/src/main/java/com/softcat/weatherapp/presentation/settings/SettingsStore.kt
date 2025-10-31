@@ -1,6 +1,7 @@
 package com.softcat.weatherapp.presentation.settings
 
 import com.arkivanov.mvikotlin.core.store.Store
+import com.softcat.domain.entity.WebPageType
 
 interface SettingsStore: Store<SettingsStore.Intent, SettingsStore.State, SettingsStore.Label> {
 
@@ -9,7 +10,7 @@ interface SettingsStore: Store<SettingsStore.Intent, SettingsStore.State, Settin
 
         data object SendLogs: Intent
 
-        data object OpenSwaggerUI: Intent
+        data class OpenWebPage(val type: WebPageType): Intent
 
         data object TechInterface: Intent
     }
@@ -21,7 +22,7 @@ interface SettingsStore: Store<SettingsStore.Intent, SettingsStore.State, Settin
     sealed interface Label {
         data object BackClick: Label
 
-        data object OpenSwaggerUiClicked: Label
+        data class OpenWebPageClicked(val type: WebPageType): Label
 
         data object TechInterface: Label
     }
