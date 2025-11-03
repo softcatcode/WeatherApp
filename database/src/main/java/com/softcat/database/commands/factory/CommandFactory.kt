@@ -20,6 +20,7 @@ import com.softcat.database.commands.SearchCityCommand
 import com.softcat.database.commands.UpdateCountriesCommand
 import com.softcat.database.commands.UpdateWeatherTypesCommand
 import com.softcat.database.commands.VerifyUserCommand
+import com.softcat.database.commands.WeatherTypesLoadedCommand
 import com.softcat.database.managers.local.PlotManager
 import com.softcat.database.managers.local.region.RegionManager
 import com.softcat.database.managers.local.weather.WeatherManager
@@ -120,4 +121,6 @@ class CommandFactory @Inject constructor(
     override fun getWeatherTypesCommand(typeCodes: List<Int>) = GetWeatherTypesCommand(typeCodes, weatherManager)
 
     override fun getClearWeatherDataCommand() = ClearWeatherDataCommand(weatherManager)
+
+    override fun getWeatherTypesLoadedCommand() = WeatherTypesLoadedCommand(weatherManager)
 }

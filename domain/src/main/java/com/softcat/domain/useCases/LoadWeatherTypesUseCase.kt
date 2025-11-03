@@ -9,6 +9,9 @@ class LoadWeatherTypesUseCase @Inject constructor(
 ) {
     suspend operator fun invoke() {
         Timber.i("${this::class.simpleName} invoked")
-        repository.loadWeatherTypesToDatabase()
+        repository.weatherTypesLoaded().onSuccess { isLoaded ->
+            if (!isLoaded)
+                repository.loadWeatherTypesToDatabase()
+        }
     }
 }

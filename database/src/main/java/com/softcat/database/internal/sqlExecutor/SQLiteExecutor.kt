@@ -167,4 +167,9 @@ class SQLiteExecutor @Inject constructor(
     override fun clearWeatherData() {
         dbHelper.writableDatabase.execSQL(CLEAR_WEATHER_DATA_COMMAND)
     }
+
+    override fun weatherTypesLoaded(): Cursor {
+        val query = GetDataQueries.WEATHER_TYPES_LOAD_CHECK
+        return dbHelper.readableDatabase.rawQuery(query, null)
+    }
 }

@@ -51,4 +51,6 @@ interface SQLiteInterface {
     fun getDaysWeather(cityId: Int, start: Long, end: Long): Cursor
 
     fun clearWeatherData()
+
+    fun weatherTypesLoaded(): Cursor
 }

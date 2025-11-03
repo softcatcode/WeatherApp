@@ -33,4 +33,8 @@ internal object GetDataQueries {
     const val GET_USER_PLOTS = """
         select * from $PLOT_TABLE_NAME where authorId = '%s';
     """
+
+    const val WEATHER_TYPES_LOAD_CHECK = """
+        select exists(select * from $WEATHER_TYPE_TABLE_NAME);
+    """
 }
