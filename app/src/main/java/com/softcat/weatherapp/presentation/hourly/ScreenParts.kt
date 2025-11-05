@@ -243,7 +243,7 @@ fun HourlyWeatherList(
 ) {
     val background = Brush.linearGradient(listOf(Purple80, Pink80))
     LazyColumn(
-        modifier = Modifier.background(background).then(modifier)
+        modifier = Modifier.background(background).then(modifier),
     ) {
         items(weatherList) { weather ->
             HourWeatherItem(
@@ -252,6 +252,9 @@ fun HourlyWeatherList(
                 time = weather.timeEpoch.toCalendar().formattedTime(),
                 weather = weather
             )
+        }
+        item {
+            Spacer(Modifier.padding(2.dp))
         }
     }
 }
