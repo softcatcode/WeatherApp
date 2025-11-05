@@ -6,8 +6,6 @@ import com.softcat.data.network.dto.DeleteUserResponseDto
 import com.softcat.data.network.dto.UserDto
 import com.softcat.data.network.dto.WeatherForecastDto
 import com.softcat.data.network.dto.WeatherTypeInfoDto
-import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -18,16 +16,16 @@ import retrofit2.http.Query
 
 interface NewWeatherApiService {
 
-    @GET("cities/{cityId}/hours_weather")
+    @GET("cities/{city_id}/hours_weather")
     suspend fun loadHoursWeather(
-        @Query("user_id") userId: String,
-        @Path("city_id") cityId: Int
+        @Path("city_id") cityId: Int,
+        @Query("user_id") userId: String
     ): CurrentWeatherResponse
 
-    @GET("cities/{cityId}/forecasts")
+    @GET("cities/{city_id}/forecasts")
     suspend fun loadForecast(
-        @Query("user_id") userId: String,
         @Path("city_id") cityId: Int,
+        @Query("user_id") userId: String,
         @Query("start") startEpoch: Long,
         @Query("end") endEpoch: Long = -1L
     ): WeatherForecastDto
@@ -47,7 +45,7 @@ interface NewWeatherApiService {
     suspend fun logIn(
         @Query("user_name") userName: String,
         @Query("password") password: String
-    ): Response<UserDto>
+    ): UserDto
 
     @POST("users")
     suspend fun createUser(

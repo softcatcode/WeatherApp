@@ -57,7 +57,7 @@ class CalendarRepositoryImpl @Inject constructor(
         val start = getYearEpoch(year)
         val end = getYearEpoch(year + 1)
         return try {
-            val forecast = apiService.loadForecast(userId, cityId, start, end)
+            val forecast = apiService.loadForecast(cityId, userId, start, end)
             val weather = forecast.toEntity().upcoming ?: emptyList()
             weather
         } catch (_: Exception) {

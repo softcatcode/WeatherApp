@@ -8,8 +8,13 @@ import javax.inject.Inject
 class AddToFavouriteUseCase @Inject constructor(
     private val repository: FavouriteRepository
 ) {
-    suspend operator fun invoke(userId: String, city: City) {
+    suspend operator fun invoke(userId: String, city: City): Result<Unit> {
         Timber.i("${this::class.simpleName} invoked")
-        repository.addToFavourite(userId, city)
+        return try {
+            repository.addToFavourite(userId, city)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

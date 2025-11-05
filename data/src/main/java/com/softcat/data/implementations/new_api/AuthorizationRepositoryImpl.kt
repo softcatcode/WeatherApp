@@ -7,6 +7,7 @@ import com.softcat.data.mapper.toEntity
 import com.softcat.data.mapper.userDbModel
 import com.softcat.data.network.api.NewWeatherApiService
 import com.softcat.data.network.dto.ErrorResponseDto
+import com.softcat.data.network.dto.UserDto
 import com.softcat.database.facade.DatabaseFacade
 import com.softcat.domain.entity.User
 import com.softcat.domain.interfaces.AuthorizationRepository
@@ -17,18 +18,9 @@ class AuthorizationRepositoryImpl @Inject constructor(
 ): AuthorizationRepository {
 
     override suspend fun enter(login: String, password: String): Result<User> {
-        val response = apiService.logIn(login, password)
-        if (response.code() != 200) {
-            return if (response.code() == 401) {
-                Result.failure(UserVerificationException(login))
-            } else {
-                val errorJson = response.errorBody()?.string() ?: ""
-                val errorResponse = Gson().fromJson(errorJson, ErrorResponseDto::class.java)
-                return Result.failure(Exception(errorResponse.error.message))
-            }
-        }
         return try {
-            val user = response.body()?.toEntity()!!
+            val response = apiService.logIn(login, password)
+            val user = response.toEntity()
             Result.success(user)
         } catch (e: Exception) {
             Result.failure(e)

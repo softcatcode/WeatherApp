@@ -17,7 +17,7 @@ class WeatherRepositoryImpl @Inject constructor(
     override suspend fun getWeather(userId: String, cityId: Int): Result<CurrentWeather> {
         Timber.i("${this::class.simpleName}.getWeather($userId, $cityId)")
         return try {
-            val result = apiService.loadHoursWeather(userId, cityId).toEntity()
+            val result = apiService.loadHoursWeather(cityId, userId).toEntity()
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)
