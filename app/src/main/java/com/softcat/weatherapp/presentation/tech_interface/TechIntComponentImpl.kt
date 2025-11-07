@@ -59,6 +59,14 @@ class TechIntComponentImpl @AssistedInject constructor(
         store.accept(TechIntComponentStore.Intent.RemoveFromFavourites(userId, cityId))
     }
 
+    override fun logIn(name: String, password: String) {
+        store.accept(TechIntComponentStore.Intent.LogIn(name, password))
+    }
+
+    override fun register(name: String, email: String, password: String) {
+        store.accept(TechIntComponentStore.Intent.Register(name, email, password))
+    }
+
     override fun selectUseCase(index: Int) {
         store.accept(TechIntComponentStore.Intent.SelectUseCase(index))
     }

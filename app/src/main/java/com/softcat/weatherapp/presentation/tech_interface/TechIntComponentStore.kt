@@ -33,6 +33,17 @@ interface TechIntComponentStore:
             val cityId: Int
         ): Intent
 
+        data class LogIn(
+            val name: String,
+            val password: String
+        ): Intent
+
+        data class Register(
+            val name: String,
+            val password: String,
+            val email: String
+        ): Intent
+
         data class SelectUseCase(
             val index: Int
         ): Intent

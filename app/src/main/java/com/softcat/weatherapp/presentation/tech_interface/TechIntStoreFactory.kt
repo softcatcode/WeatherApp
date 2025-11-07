@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.domain.useCases.AddToFavouriteUseCase
+import com.softcat.domain.useCases.AuthorizationUseCase
 import com.softcat.domain.useCases.GetCurrentWeatherUseCase
 import com.softcat.domain.useCases.GetFavouriteCitiesUseCase
 import com.softcat.domain.useCases.GetForecastUseCase
@@ -26,6 +27,7 @@ class TechIntStoreFactory @Inject constructor(
     private val addFavouriteUseCase: AddToFavouriteUseCase,
     private val removeFavouriteUseCase: RemoveFromFavouriteUseCase,
     private val getFavouriteUseCase: GetFavouriteCitiesUseCase,
+    private val authUseCase: AuthorizationUseCase,
 ) {
 
     fun create(): TechIntComponentStore = object:
@@ -67,18 +69,16 @@ class TechIntStoreFactory @Inject constructor(
                 is TechIntComponentStore.Intent.GetFavouriteCities -> getFavourites(intent.userId)
                 is TechIntComponentStore.Intent.GetForecast -> getForecast(intent.userId, intent.cityName)
                 is TechIntComponentStore.Intent.SearchUseCase -> search(intent.userId, intent.query)
+                is TechIntComponentStore.Intent.LogIn -> logIn(intent.name, intent.password)
+                is TechIntComponentStore.Intent.Register -> register(intent.name, intent.email, intent.password)
             }
         }
 
         private fun search(userId: String, query: String) {
             scope.launch {
-                try {
-                    val result = searchUseCase(userId, query).toString()
-                    withContext(Dispatchers.Main) {
-                        dispatch(AnswerIsReady(result))
-                    }
-                } catch (e: Exception) {
-                    Timber.e(e)
+                val result = searchUseCase(userId, query).toString()
+                withContext(Dispatchers.Main) {
+                    dispatch(AnswerIsReady(result))
                 }
             }
         }
@@ -117,13 +117,9 @@ class TechIntStoreFactory @Inject constructor(
 
         private fun addToFavourites(cityName: String, userId: String) {
             scope.launch {
-                try {
-                    val city = searchUseCase(userId, cityName).getOrNull()?.firstOrNull()
-                    city?.let {
-                        addFavouriteUseCase(userId, city)
-                    }
-                } catch (e: Exception) {
-                    Timber.e(e)
+                val city = searchUseCase(userId, cityName).getOrNull()?.firstOrNull()
+                city?.let {
+                    addFavouriteUseCase(userId, city)
                 }
             }
         }
@@ -143,11 +139,19 @@ class TechIntStoreFactory @Inject constructor(
 
         private fun removeFromFavourites(userId: String, cityId: Int) {
             scope.launch {
-                try {
-                    removeFavouriteUseCase(userId, cityId)
-                } catch (e: Exception) {
-                    Timber.e(e)
-                }
+                removeFavouriteUseCase(userId, cityId)
+            }
+        }
+
+        private fun logIn(name: String, password: String) {
+            scope.launch {
+                authUseCase.logIn(name, password)
+            }
+        }
+
+        private fun register(name: String, email: String, password: String) {
+            scope.launch {
+                authUseCase.register(name, email, password)
             }
         }
     }

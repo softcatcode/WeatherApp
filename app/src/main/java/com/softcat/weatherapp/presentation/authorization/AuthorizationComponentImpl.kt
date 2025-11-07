@@ -18,7 +18,7 @@ class AuthorizationComponentImpl @AssistedInject constructor(
     private val storeFactory: AuthorizationStoreFactory,
     @Assisted("context") private val componentContext: ComponentContext,
     @Assisted("back") private val onBackClick: () -> Unit,
-    @Assisted("signIn") private val onSignIn: (User) -> Unit,
+    @Assisted("register") private val onSignIn: (User) -> Unit,
     @Assisted("logIn") private val onLogIn: (User) -> Unit,
 ): AuthorizationComponent, ComponentContext by componentContext {
 
@@ -113,7 +113,7 @@ class AuthorizationComponentImpl @AssistedInject constructor(
         fun create(
             @Assisted("context") componentContext: ComponentContext,
             @Assisted("back") onBackClick: () -> Unit,
-            @Assisted("signIn") onSignIn: (User) -> Unit,
+            @Assisted("register") onSignIn: (User) -> Unit,
             @Assisted("logIn") onLogIn: (User) -> Unit,
         ): AuthorizationComponentImpl
     }

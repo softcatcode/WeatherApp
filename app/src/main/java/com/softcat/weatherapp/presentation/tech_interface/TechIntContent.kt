@@ -1,11 +1,8 @@
 package com.softcat.weatherapp.presentation.tech_interface
 
-import android.graphics.drawable.shapes.OvalShape
-import android.view.RoundedCorner
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,12 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPink
 import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
-import kotlinx.coroutines.selects.select
 
 @Composable
 @Preview
@@ -72,51 +67,26 @@ fun UseCases(
     onSelectIndex: (Int) -> Unit = {},
     selectedIndex: Int = 0
 ) {
+    val useCases = listOf(
+        "AddToFavourites",
+        "RemoveFromFavourite",
+        "GetFavourites",
+        "GetForecast",
+        "GetCurrentWeather",
+        "SearchCity",
+        "Register",
+        "LogIn"
+    )
     LazyRow(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        item {
+        itemsIndexed(useCases, key = { index, elem -> elem }) { index, elem ->
             UseCase(
-                isSelected = selectedIndex == 0,
-                name = "AddToFavourites",
-                onClick = { onSelectIndex(0) }
-            )
-        }
-        item {
-            UseCase(
-                isSelected = selectedIndex == 1,
-                name = "RemoveFromFavourite",
-                onClick = { onSelectIndex(1) }
-            )
-        }
-        item {
-            UseCase(
-                isSelected = selectedIndex == 2,
-                name = "GetFavourites",
-                onClick = { onSelectIndex(2) }
-            )
-        }
-        item {
-            UseCase(
-                isSelected = selectedIndex == 3,
-                name = "GetForecast",
-                onClick = { onSelectIndex(3) }
-            )
-        }
-        item {
-            UseCase(
-                isSelected = selectedIndex == 4,
-                name = "GetCurrentWeather",
-                onClick = { onSelectIndex(4) }
-            )
-        }
-        item {
-            UseCase(
-                isSelected = selectedIndex == 5,
-                name = "SearchCity",
-                onClick = { onSelectIndex(5) }
+                name = elem,
+                onClick = { onSelectIndex(index) },
+                isSelected = selectedIndex == index
             )
         }
     }
@@ -177,7 +147,7 @@ fun TechIntContent(component: TechIntComponent) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 10.dp)
+            .padding(start = 10.dp, end = 10.dp, top = 20.dp),
     ) {
         UseCases(
             modifier = Modifier
@@ -202,6 +172,16 @@ fun TechIntContent(component: TechIntComponent) {
                 3 -> component.getForecast(arg.value)
                 4 -> component.getCurrentWeather(arg.value)
                 5 -> component.search(arg.value)
+                6 -> {
+                    val words = arg.value.split(' ')
+                    if (words.size >= 3)
+                        component.register(words[0], words[1], words[2])
+                }
+                7 -> {
+                    val words = arg.value.split(' ')
+                    if (words.size >= 2)
+                        component.logIn(words[0], words[1])
+                }
             }
         }
         Text(

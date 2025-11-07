@@ -147,7 +147,7 @@ class AuthorizationStoreFactory @Inject constructor(
                 return
             }
             scope.launch(Dispatchers.IO) {
-                val result = authUseCase.signIn(name, email, psw)
+                val result = authUseCase.register(name, email, psw)
                 withContext(Dispatchers.Main) {
                     dispatch(Msg.LoadingFinished)
                     result.onSuccess {

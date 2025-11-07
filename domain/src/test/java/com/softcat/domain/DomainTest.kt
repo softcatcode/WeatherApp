@@ -259,7 +259,7 @@ class DomainTest {
         val email = getRandomEmail()
         val password = getRandomPassword()
 
-        authUseCase.signIn(login, email, password)
+        authUseCase.register(login, email, password)
 
         verify(authRepository, times(1))
             .register(login, email, password)
