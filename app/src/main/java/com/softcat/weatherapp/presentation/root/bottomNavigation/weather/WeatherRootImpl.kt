@@ -30,7 +30,7 @@ class WeatherRootImpl @AssistedInject constructor(
     private val calendarComponentFactory: CalendarComponentImpl.Factory,
     private val hourlyWeatherComponentFactory: HourlyWeatherComponentImpl.Factory,
     @Assisted("context") componentContext: ComponentContext,
-    @Assisted("user") user: User
+    @Assisted("user") private val user: User
 ): WeatherRootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -51,7 +51,9 @@ class WeatherRootImpl @AssistedInject constructor(
                     city = config.city,
                     componentContext = componentContext,
                     onBackClickCallback = { navigation.pop() },
-                    openCityCalendarCallback = { navigation.push(Config.Calendar(config.city)) },
+                    openCityCalendarCallback = {
+                        navigation.push(Config.Calendar(config.city, user.id))
+                    },
                     openHourlyWeatherCallback = { weatherList ->
                         navigation.push(Config.HourlyWeather(weatherList))
                     }
@@ -101,6 +103,7 @@ class WeatherRootImpl @AssistedInject constructor(
                 val component = calendarComponentFactory.create(
                     componentContext = componentContext,
                     city = config.city,
+                    userId = config.userId,
                     onBackClicked = { navigation.pop() }
                 )
                 WeatherRootComponent.Child.Calendar(component)
@@ -131,7 +134,10 @@ class WeatherRootImpl @AssistedInject constructor(
         data class Details(val user: User, val city: City): Config
 
         @Parcelize
-        data class Calendar(val city: City): Config
+        data class Calendar(
+            val city: City,
+            val userId: String
+        ): Config
 
         @Parcelize
         data class HourlyWeather(val hoursWeather: List<CurrentWeather>): Config

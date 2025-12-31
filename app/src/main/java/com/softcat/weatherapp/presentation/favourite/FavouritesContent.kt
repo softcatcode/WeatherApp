@@ -62,10 +62,9 @@ fun FavouritesContent(component: FavouritesComponent) {
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .transformable(transformableState),
             columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(16.dp),
+            contentPadding = PaddingValues(bottom = 16.dp, start = 8.dp, end = 8.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {

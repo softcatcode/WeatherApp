@@ -62,13 +62,15 @@ class LocationRepositoryImpl @Inject constructor(
         onCityNameLoaded: (String) -> Unit
     ) {
         Timber.i("${this::class.simpleName}.getCurrentCity($context, $onCityNameLoaded)")
-        getLocation(context) { location ->
-            val latitude = location.latitude
-            val longitude = location.longitude
-            geocoder.getFromLocation(latitude, longitude, 1) { addressList ->
-                val cityName = addressList.getOrNull(0)?.adminArea.orEmpty()
-                onCityNameLoaded(cityName)
+        try {
+            getLocation(context) { location ->
+                val latitude = location.latitude
+                val longitude = location.longitude
+                geocoder.getFromLocation(latitude, longitude, 1) { addressList ->
+                    val cityName = addressList.getOrNull(0)?.adminArea.orEmpty()
+                    onCityNameLoaded(cityName)
+                }
             }
-        }
+        } catch (_: Exception) {}
     }
 }

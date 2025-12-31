@@ -176,4 +176,8 @@ class DatabaseProxy @Inject constructor(
         return database.clearWeatherData()
     }
 
+    override suspend fun weatherTypesLoaded(): Result<Boolean> {
+        return database.weatherTypesLoaded()
+    }
+
 }

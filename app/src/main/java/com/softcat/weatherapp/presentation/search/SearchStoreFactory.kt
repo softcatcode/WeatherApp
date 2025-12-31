@@ -87,7 +87,7 @@ class SearchStoreFactory @Inject constructor(
             searchJob?.cancel()
             searchJob = scope.launch {
                 dispatch(Msg.LoadingSearchResult)
-                searchCityUseCase(state.searchQuery).onSuccess { cities ->
+                searchCityUseCase(state.user.id, state.searchQuery).onSuccess { cities ->
                     dispatch(Msg.SearchResultLoaded(cities))
                 }.onFailure {
                     dispatch(Msg.SearchResultError(it))

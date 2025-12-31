@@ -127,4 +127,13 @@ class WeatherManagerImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override fun weatherTypesLoaded(): Result<Boolean> {
+        return try {
+            val isLoaded = mapper.unpackBoolean(executor.weatherTypesLoaded())
+            Result.success(isLoaded)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

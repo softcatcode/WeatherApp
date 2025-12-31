@@ -15,7 +15,7 @@ class SearchRepositoryImpl @Inject constructor(
     private val database: DatabaseFacade
 ): SearchRepository {
 
-    override suspend fun search(query: String): List<City> {
+    override suspend fun search(userId: String, query: String): List<City> {
         Timber.i("${this::class.simpleName}.search($query)")
         val cities = apiService.searchCity(query).toEntities()
 

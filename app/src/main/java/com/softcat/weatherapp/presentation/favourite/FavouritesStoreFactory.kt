@@ -58,7 +58,10 @@ class FavouritesStoreFactory @Inject constructor(
     }
 
     private sealed interface Action {
-        data class FavouriteCitiesLoaded(val cities: List<City>): Action
+        data class FavouriteCitiesLoaded(
+            val userId: String,
+            val cities: List<City>
+        ): Action
     }
 
     private inner class BootstrapperImpl(
@@ -73,7 +76,7 @@ class FavouritesStoreFactory @Inject constructor(
                 }
                 withContext(Dispatchers.Main) {
                     getFavouriteCitiesUseCase(user.id).collect {
-                        dispatch(Action.FavouriteCitiesLoaded(it))
+                        dispatch(Action.FavouriteCitiesLoaded(user.id,it))
                     }
                 }
             }
@@ -134,10 +137,10 @@ class FavouritesStoreFactory @Inject constructor(
     private inner class ExecutorImpl:
         CoroutineExecutor<FavouritesStore.Intent, Action, FavouritesStore.State, Msg, FavouritesStore.Label>() {
 
-        suspend fun loadCity(city: City) {
+        suspend fun loadCity(userId: String, city: City) {
             try {
                 dispatch(Msg.CityIsLoading(city.id))
-                val weather = getCurrentWeatherUseCase(city.id)
+                val weather = getCurrentWeatherUseCase(userId, city.id)
                 dispatch(
                     Msg.WeatherLoaded(
                         cityId = city.id,
@@ -150,9 +153,9 @@ class FavouritesStoreFactory @Inject constructor(
             }
         }
 
-        fun loadCities(cities: List<City>) {
+        fun loadCities(userId: String, cities: List<City>) {
             cities.forEach {
-                scope.launch { loadCity(it) }
+                scope.launch { loadCity(userId,it) }
             }
         }
 
@@ -162,7 +165,7 @@ class FavouritesStoreFactory @Inject constructor(
                 is Action.FavouriteCitiesLoaded -> {
                     val cities = action.cities
                     dispatch(Msg.FavouriteCitiesLoaded(cities))
-                    loadCities(action.cities)
+                    loadCities(action.userId, action.cities)
                 }
             }
         }
@@ -183,7 +186,7 @@ class FavouritesStoreFactory @Inject constructor(
                     publish(FavouritesStore.Label.SearchClicked)
                 }
                 is FavouritesStore.Intent.ReloadCities -> {
-                    loadCities(intent.cities)
+                    loadCities(intent.userId, intent.cities)
                 }
             }
         }

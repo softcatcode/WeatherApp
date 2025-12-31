@@ -12,7 +12,7 @@ class WeatherRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
 ): WeatherRepository {
 
-    override suspend fun getWeather(cityId: Int): Result<CurrentWeather> {
+    override suspend fun getWeather(userId: String, cityId: Int): Result<CurrentWeather> {
         Timber.i("${this::class.simpleName}.getWeather($cityId)")
         return try {
             val result = apiService.loadCurrentWeather(cityIdToQuery(cityId)).toEntity()
@@ -22,7 +22,7 @@ class WeatherRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getForecast(cityId: Int): Result<Forecast> {
+    override suspend fun getForecast(userId: String, cityId: Int): Result<Forecast> {
         Timber.i("${this::class.simpleName}.getForecast($cityId)")
         return try {
             val forecast = apiService.loadForecast(cityIdToQuery(cityId)).toEntity()
@@ -32,7 +32,7 @@ class WeatherRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTodayLocalForecast(cityId: Int): Result<List<CurrentWeather>> {
+    override suspend fun getTodayLocalForecast(userId: String, cityId: Int): Result<List<CurrentWeather>> {
         Timber.i("${this::class.simpleName}.getTodayLocalForecast($cityId)")
         return try {
             val forecast = apiService.loadForecast(cityIdToQuery(cityId), 1).toEntity()

@@ -36,15 +36,15 @@ class TechIntComponentImpl @AssistedInject constructor(
     }
 
     override fun search(query: String) {
-        store.accept(TechIntComponentStore.Intent.SearchUseCase(query))
+        store.accept(TechIntComponentStore.Intent.SearchUseCase(userId, query))
     }
 
     override fun getCurrentWeather(cityName: String) {
-        store.accept(TechIntComponentStore.Intent.GetCurrentWeather(cityName))
+        store.accept(TechIntComponentStore.Intent.GetCurrentWeather(userId, cityName))
     }
 
     override fun getForecast(cityName: String) {
-        store.accept(TechIntComponentStore.Intent.GetForecast(cityName))
+        store.accept(TechIntComponentStore.Intent.GetForecast(userId, cityName))
     }
 
     override fun getFavouriteCities() {
@@ -57,6 +57,14 @@ class TechIntComponentImpl @AssistedInject constructor(
 
     override fun removeFromFavourites(cityId: Int) {
         store.accept(TechIntComponentStore.Intent.RemoveFromFavourites(userId, cityId))
+    }
+
+    override fun logIn(name: String, password: String) {
+        store.accept(TechIntComponentStore.Intent.LogIn(name, password))
+    }
+
+    override fun register(name: String, email: String, password: String) {
+        store.accept(TechIntComponentStore.Intent.Register(name, email, password))
     }
 
     override fun selectUseCase(index: Int) {

@@ -18,5 +18,9 @@ interface TechIntComponent {
 
     fun removeFromFavourites(cityId: Int)
 
+    fun logIn(name: String, password: String)
+
+    fun register(name: String, email: String, password: String)
+
     fun selectUseCase(index: Int)
 }

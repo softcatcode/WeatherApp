@@ -53,8 +53,8 @@ import com.softcat.domain.entity.WeatherType
 import com.softcat.domain.entity.toIconResId
 import com.softcat.domain.entity.toTitleResId
 import com.softcat.weatherapp.R
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPink
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
+import com.softcat.weatherapp.presentation.ui.theme.CustomPink
+import com.softcat.weatherapp.presentation.ui.theme.CustomPurple
 import kotlin.math.roundToInt
 
 val exo2FontFamily = FontFamily(
@@ -95,7 +95,7 @@ private fun MonthDayBox(
         MaterialTheme.colorScheme.onBackground
     }
     val backgroundColor = if (isHighlighted) {
-        Brush.verticalGradient(listOf(CalendarPurple, CalendarPink))
+        Brush.verticalGradient(listOf(CustomPurple, CustomPink))
     } else {
         Brush.linearGradient(listOf(White, White))
     }

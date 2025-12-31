@@ -28,7 +28,9 @@ fun MainScreenContent(component: BottomNavigationComponent) {
         }
     ) { paddings ->
         Box(
-            modifier = Modifier.padding(paddings).fillMaxSize()
+            modifier = Modifier
+                .padding(bottom = paddings.calculateBottomPadding())
+                .fillMaxSize()
         ) {
             when (instance) {
                 is BottomNavigationComponent.Child.WeatherRoot -> WeatherRootContent(instance.component)

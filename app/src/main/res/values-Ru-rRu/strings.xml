@@ -9,6 +9,7 @@
     <string name="extra_info">Дополнительная информация</string>
     <string name="feels_like">Ощущается</string>
     <string name="hourly_weather_title">Погода по часам</string>
+    <string name="profile_title">Мой аккаунт</string>
 
     <string name="from_label">от</string>
     <string name="to_label">до</string>
@@ -34,6 +35,11 @@
     <string name="clear">Удалить погоду</string>
     <string name="send_logs">Отправить логи</string>
     <string name="tech_interface">Технологический интерфейс</string>
+    <string name="documentation_page">Documentation page</string>
+    <string name="status_page">Status page</string>
+    <string name="statistic_page">Statistic page</string>
+    <string name="admin_page">Admin page</string>
+    <string name="useful_links">Полезные ссылки</string>
     <string name="swagger_interface">Swagger интерфейс</string>
     <string name="settings">Настройки</string>
     <string name="today">Сегодня</string>
@@ -64,6 +70,11 @@
     <string name="log_in">Войти</string>
     <string name="or">ИЛИ</string>
     <string name="auth_title">Авторизация</string>
-
     <string name="loading_auth">Загрузка погоды…</string>
+
+    <string name="user_id">id пользователя</string>
+    <string name="user_name">Имя</string>
+    <string name="user_email">Почта</string>
+    <string name="user_password">Пароль</string>
+    <string name="user_role">Активная подписка</string>
 </resources>

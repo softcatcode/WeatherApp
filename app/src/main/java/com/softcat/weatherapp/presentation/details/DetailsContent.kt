@@ -62,7 +62,7 @@ import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.extensions.formattedFullDate
 import com.softcat.weatherapp.presentation.extensions.formattedShortWeekDay
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
+import com.softcat.weatherapp.presentation.ui.theme.CustomPurple
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
 import com.softcat.weatherapp.presentation.utils.ErrorDialog
 import com.softcat.weatherapp.presentation.utils.defaultWeather
@@ -108,7 +108,9 @@ private fun Loaded(
     onWeatherItemClicked: (Int) -> Unit = {}
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(Modifier.weight(1f))
@@ -217,7 +219,7 @@ private fun SmallWeatherCard(
     isForCurrentDay: Boolean = false
 ) {
     val cardBorder = if (isForCurrentDay)
-        BorderStroke(1.dp, CalendarPurple)
+        BorderStroke(1.dp, CustomPurple)
     else
         BorderStroke(0.dp, Color.Unspecified)
     OutlinedCard(
@@ -261,6 +263,7 @@ private fun SmallWeatherCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TopBar(
+    modifier: Modifier = Modifier,
     cityName: String,
     isFavourite: Boolean,
     onFavouriteStatusClicked: () -> Unit,
@@ -268,6 +271,7 @@ private fun TopBar(
     onBackClicked: () -> Unit
 ) {
     CenterAlignedTopAppBar(
+        modifier = modifier,
         title = { Text(text = cityName) },
         colors = TopAppBarDefaults.topAppBarColors().copy(
             containerColor = Color.Transparent,
@@ -336,7 +340,7 @@ fun DetailsContent(component: DetailsComponent) {
             .background(getBackgroundGradient(state)),
         contentColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(modifier = Modifier) {
             when (val forecastState = state.forecastState) {
                 is DetailsStore.State.ForecastState.Error -> Error(
                     error = forecastState.error,

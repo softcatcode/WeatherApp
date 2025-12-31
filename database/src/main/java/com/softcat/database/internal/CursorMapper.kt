@@ -138,4 +138,13 @@ class CursorMapper @Inject constructor(): CursorMapperInterface {
             result
         }
     }
+
+    override fun unpackBoolean(cursor: Cursor): Boolean {
+        return cursor.use {
+            if (!cursor.moveToNext())
+                false
+            else
+                cursor.getInt(0) == 1
+        }
+    }
 }

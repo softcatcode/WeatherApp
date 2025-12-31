@@ -7,8 +7,13 @@ import javax.inject.Inject
 class RemoveFromFavouriteUseCase @Inject constructor(
     private val repository: FavouriteRepository
 ) {
-    suspend operator fun invoke(userId: String, cityId: Int) {
+    suspend operator fun invoke(userId: String, cityId: Int): Result<Unit> {
         Timber.i("${this::class.simpleName} invoked")
-        return repository.removeFromFavourite(userId, cityId)
+        return try {
+            repository.removeFromFavourite(userId, cityId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            return Result.failure(e)
+        }
     }
 }

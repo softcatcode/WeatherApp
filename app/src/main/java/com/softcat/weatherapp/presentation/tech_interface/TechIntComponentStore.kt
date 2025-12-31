@@ -1,7 +1,6 @@
 package com.softcat.weatherapp.presentation.tech_interface
 
 import com.arkivanov.mvikotlin.core.store.Store
-import com.softcat.domain.entity.City
 
 interface TechIntComponentStore:
     Store<TechIntComponentStore.Intent, TechIntComponentStore.State, TechIntComponentStore.Label> {
@@ -11,13 +10,16 @@ interface TechIntComponentStore:
         ): Intent
 
         data class SearchUseCase(
+            val userId: String,
             val query: String
         ): Intent
 
         data class GetCurrentWeather(
+            val userId: String,
             val cityName: String
         ): Intent
         data class GetForecast(
+            val userId: String,
             val cityName: String
         ): Intent
 
@@ -29,6 +31,17 @@ interface TechIntComponentStore:
         data class RemoveFromFavourites(
             val userId: String,
             val cityId: Int
+        ): Intent
+
+        data class LogIn(
+            val name: String,
+            val password: String
+        ): Intent
+
+        data class Register(
+            val name: String,
+            val password: String,
+            val email: String
         ): Intent
 
         data class SelectUseCase(

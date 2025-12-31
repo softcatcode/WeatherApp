@@ -147,4 +147,10 @@ class DatabaseFacadeImpl @Inject constructor(
         cmd.execute()
         return cmd.result
     }
+
+    override suspend fun weatherTypesLoaded(): Result<Boolean> {
+        val cmd = factory.getWeatherTypesLoadedCommand()
+        cmd.execute()
+        return cmd.result
+    }
 }

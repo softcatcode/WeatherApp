@@ -9,5 +9,4 @@ data class CityDto(
     @SerializedName("country") val country: String,
     @SerializedName("lat") val latitude: Float,
     @SerializedName("lon") val longitude: Float,
-    @SerializedName("url") val url: String,
 )

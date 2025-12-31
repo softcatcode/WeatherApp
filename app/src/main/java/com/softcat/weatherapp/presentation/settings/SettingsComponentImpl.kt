@@ -5,6 +5,7 @@ import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import com.softcat.weatherapp.presentation.extensions.componentScope
+import com.softcat.domain.entity.WebPageType
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -17,7 +18,7 @@ class SettingsComponentImpl @AssistedInject constructor(
     storeFactory: SettingsStoreFactory,
     @Assisted("context") componentContext: ComponentContext,
     @Assisted("back") private val backClickCallback: () -> Unit,
-    @Assisted("swagger") private val openSwaggerUICallback: () -> Unit,
+    @Assisted("web") private val openWebPageCallback: (WebPageType) -> Unit,
     @Assisted("tech") private val openTechInterfaceCallback: () -> Unit
 ): SettingsComponent, ComponentContext by componentContext {
 
@@ -26,7 +27,7 @@ class SettingsComponentImpl @AssistedInject constructor(
         fun create(
             @Assisted("context") componentContext: ComponentContext,
             @Assisted("back") backClickCallback: () -> Unit,
-            @Assisted("swagger") openSwaggerUICallback: () -> Unit,
+            @Assisted("web") openWebPageCallback: (WebPageType) -> Unit,
             @Assisted("tech") openTechInterfaceCallback: () -> Unit
         ): SettingsComponentImpl
     }
@@ -46,7 +47,7 @@ class SettingsComponentImpl @AssistedInject constructor(
     private fun labelCollector(label: SettingsStore.Label) {
         when (label) {
             SettingsStore.Label.BackClick -> backClickCallback()
-            SettingsStore.Label.OpenSwaggerUiClicked -> openSwaggerUICallback()
+            is SettingsStore.Label.OpenWebPageClicked -> openWebPageCallback(label.type)
             SettingsStore.Label.TechInterface -> openTechInterfaceCallback()
         }
     }
@@ -56,9 +57,9 @@ class SettingsComponentImpl @AssistedInject constructor(
         store.accept(SettingsStore.Intent.SendLogs)
     }
 
-    override fun swaggerInterface() {
-        Timber.i("${this::class.simpleName}.swaggerInterface()")
-        store.accept(SettingsStore.Intent.OpenSwaggerUI)
+    override fun openWebPage(type: WebPageType) {
+        Timber.i("${this::class.simpleName}.openWebPage($type)")
+        store.accept(SettingsStore.Intent.OpenWebPage(type))
     }
 
     override fun techInterface() {

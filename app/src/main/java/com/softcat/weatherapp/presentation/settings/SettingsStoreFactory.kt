@@ -34,8 +34,8 @@ class SettingsStoreFactory @Inject constructor(
                     // send logs logic
                 }
 
-                SettingsStore.Intent.OpenSwaggerUI -> {
-                    publish(SettingsStore.Label.OpenSwaggerUiClicked)
+                is SettingsStore.Intent.OpenWebPage -> {
+                    publish(SettingsStore.Label.OpenWebPageClicked(intent.type))
                 }
 
                 SettingsStore.Intent.TechInterface -> {

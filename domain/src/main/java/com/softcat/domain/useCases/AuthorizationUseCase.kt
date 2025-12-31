@@ -15,8 +15,8 @@ class AuthorizationUseCase @Inject constructor(
         return repository.enter(login, password)
     }
 
-    suspend fun signIn(login: String, email: String, password: String): Result<User> {
-        Timber.i("${this::class.simpleName}.signIn invoked")
+    suspend fun register(login: String, email: String, password: String): Result<User> {
+        Timber.i("${this::class.simpleName}.register invoked")
         return repository.register(login, email, password)
     }
 

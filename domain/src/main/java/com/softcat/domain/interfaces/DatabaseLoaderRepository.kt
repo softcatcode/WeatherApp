@@ -22,4 +22,6 @@ interface DatabaseLoaderRepository {
     suspend fun loadWeatherTypesToDatabase(): Result<Unit>
 
     suspend fun clearWeatherData(): Result<Unit>
+
+    suspend fun weatherTypesLoaded(): Result<Boolean>
 }

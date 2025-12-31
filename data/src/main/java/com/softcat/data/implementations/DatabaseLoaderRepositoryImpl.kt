@@ -130,4 +130,8 @@ class DatabaseLoaderRepositoryImpl @Inject constructor(
     override suspend fun clearWeatherData(): Result<Unit> {
         return database.clearWeatherData()
     }
+
+    override suspend fun weatherTypesLoaded(): Result<Boolean> {
+        return database.weatherTypesLoaded()
+    }
 }

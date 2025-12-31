@@ -8,6 +8,7 @@ import com.softcat.domain.entity.WeatherType
 interface CalendarStore: Store<CalendarStore.Intent, CalendarStore.State, CalendarStore.Label> {
 
     data class State(
+        val userId: String,
         val city: City,
         val year: Int,
         val weatherParams: WeatherParameters,

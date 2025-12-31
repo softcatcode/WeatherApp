@@ -12,8 +12,9 @@ import com.softcat.domain.entity.User
 import com.softcat.weatherapp.presentation.profile.ProfileComponentImpl
 import com.softcat.weatherapp.presentation.root.bottomNavigation.profile.ProfileRootComponent.Child.*
 import com.softcat.weatherapp.presentation.settings.SettingsComponentImpl
-import com.softcat.weatherapp.presentation.swagger.SwaggerComponentImpl
+import com.softcat.weatherapp.presentation.web.WebComponentImpl
 import com.softcat.weatherapp.presentation.tech_interface.TechIntComponentImpl
+import com.softcat.domain.entity.WebPageType
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -23,7 +24,7 @@ import timber.log.Timber
 class ProfileRootImpl @AssistedInject constructor(
     private val profileComponentFactory: ProfileComponentImpl.Factory,
     private val settingsComponentFactory: SettingsComponentImpl.Factory,
-    private val swaggerComponentFactory: SwaggerComponentImpl.Factory,
+    private val webComponentFactory: WebComponentImpl.Factory,
     private val techIntComponentFactory: TechIntComponentImpl.Factory,
     @Assisted("context") componentContext: ComponentContext,
     @Assisted("user") private val user: User
@@ -56,18 +57,19 @@ class ProfileRootImpl @AssistedInject constructor(
                 val component = settingsComponentFactory.create(
                     componentContext = componentContext,
                     backClickCallback = { navigation.pop() },
-                    openSwaggerUICallback = { navigation.push(Config.SwaggerUI) },
+                    openWebPageCallback = { navigation.push(Config.WebPage(it)) },
                     openTechInterfaceCallback = { navigation.push(Config.TechInterface) }
                 )
                 Settings(component)
             }
 
-            Config.SwaggerUI -> {
-                val component = swaggerComponentFactory.create(
+            is Config.WebPage -> {
+                val component = webComponentFactory.create(
                     componentContext = componentContext,
-                    onBackClick = { navigation.pop() }
+                    onBackClick = { navigation.pop() },
+                    pageType = config.type
                 )
-                SwaggerUI(component)
+                WebPage(component)
             }
 
             is Config.TechInterface -> {
@@ -90,7 +92,9 @@ class ProfileRootImpl @AssistedInject constructor(
         data object Settings: Config
 
         @Parcelize
-        data object SwaggerUI: Config
+        data class WebPage(
+            val type: WebPageType
+        ): Config
 
         @Parcelize
         data object TechInterface: Config

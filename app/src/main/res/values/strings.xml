@@ -9,6 +9,7 @@
     <string name="extra_info">Extra information</string>
     <string name="feels_like">Feels like</string>
     <string name="hourly_weather_title">Hourly weather</string>
+    <string name="profile_title">User profile</string>
 
     <string name="from_label">from</string>
     <string name="to_label">to</string>
@@ -36,6 +37,11 @@
     <string name="send_logs">Send logs</string>
     <string name="tech_interface">Technological interface</string>
     <string name="swagger_interface">Swagger UI</string>
+    <string name="documentation_page">Documentation page</string>
+    <string name="status_page">Status page</string>
+    <string name="statistic_page">Statistic page</string>
+    <string name="admin_page">Admin page</string>
+    <string name="useful_links">Useful links</string>
     <string name="settings">Settings</string>
     <string name="today">Today</string>
 
@@ -66,6 +72,11 @@
     <string name="log_in">Log in</string>
     <string name="or">OR</string>
     <string name="auth_title">Authorization</string>
-
     <string name="loading_auth">Loading weather…</string>
+
+    <string name="user_id">User id</string>
+    <string name="user_name">Name</string>
+    <string name="user_email">Email</string>
+    <string name="user_password">Password</string>
+    <string name="user_role">Active subscription</string>
 </resources>

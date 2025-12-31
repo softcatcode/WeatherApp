@@ -20,6 +20,7 @@ import com.softcat.database.commands.SearchCityCommand
 import com.softcat.database.commands.UpdateCountriesCommand
 import com.softcat.database.commands.UpdateWeatherTypesCommand
 import com.softcat.database.commands.VerifyUserCommand
+import com.softcat.database.commands.WeatherTypesLoadedCommand
 import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
@@ -69,4 +70,6 @@ interface CommandFactoryInterface {
     fun getWeatherTypesCommand(typeCodes: List<Int>): GetWeatherTypesCommand
 
     fun getClearWeatherDataCommand(): ClearWeatherDataCommand
+
+    fun getWeatherTypesLoadedCommand(): WeatherTypesLoadedCommand
 }
