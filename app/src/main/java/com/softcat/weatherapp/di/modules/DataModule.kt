@@ -3,20 +3,18 @@ package com.softcat.weatherapp.di.modules
 import android.content.Context
 import android.location.Geocoder
 import com.softcat.data.implementations.AppInfoRepositoryImpl
-import com.softcat.data.implementations.new_api.AuthorizationRepositoryImpl
-import com.softcat.data.implementations.new_api.CalendarRepositoryImpl
+import com.softcat.data.implementations.AuthorizationRepositoryImpl
+import com.softcat.data.implementations.CalendarRepositoryImpl
 import com.softcat.data.implementations.DatabaseLoaderRepositoryImpl
 import com.softcat.data.implementations.DatastoreRepositoryImpl
-import com.softcat.data.implementations.new_api.FavouriteRepositoryImpl
+import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.data.implementations.LocationRepositoryImpl
-import com.softcat.data.implementations.new_api.SearchRepositoryImpl
-import com.softcat.data.implementations.new_api.WeatherRepositoryImpl
+import com.softcat.data.implementations.SearchRepositoryImpl
+import com.softcat.data.implementations.WeatherRepositoryImpl
 import com.softcat.data.network.api.ApiFactory
 import com.softcat.data.network.api.ApiService
 import com.softcat.data.network.api.DocsApiFactory
 import com.softcat.data.network.api.DocsApiService
-import com.softcat.data.network.api.NewWeatherApiFactory
-import com.softcat.data.network.api.NewWeatherApiService
 import com.softcat.database.di.ApplicationScope
 import com.softcat.domain.interfaces.AppInfoRepository
 import com.softcat.domain.interfaces.AuthorizationRepository
@@ -80,10 +78,6 @@ interface DataModule {
         @ApplicationScope
         @Provides
         fun provideDocsApiService(): DocsApiService = DocsApiFactory.apiService
-
-        @ApplicationScope
-        @Provides
-        fun provideNewWeatherApiService(): NewWeatherApiService = NewWeatherApiFactory.apiService
 
         @ApplicationScope
         @Provides
