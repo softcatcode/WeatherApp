@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Adb
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Api
 import androidx.compose.material.icons.filled.Assessment
+import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Web
 import androidx.compose.runtime.Composable
@@ -61,6 +62,11 @@ fun SettingsScreen(component: SettingsComponent) {
             text = stringResource(R.string.admin_page),
             icon = Icons.Default.Android,
             onClick = { component.openWebPage(WebPageType.Admin) }
+        )
+        TextIconButton(
+            text = stringResource(R.string.useful_links),
+            icon = Icons.Default.AttachFile,
+            onClick = { component.openWebPage(WebPageType.UsefulLinks) }
         )
     }
 }

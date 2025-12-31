@@ -10,4 +10,6 @@ interface AppInfoRepository {
     fun getDocumentationLink(): String
 
     fun getAdminPageLink(): String
+
+    fun getUsefulLinksPage(): String
 }

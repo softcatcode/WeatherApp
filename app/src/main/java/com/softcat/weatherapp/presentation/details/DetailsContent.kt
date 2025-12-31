@@ -62,7 +62,7 @@ import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.extensions.formattedFullDate
 import com.softcat.weatherapp.presentation.extensions.formattedShortWeekDay
 import com.softcat.weatherapp.presentation.extensions.toTemperatureString
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
+import com.softcat.weatherapp.presentation.ui.theme.CustomPurple
 import com.softcat.weatherapp.presentation.ui.theme.WeatherCardGradient
 import com.softcat.weatherapp.presentation.utils.ErrorDialog
 import com.softcat.weatherapp.presentation.utils.defaultWeather
@@ -219,7 +219,7 @@ private fun SmallWeatherCard(
     isForCurrentDay: Boolean = false
 ) {
     val cardBorder = if (isForCurrentDay)
-        BorderStroke(1.dp, CalendarPurple)
+        BorderStroke(1.dp, CustomPurple)
     else
         BorderStroke(0.dp, Color.Unspecified)
     OutlinedCard(

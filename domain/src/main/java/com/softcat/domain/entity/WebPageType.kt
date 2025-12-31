@@ -6,4 +6,5 @@ enum class WebPageType {
     Admin,
     Statistics,
     ServerStatus,
+    UsefulLinks,
 }

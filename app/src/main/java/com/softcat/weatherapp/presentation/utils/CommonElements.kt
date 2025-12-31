@@ -36,7 +36,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.calendar.exo2FontFamily
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPink
+import com.softcat.weatherapp.presentation.ui.theme.CustomPink
 
 @Composable
 fun TextIconButton(
@@ -129,7 +129,7 @@ fun NavigationButton(
             modifier = Modifier.size(32.dp),
             imageVector = icon,
             contentDescription = null,
-            tint = if (isActive) CalendarPink else MaterialTheme.colorScheme.background
+            tint = if (isActive) CustomPink else MaterialTheme.colorScheme.background
         )
     }
 }

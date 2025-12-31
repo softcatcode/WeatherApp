@@ -30,8 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPink
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
+import com.softcat.weatherapp.presentation.ui.theme.CustomPink
+import com.softcat.weatherapp.presentation.ui.theme.CustomPurple
 
 @Composable
 @Preview
@@ -41,14 +41,14 @@ fun UseCase(
     name: String = "UseCase",
     onClick: () -> Unit = {}
 ) {
-    val bkg = if (isSelected) CalendarPurple else CalendarPink
+    val bkg = if (isSelected) CustomPurple else CustomPink
     Card(
         modifier = Modifier
             .wrapContentSize()
             .then(modifier),
         shape = RoundedCornerShape(20),
         colors = CardDefaults.cardColors(containerColor = bkg),
-        border = BorderStroke(1.dp, CalendarPurple),
+        border = BorderStroke(1.dp, CustomPurple),
         onClick = onClick
     ) {
         Text(
@@ -101,8 +101,8 @@ fun ExecuteButton(
     OutlinedButton(
         modifier = modifier,
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = CalendarPink),
-        border = BorderStroke(2.dp, CalendarPurple),
+        colors = ButtonDefaults.buttonColors(containerColor = CustomPink),
+        border = BorderStroke(2.dp, CustomPurple),
         shape = RoundedCornerShape(50)
     ) {
         Text(

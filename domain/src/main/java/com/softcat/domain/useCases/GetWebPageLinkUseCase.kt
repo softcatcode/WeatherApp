@@ -10,13 +10,13 @@ class GetWebPageLinkUseCase @Inject constructor(
 ) {
     operator fun invoke(type: WebPageType): String {
         Timber.i("${this::class.simpleName} invoked")
-        when (type) {
+        return when (type) {
             WebPageType.SwaggerUI -> repository.getSwaggerLink()
             WebPageType.Documentation -> repository.getDocumentationLink()
             WebPageType.Admin -> repository.getAdminPageLink()
             WebPageType.Statistics -> repository.getStatisticsLink()
             WebPageType.ServerStatus -> repository.getServerStatusLink()
+            WebPageType.UsefulLinks -> repository.getUsefulLinksPage()
         }
-        return repository.getSwaggerLink()
     }
 }

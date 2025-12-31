@@ -49,7 +49,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.extensions.formattedTime
-import com.softcat.weatherapp.presentation.ui.theme.CalendarPurple
+import com.softcat.weatherapp.presentation.ui.theme.CustomPurple
 import com.softcat.weatherapp.presentation.ui.theme.Pink80
 import com.softcat.weatherapp.presentation.ui.theme.Purple80
 import com.softcat.weatherapp.presentation.utils.defaultWeather
@@ -272,7 +272,7 @@ fun HourlyWeatherTopBar(
             )
         },
         colors = TopAppBarDefaults.topAppBarColors().copy(
-            containerColor = CalendarPurple,
+            containerColor = CustomPurple,
             titleContentColor = MaterialTheme.colorScheme.background
         ),
         navigationIcon = {
