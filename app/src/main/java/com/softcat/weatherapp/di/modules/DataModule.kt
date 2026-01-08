@@ -10,6 +10,7 @@ import com.softcat.data.implementations.DatastoreRepositoryImpl
 import com.softcat.data.implementations.FavouriteRepositoryImpl
 import com.softcat.data.implementations.LocationRepositoryImpl
 import com.softcat.data.implementations.SearchRepositoryImpl
+import com.softcat.data.implementations.UserAvatarRepositoryImpl
 import com.softcat.data.implementations.WeatherRepositoryImpl
 import com.softcat.data.network.api.ApiFactory
 import com.softcat.data.network.api.ApiService
@@ -24,6 +25,7 @@ import com.softcat.domain.interfaces.DatastoreRepository
 import com.softcat.domain.interfaces.FavouriteRepository
 import com.softcat.domain.interfaces.LocationRepository
 import com.softcat.domain.interfaces.SearchRepository
+import com.softcat.domain.interfaces.UserAvatarRepository
 import com.softcat.domain.interfaces.WeatherRepository
 import dagger.Binds
 import dagger.Module
@@ -68,6 +70,10 @@ interface DataModule {
     @ApplicationScope
     @Binds
     fun bindAppInfoRepository(impl: AppInfoRepositoryImpl): AppInfoRepository
+
+    @ApplicationScope
+    @Binds
+    fun bindUserAvatarRepository(impl: UserAvatarRepositoryImpl): UserAvatarRepository
 
     companion object {
 

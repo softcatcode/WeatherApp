@@ -1,5 +1,6 @@
 package com.softcat.weatherapp.presentation.profile
 
+import android.content.Context
 import android.net.Uri
 import kotlinx.coroutines.flow.StateFlow
 
@@ -11,7 +12,7 @@ interface ProfileComponent {
 
     fun clearWeatherData()
 
-    fun saveAvatar(uri: Uri?)
+    fun saveAvatar(context: Context, uri: Uri?)
 
     fun back()
 }

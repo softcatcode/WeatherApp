@@ -3,6 +3,7 @@ package com.softcat.weatherapp.presentation.profile
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,11 +49,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -242,6 +247,7 @@ fun UserDataSheet(
 @Composable
 fun AvatarCard(
     modifier: Modifier = Modifier,
+    avatarState: ProfileStore.State.AvatarState,
     onClick: () -> Unit
 ) {
     Card(
@@ -252,14 +258,23 @@ fun AvatarCard(
         ),
         onClick = onClick
     ) {
-        Icon(
-            modifier = Modifier
-                .size(90.dp)
-                .padding(20.dp),
-            imageVector = Icons.Filled.PhotoCamera,
-            contentDescription = null,
-            tint = Color.White
-        )
+        if (avatarState.avatar != null) {
+            Image(
+                modifier = Modifier.size(90.dp),
+                bitmap = avatarState.avatar.image.asImageBitmap(),
+                contentDescription = stringResource(R.string.avatar_image_description),
+                contentScale = ContentScale.Fit
+            )
+        } else {
+            Icon(
+                modifier = Modifier
+                    .size(90.dp)
+                    .padding(20.dp),
+                imageVector = Icons.Filled.PhotoCamera,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
     }
 }
 
@@ -326,6 +341,7 @@ fun UserInfoScreen(
         email = "test@email.com",
         password = "12345"
     ),
+    avatarState: ProfileStore.State.AvatarState = ProfileStore.State.AvatarState(),
     onSettingsClick: () -> Unit = {},
     onExitClick: () -> Unit = {},
     onClearWeatherDataClick: () -> Unit = {},
@@ -379,6 +395,7 @@ fun UserInfoScreen(
                             modifier = Modifier
                                 .align(Alignment.TopCenter)
                                 .wrapContentSize(),
+                            avatarState = avatarState,
                             onClick = onAvatarClick
                         )
                     }
@@ -400,22 +417,20 @@ fun UserInfoScreen(
 
 @Composable
 fun ProfileContent(component: ProfileComponent) {
-    val model = component.model.collectAsState()
+    val model by component.model.collectAsState()
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = {
-            component.saveAvatar(it)
+            component.saveAvatar(context, it)
         }
     )
 
-    when (val state = model.value) {
-        is ProfileStore.State.Content -> {
-            UserInfoScreen(
-                user = state.user,
-                onSettingsClick = { component.openSettings() },
-                onClearWeatherDataClick = { component.clearWeatherData() },
-                onAvatarClick = { launcher.launch("image/*") }
-            )
-        }
-    }
+    UserInfoScreen(
+        user = model.user,
+        avatarState = model.avatarState,
+        onSettingsClick = { component.openSettings() },
+        onClearWeatherDataClick = { component.clearWeatherData() },
+        onAvatarClick = { launcher.launch("image/*") }
+    )
 }

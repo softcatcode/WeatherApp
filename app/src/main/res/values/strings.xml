@@ -79,4 +79,9 @@
     <string name="user_email">Email</string>
     <string name="user_password">Password</string>
     <string name="user_role">Active subscription</string>
+
+    <string name="avatar_saved">Avatar image is saved.</string>
+    <string name="avatar_save_error">Avatar updating error. It is not saved.</string>
+    <string name="avatar_read_error">Avatar choosing error. Error when reading file.</string>
+    <string name="avatar_image_description">Profile image (user\'s photo).</string>
 </resources>

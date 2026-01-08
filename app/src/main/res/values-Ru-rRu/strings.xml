@@ -77,4 +77,9 @@
     <string name="user_email">Почта</string>
     <string name="user_password">Пароль</string>
     <string name="user_role">Активная подписка</string>
+
+    <string name="avatar_saved">Фото профиля сохранено.</string>
+    <string name="avatar_save_error">Ошибка обновления фото профиля. Новое фото не сохранено.</string>
+    <string name="avatar_read_error">Ошибка чтения файла с изображением. Фото профиля не обновлено.</string>
+    <string name="avatar_image_description">Фото профиля.</string>
 </resources>
