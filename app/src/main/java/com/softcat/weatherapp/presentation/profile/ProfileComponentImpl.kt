@@ -1,5 +1,6 @@
 package com.softcat.weatherapp.presentation.profile
 
+import android.net.Uri
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
@@ -51,6 +52,11 @@ class ProfileComponentImpl @AssistedInject constructor(
     override fun clearWeatherData() {
         Timber.i("${this::class.simpleName}.clearWeatherData()")
         store.accept(ProfileStore.Intent.ClearWeatherDataClicked)
+    }
+
+    override fun saveAvatar(uri: Uri?) {
+        Timber.i("${this::class.simpleName}.saveAvatar($uri)")
+        store.accept(ProfileStore.Intent.SaveAvatar(uri))
     }
 
     @AssistedFactory

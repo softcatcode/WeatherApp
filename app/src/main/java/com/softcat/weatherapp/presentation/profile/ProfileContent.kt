@@ -1,5 +1,7 @@
 package com.softcat.weatherapp.presentation.profile
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -239,14 +241,16 @@ fun UserDataSheet(
 
 @Composable
 fun AvatarCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = modifier,
         shape = CircleShape,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
-        )
+        ),
+        onClick = onClick
     ) {
         Icon(
             modifier = Modifier
@@ -283,6 +287,36 @@ fun SettingsButton(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+fun ProfileTopBar(
+    modifier: Modifier = Modifier
+) {
+    TopAppBar(
+        modifier = modifier,
+        navigationIcon = {
+            Icon(
+                modifier = Modifier.size(36.dp).padding(start = 8.dp),
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.back),
+                tint = Color.White
+            )
+        },
+        title = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(R.string.profile_title),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineSmall,
+                color = Color.White
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors().copy(
+            containerColor = DarkBlue
+        )
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 @Preview(showBackground = true)
 fun UserInfoScreen(
     user: User = User(
@@ -294,33 +328,13 @@ fun UserInfoScreen(
     ),
     onSettingsClick: () -> Unit = {},
     onExitClick: () -> Unit = {},
-    onClearWeatherDataClick: () -> Unit = {}
+    onClearWeatherDataClick: () -> Unit = {},
+    onAvatarClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.primary),
-                navigationIcon = {
-                    Icon(
-                        modifier = Modifier.size(36.dp).padding(start = 8.dp),
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back),
-                        tint = Color.White
-                    )
-                },
-                title = {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = stringResource(R.string.profile_title),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = Color.White
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors().copy(
-                    containerColor = DarkBlue
-                )
+            ProfileTopBar(
+                Modifier.background(MaterialTheme.colorScheme.primary)
             )
         }
     ) { paddingValues ->
@@ -364,7 +378,8 @@ fun UserInfoScreen(
                         AvatarCard(
                             modifier = Modifier
                                 .align(Alignment.TopCenter)
-                                .wrapContentSize()
+                                .wrapContentSize(),
+                            onClick = onAvatarClick
                         )
                     }
                 }
@@ -386,13 +401,20 @@ fun UserInfoScreen(
 @Composable
 fun ProfileContent(component: ProfileComponent) {
     val model = component.model.collectAsState()
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = {
+            component.saveAvatar(it)
+        }
+    )
 
     when (val state = model.value) {
         is ProfileStore.State.Content -> {
             UserInfoScreen(
                 user = state.user,
                 onSettingsClick = { component.openSettings() },
-                onClearWeatherDataClick = { component.clearWeatherData() }
+                onClearWeatherDataClick = { component.clearWeatherData() },
+                onAvatarClick = { launcher.launch("image/*") }
             )
         }
     }

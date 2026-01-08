@@ -39,6 +39,7 @@ class ProfileStoreFactory @Inject constructor(
                         clearWeatherUseCase()
                     }
                 }
+                is ProfileStore.Intent.SaveAvatar -> TODO()
             }
         }
     }
