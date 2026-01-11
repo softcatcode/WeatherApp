@@ -22,11 +22,16 @@ interface ProfileStore: Store<ProfileStore.Intent, ProfileStore.State, ProfileSt
         ): Intent
 
         data object Exit: Intent
+
+        data object ShowDialog: Intent
+
+        data object DismissDialog: Intent
     }
 
     data class State(
         val user: User,
-        val avatarState: AvatarState = AvatarState()
+        val avatarState: AvatarState = AvatarState(),
+        val showDialog: Boolean = false
     ) {
         data class AvatarState(
             val avatar: UserAvatar? = null,
@@ -40,5 +45,7 @@ interface ProfileStore: Store<ProfileStore.Intent, ProfileStore.State, ProfileSt
         data object SettingsClicked: Label
 
         data object Exited: Label
+
+        data object WeatherDataIsCleared: Label
     }
 }

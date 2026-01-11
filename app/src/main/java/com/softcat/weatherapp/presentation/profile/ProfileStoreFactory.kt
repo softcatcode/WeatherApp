@@ -73,6 +73,10 @@ class ProfileStoreFactory @Inject constructor(
         data object AvatarDeleted: Msg
 
         data object AvatarLoadingFinished: Msg
+
+        data object ShowDialog: Msg
+
+        data object DismissDialog: Msg
     }
 
     private inner class ProfileExecutor: CoroutineExecutor<ProfileStore.Intent, Action, ProfileStore.State, Msg, ProfileStore.Label>() {
@@ -84,8 +88,11 @@ class ProfileStoreFactory @Inject constructor(
                 ProfileStore.Intent.BackClicked -> publish(ProfileStore.Label.BackClicked)
                 ProfileStore.Intent.SettingsClicked -> publish(ProfileStore.Label.SettingsClicked)
                 ProfileStore.Intent.ClearWeatherDataClicked -> {
-                    scope.launch {
+                    scope.launch(Dispatchers.IO) {
                         clearWeatherUseCase()
+                        withContext(Dispatchers.Main) {
+                            publish(ProfileStore.Label.WeatherDataIsCleared)
+                        }
                     }
                 }
                 is ProfileStore.Intent.SaveAvatar -> with (intent) {
@@ -98,6 +105,10 @@ class ProfileStoreFactory @Inject constructor(
                         publish(ProfileStore.Label.Exited)
                     }
                 }
+
+                ProfileStore.Intent.ShowDialog -> dispatch(Msg.ShowDialog)
+
+                ProfileStore.Intent.DismissDialog -> dispatch(Msg.DismissDialog)
             }
         }
 
@@ -151,6 +162,10 @@ class ProfileStoreFactory @Inject constructor(
                 Msg.AvatarDeleted -> copy(avatarState = ProfileStore.State.AvatarState())
 
                 Msg.AvatarLoadingFinished -> copy(avatarState = avatarState.copy(updating = false))
+
+                Msg.ShowDialog -> copy(showDialog = true)
+
+                Msg.DismissDialog -> copy(showDialog = false)
             }
             Timber.i("${this::class.simpleName} NEW_STATE: $state.")
             return state

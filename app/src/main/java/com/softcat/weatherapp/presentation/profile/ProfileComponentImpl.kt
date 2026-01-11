@@ -39,7 +39,8 @@ class ProfileComponentImpl @AssistedInject constructor(
     private fun labelCollector(label: ProfileStore.Label): Unit = when (label) {
         ProfileStore.Label.BackClicked -> backClickCallback()
         ProfileStore.Label.SettingsClicked -> settingsClickCallback()
-        else -> exitCallback()
+        ProfileStore.Label.Exited -> exitCallback()
+        ProfileStore.Label.WeatherDataIsCleared -> dismissDialog()
     }
 
     override fun back() {
@@ -50,6 +51,16 @@ class ProfileComponentImpl @AssistedInject constructor(
     override fun exit() {
         Timber.i("${this::class.simpleName}.exit()")
         store.accept(ProfileStore.Intent.Exit)
+    }
+
+    override fun showDialog() {
+        Timber.i("${this::class.simpleName}.showDialog()")
+        store.accept(ProfileStore.Intent.ShowDialog)
+    }
+
+    override fun dismissDialog() {
+        Timber.i("${this::class.simpleName}.dismissDialog()")
+        store.accept(ProfileStore.Intent.DismissDialog)
     }
 
     override fun openSettings() {

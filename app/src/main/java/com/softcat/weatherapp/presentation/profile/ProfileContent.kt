@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +37,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -44,6 +46,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -61,6 +64,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -72,6 +76,7 @@ import com.softcat.domain.entity.User
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.ui.theme.CustomPink
 import com.softcat.weatherapp.presentation.ui.theme.DarkBlue
+import com.softcat.weatherapp.presentation.ui.theme.WarningColor
 import com.softcat.weatherapp.presentation.utils.ProgressBar
 
 @Composable
@@ -423,11 +428,78 @@ fun UserInfoScreen(
 
 }
 
+@Composable
+@Preview
+fun ConfirmDialog(
+    message: String = "Default message",
+    onConfirmClick: () -> Unit = {},
+    onDismissRequest: () -> Unit = {}
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = android.R.drawable.ic_dialog_alert),
+                contentDescription = stringResource(R.string.confirm_clear_weather),
+                tint = WarningColor,
+                modifier = Modifier.size(48.dp)
+            )
+
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                textAlign = TextAlign.Center,
+                color = Color.Black,
+                fontSize = 14.sp
+            )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                OutlinedButton(
+                    onClick = onDismissRequest,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.weight(4f)
+                ) {
+                    Text(
+                        text = stringResource(R.string.delay),
+                        fontSize = 14.sp
+                    )
+                }
+
+                Button(
+                    onClick = onConfirmClick,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                    modifier = Modifier.weight(5f)
+                ) {
+                    Text(
+                        text = stringResource(R.string.confirm),
+                        color = Color.White,
+                        fontSize = 14.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
 private fun checkReadImagePermission(context: Context) = ContextCompat.checkSelfPermission(
     context,
     Manifest.permission.READ_MEDIA_IMAGES
 ) == PackageManager.PERMISSION_GRANTED
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileContent(component: ProfileComponent) {
     val model by component.model.collectAsState()
@@ -454,7 +526,7 @@ fun ProfileContent(component: ProfileComponent) {
         user = model.user,
         avatarState = model.avatarState,
         onSettingsClick = { component.openSettings() },
-        onClearWeatherDataClick = { component.clearWeatherData() },
+        onClearWeatherDataClick = { component.showDialog() },
         onAvatarClick = {
             if (checkReadImagePermission(context))
                 launcher.launch("image/*")
@@ -463,4 +535,18 @@ fun ProfileContent(component: ProfileComponent) {
         },
         onExitClick = { component.exit() }
     )
+    if (model.showDialog) {
+        BasicAlertDialog(
+            onDismissRequest = { component.dismissDialog() }
+        ) {
+
+            ConfirmDialog(
+                message = stringResource(R.string.confirm_clear_weather),
+                onConfirmClick = {
+                    component.clearWeatherData()
+                },
+                onDismissRequest = { component.dismissDialog() }
+            )
+        }
+    }
 }

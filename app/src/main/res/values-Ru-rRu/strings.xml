@@ -83,4 +83,7 @@
     <string name="avatar_read_error">Ошибка чтения файла с изображением. Фото профиля не обновлено.</string>
     <string name="avatar_image_description">Фото профиля.</string>
     <string name="deny_read_images_warning">Без доступа к галерее невозможно обновить фото профиля</string>
+    <string name="confirm_clear_weather">Удалить погоду за прошлые дни, сохранённую локально в базе данных?</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="delay">Отмена</string>
 </resources>

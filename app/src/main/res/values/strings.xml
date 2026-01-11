@@ -85,4 +85,7 @@
     <string name="avatar_read_error">Avatar choosing error. Error when reading file.</string>
     <string name="avatar_image_description">Profile image (user\'s photo).</string>
     <string name="deny_read_images_warning">You won\'t be able to update profile photo without gallery permission.</string>
+    <string name="confirm_clear_weather">Do you really want to delete last days\' weather, which is saved in the local database?</string>
+    <string name="confirm">Confirm</string>
+    <string name="delay">Delay</string>
 </resources>

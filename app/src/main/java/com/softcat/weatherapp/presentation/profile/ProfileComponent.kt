@@ -17,4 +17,8 @@ interface ProfileComponent {
     fun back()
 
     fun exit()
+
+    fun showDialog()
+
+    fun dismissDialog()
 }
