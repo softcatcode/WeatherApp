@@ -2,17 +2,20 @@ package com.softcat.weatherapp.presentation.utils
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,11 +25,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
@@ -37,6 +42,7 @@ import coil.size.Size
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.calendar.exo2FontFamily
 import com.softcat.weatherapp.presentation.ui.theme.CustomPink
+import com.softcat.weatherapp.presentation.ui.theme.LightBlue
 
 @Composable
 fun TextIconButton(
@@ -155,5 +161,20 @@ fun MainBottomBar(
             )
         },
         containerColor = MaterialTheme.colorScheme.primary
+    )
+}
+
+@Preview
+@Composable
+fun ProgressBar(
+    modifier: Modifier = Modifier,
+    color: Color = Color.DarkGray
+) {
+    CircularProgressIndicator(
+        modifier = modifier,
+        color = color,
+        trackColor = LightBlue,
+        strokeWidth = 5.dp,
+        strokeCap = StrokeCap.Butt
     )
 }

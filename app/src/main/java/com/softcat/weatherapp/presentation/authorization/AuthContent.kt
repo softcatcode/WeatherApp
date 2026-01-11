@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -27,6 +28,7 @@ import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.ui.theme.DarkBlue
 import com.softcat.weatherapp.presentation.ui.theme.LightBlue
 import com.softcat.weatherapp.presentation.utils.LoadingGifCloud
+import com.softcat.weatherapp.presentation.utils.ProgressBar
 
 @Preview
 @Composable
@@ -285,7 +287,9 @@ fun AuthorizationScreen(component: AuthorizationComponent) {
             }
             if (state.isLoading) {
                 ProgressBar(
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .size(70.dp)
                 )
             }
             state.error?.let {

@@ -71,7 +71,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.softcat.domain.entity.User
 import com.softcat.weatherapp.R
+import com.softcat.weatherapp.presentation.ui.theme.CustomPink
 import com.softcat.weatherapp.presentation.ui.theme.DarkBlue
+import com.softcat.weatherapp.presentation.utils.ProgressBar
 
 @Composable
 fun TextIconButton(
@@ -263,22 +265,32 @@ fun AvatarCard(
         ),
         onClick = onClick
     ) {
-        if (avatarState.avatar != null) {
-            Image(
-                modifier = Modifier.size(90.dp),
-                bitmap = avatarState.avatar.image.asImageBitmap(),
-                contentDescription = stringResource(R.string.avatar_image_description),
-                contentScale = ContentScale.Fit
-            )
-        } else {
-            Icon(
-                modifier = Modifier
-                    .size(90.dp)
-                    .padding(20.dp),
-                imageVector = Icons.Filled.PhotoCamera,
-                contentDescription = null,
-                tint = Color.White
-            )
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            if (avatarState.avatar != null) {
+                Image(
+                    modifier = Modifier.size(90.dp),
+                    bitmap = avatarState.avatar.image.asImageBitmap(),
+                    contentDescription = stringResource(R.string.avatar_image_description),
+                    contentScale = ContentScale.Fit
+                )
+            } else {
+                Icon(
+                    modifier = Modifier
+                        .size(90.dp)
+                        .padding(20.dp),
+                    imageVector = Icons.Filled.PhotoCamera,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+            if (avatarState.updating) {
+                ProgressBar(
+                    modifier = Modifier.size(90.dp),
+                    color = CustomPink.copy(alpha = 0.3f)
+                )
+            }
         }
     }
 }
