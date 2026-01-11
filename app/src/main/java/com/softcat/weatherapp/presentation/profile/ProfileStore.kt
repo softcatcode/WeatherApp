@@ -20,6 +20,8 @@ interface ProfileStore: Store<ProfileStore.Intent, ProfileStore.State, ProfileSt
             val uri: Uri?,
             val userId: String
         ): Intent
+
+        data object Exit: Intent
     }
 
     data class State(
@@ -36,5 +38,7 @@ interface ProfileStore: Store<ProfileStore.Intent, ProfileStore.State, ProfileSt
         data object BackClicked: Label
 
         data object SettingsClicked: Label
+
+        data object Exited: Label
     }
 }

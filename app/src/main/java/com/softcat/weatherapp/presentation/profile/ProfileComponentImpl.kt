@@ -21,7 +21,8 @@ class ProfileComponentImpl @AssistedInject constructor(
     @Assisted("componentContext") componentContext: ComponentContext,
     @Assisted("user") user: User,
     @Assisted("back") private val backClickCallback: () -> Unit,
-    @Assisted("settings") private val settingsClickCallback: () -> Unit
+    @Assisted("settings") private val settingsClickCallback: () -> Unit,
+    @Assisted("exit") private val exitCallback: () -> Unit
 ): ProfileComponent, ComponentContext by componentContext {
     private val store: ProfileStore = instanceKeeper.getStore { storeFactory.create(user) }
     private val scope = componentScope()
@@ -38,11 +39,17 @@ class ProfileComponentImpl @AssistedInject constructor(
     private fun labelCollector(label: ProfileStore.Label): Unit = when (label) {
         ProfileStore.Label.BackClicked -> backClickCallback()
         ProfileStore.Label.SettingsClicked -> settingsClickCallback()
+        else -> exitCallback()
     }
 
     override fun back() {
         Timber.i("${this::class.simpleName}.back()")
         store.accept(ProfileStore.Intent.BackClicked)
+    }
+
+    override fun exit() {
+        Timber.i("${this::class.simpleName}.exit()")
+        store.accept(ProfileStore.Intent.Exit)
     }
 
     override fun openSettings() {
@@ -66,7 +73,8 @@ class ProfileComponentImpl @AssistedInject constructor(
             @Assisted("user") user: User,
             @Assisted("componentContext") componentContext: ComponentContext,
             @Assisted("back") backClickCallback: () -> Unit,
-            @Assisted("settings") settingsClickCallback: () -> Unit
+            @Assisted("settings") settingsClickCallback: () -> Unit,
+            @Assisted("exit") exitCallback: () -> Unit
         ): ProfileComponentImpl
     }
 }

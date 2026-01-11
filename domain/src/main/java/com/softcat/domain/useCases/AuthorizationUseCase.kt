@@ -26,7 +26,16 @@ class AuthorizationUseCase @Inject constructor(
     }
 
     suspend fun getLastUser(): User? {
-        Timber.i("${this::class.simpleName}.rememberUser invoked")
+        Timber.i("${this::class.simpleName}.getLastUser invoked")
         return datastoreRepository.getLastUser()
+    }
+
+    suspend fun exit(): Result<Unit> {
+        Timber.i("${this::class.simpleName}.exit invoked")
+        return try {
+            Result.success(datastoreRepository.clearLastUser())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

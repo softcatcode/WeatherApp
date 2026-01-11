@@ -25,6 +25,15 @@ class DatastoreRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun clearLastUser() {
+        Timber.i("${this::class.simpleName}.clearLastUser()")
+        dataStore.edit { preferences ->
+            val userKey = stringPreferencesKey(USER_KEY)
+            preferences.remove(userKey)
+            Timber.i("Last authorized user is forgotten.")
+        }
+    }
+
     override suspend fun getLastUser(): User? {
         val datastoreKey = stringPreferencesKey(USER_KEY)
         val userJson = dataStore.data.first()[datastoreKey]

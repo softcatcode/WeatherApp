@@ -11,6 +11,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import com.softcat.database.exceptions.AvatarIsAbsentException
 import com.softcat.domain.entity.User
 import com.softcat.domain.entity.UserAvatar
+import com.softcat.domain.useCases.AuthorizationUseCase
 import com.softcat.domain.useCases.ClearWeatherDataUseCase
 import com.softcat.domain.useCases.UserAvatarUseCase
 import com.softcat.weatherapp.R
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class ProfileStoreFactory @Inject constructor(
     private val storeFactory: StoreFactory,
     private val clearWeatherUseCase: ClearWeatherDataUseCase,
-    private val avatarUseCase: UserAvatarUseCase
+    private val avatarUseCase: UserAvatarUseCase,
+    private val authUseCase: AuthorizationUseCase
 ) {
     fun create(user: User): ProfileStore =
         object:
@@ -40,8 +42,9 @@ class ProfileStoreFactory @Inject constructor(
     private inner class ProfileBootstrapper(private val userId: String): CoroutineBootstrapper<Action>() {
         override fun invoke() {
             scope.launch(Dispatchers.IO) {
-                avatarUseCase.get(userId)
-                    .onSuccess {
+                val result = avatarUseCase.get(userId)
+                withContext(Dispatchers.Main) {
+                    result.onSuccess {
                         dispatch(Action.AvatarLoaded(it))
                     }.onFailure {
                         if (it is AvatarIsAbsentException)
@@ -49,6 +52,7 @@ class ProfileStoreFactory @Inject constructor(
                         else
                             dispatch(Action.AvatarLoadingError(it.message ?: ""))
                     }
+                }
             }
         }
     }
@@ -86,6 +90,13 @@ class ProfileStoreFactory @Inject constructor(
                 }
                 is ProfileStore.Intent.SaveAvatar -> with (intent) {
                     getAndSaveAvatar(context, uri, userId)
+                }
+
+                ProfileStore.Intent.Exit -> {
+                    scope.launch {
+                        authUseCase.exit()
+                        publish(ProfileStore.Label.Exited)
+                    }
                 }
             }
         }

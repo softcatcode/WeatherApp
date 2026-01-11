@@ -27,7 +27,8 @@ class ProfileRootImpl @AssistedInject constructor(
     private val webComponentFactory: WebComponentImpl.Factory,
     private val techIntComponentFactory: TechIntComponentImpl.Factory,
     @Assisted("context") componentContext: ComponentContext,
-    @Assisted("user") private val user: User
+    @Assisted("user") private val user: User,
+    @Assisted("exit") private val exitCallback: () -> Unit,
 ): ProfileRootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<Config>()
@@ -48,7 +49,8 @@ class ProfileRootImpl @AssistedInject constructor(
                     user = config.user,
                     componentContext = componentContext,
                     backClickCallback = { navigation.pop() },
-                    settingsClickCallback = { navigation.push(Config.Settings) }
+                    settingsClickCallback = { navigation.push(Config.Settings) },
+                    exitCallback = exitCallback
                 )
                 Profile(component)
             }
@@ -105,6 +107,7 @@ class ProfileRootImpl @AssistedInject constructor(
         fun create(
             @Assisted("context") componentContext: ComponentContext,
             @Assisted("user") user: User,
+            @Assisted("exit") exitCallback: () -> Unit,
         ): ProfileRootImpl
     }
 }

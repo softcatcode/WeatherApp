@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
@@ -324,14 +323,6 @@ fun ProfileTopBar(
 ) {
     TopAppBar(
         modifier = modifier,
-        navigationIcon = {
-            Icon(
-                modifier = Modifier.size(36.dp).padding(start = 8.dp),
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = stringResource(R.string.back),
-                tint = Color.White
-            )
-        },
         title = {
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -469,6 +460,7 @@ fun ProfileContent(component: ProfileComponent) {
                 launcher.launch("image/*")
             else
                 permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
-        }
+        },
+        onExitClick = { component.exit() }
     )
 }

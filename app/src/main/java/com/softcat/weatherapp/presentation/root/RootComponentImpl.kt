@@ -54,7 +54,8 @@ class RootComponentImpl @AssistedInject constructor(
             is Config.Main -> {
                 val component = bottomNavigationFactory.create(
                     componentContext = componentContext,
-                    user = config.user
+                    user = config.user,
+                    exitCallback = { navigation.replaceCurrent(Config.Authorization) }
                 )
                 Main(component)
             }

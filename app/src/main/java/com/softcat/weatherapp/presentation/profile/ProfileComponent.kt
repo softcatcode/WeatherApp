@@ -15,4 +15,6 @@ interface ProfileComponent {
     fun saveAvatar(context: Context, uri: Uri?, userId: String)
 
     fun back()
+
+    fun exit()
 }

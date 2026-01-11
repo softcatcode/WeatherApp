@@ -21,22 +21,10 @@ import timber.log.Timber
 class BottomNavigationComponentImpl @AssistedInject constructor(
     @Assisted("context") componentContext: ComponentContext,
     @Assisted("user") private val user: User,
+    @Assisted("exit") private val exitCallback: () -> Unit,
     private val weatherRootFactory: WeatherRootImpl.Factory,
     private val profileRootFactory: ProfileRootImpl.Factory
 ): BottomNavigationComponent, ComponentContext by componentContext {
-
-//    private val weatherRoot = instanceKeeper.getOrCreateSimple<WeatherRootComponent> {
-//        weatherRootFactory.create(
-//            componentContext = componentContext,
-//            user = user
-//        )
-//    }
-//    private val profileRoot = instanceKeeper.getOrCreateSimple<ProfileRootComponent> {
-//        profileRootFactory.create(
-//            componentContext = componentContext,
-//            user = user
-//        )
-//    }
 
     @OptIn(ExperimentalDecomposeApi::class)
     val navigation = PagesNavigation<Config>()
@@ -64,7 +52,8 @@ class BottomNavigationComponentImpl @AssistedInject constructor(
             is Config.ProfileConfig -> {
                 val component = profileRootFactory.create(
                     componentContext = componentContext,
-                    user = user
+                    user = user,
+                    exitCallback = exitCallback
                 )
                 BottomNavigationComponent.Child.ProfileRoot(component)
             }
@@ -90,7 +79,8 @@ class BottomNavigationComponentImpl @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted("context") componentContext: ComponentContext,
-            @Assisted("user") user: User
+            @Assisted("user") user: User,
+            @Assisted("exit") exitCallback: () -> Unit,
         ): BottomNavigationComponentImpl
     }
 
