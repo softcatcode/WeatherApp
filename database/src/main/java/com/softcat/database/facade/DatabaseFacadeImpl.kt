@@ -6,6 +6,7 @@ import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.PlotDbModel
+import com.softcat.database.model.UserAvatarDbModel
 import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -150,6 +151,21 @@ class DatabaseFacadeImpl @Inject constructor(
 
     override suspend fun weatherTypesLoaded(): Result<Boolean> {
         val cmd = factory.getWeatherTypesLoadedCommand()
+        cmd.execute()
+        return cmd.result
+    }
+
+    override suspend fun updateAvatar(
+        userId: String,
+        avatar: UserAvatarDbModel
+    ): Result<Unit> {
+        val cmd = factory.getUpdateAvatarCommand(userId, avatar)
+        cmd.execute()
+        return cmd.result
+    }
+
+    override suspend fun getAvatar(userId: String): Result<UserAvatarDbModel> {
+        val cmd = factory.getReadAvatarCommand(userId)
         cmd.execute()
         return cmd.result
     }

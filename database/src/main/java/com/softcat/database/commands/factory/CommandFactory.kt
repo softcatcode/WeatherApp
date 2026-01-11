@@ -14,9 +14,11 @@ import com.softcat.database.commands.GetFavouriteCitiesCommand
 import com.softcat.database.commands.GetPlotCommand
 import com.softcat.database.commands.GetWeatherTypesCommand
 import com.softcat.database.commands.IsFavouriteCommand
+import com.softcat.database.commands.ReadAvatarCommand
 import com.softcat.database.commands.RemoveFromFavouritesCommand
 import com.softcat.database.commands.SavePlotCommand
 import com.softcat.database.commands.SearchCityCommand
+import com.softcat.database.commands.UpdateAvatarCommand
 import com.softcat.database.commands.UpdateCountriesCommand
 import com.softcat.database.commands.UpdateWeatherTypesCommand
 import com.softcat.database.commands.VerifyUserCommand
@@ -30,6 +32,7 @@ import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.PlotDbModel
+import com.softcat.database.model.UserAvatarDbModel
 import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -123,4 +126,11 @@ class CommandFactory @Inject constructor(
     override fun getClearWeatherDataCommand() = ClearWeatherDataCommand(weatherManager)
 
     override fun getWeatherTypesLoadedCommand() = WeatherTypesLoadedCommand(weatherManager)
+
+    override fun getUpdateAvatarCommand(
+        userId: String,
+        avatar: UserAvatarDbModel
+    ) = UpdateAvatarCommand(usersManager, userId, avatar)
+
+    override fun getReadAvatarCommand(userId: String) = ReadAvatarCommand(usersManager, userId)
 }

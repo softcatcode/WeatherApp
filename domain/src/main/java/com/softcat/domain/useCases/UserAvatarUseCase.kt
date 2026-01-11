@@ -15,9 +15,9 @@ class UserAvatarUseCase @Inject constructor(
         return repository.loadAvatarFromGallery(context, uri)
     }
 
-    suspend fun save(avatar: UserAvatar): Result<Unit> {
+    suspend fun save(userId: String, avatar: UserAvatar): Result<Unit> {
         Timber.i("${this::class.simpleName} saveAvatar($avatar) invoked")
-        return repository.saveAvatar(avatar)
+        return repository.saveAvatar(userId, avatar)
     }
 
     suspend fun get(userId: String): Result<UserAvatar> {

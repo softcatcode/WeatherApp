@@ -4,6 +4,7 @@ import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.PlotDbModel
+import com.softcat.database.model.UserAvatarDbModel
 import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -53,4 +54,8 @@ interface DatabaseFacade {
     suspend fun clearWeatherData(): Result<Unit>
 
     suspend fun weatherTypesLoaded(): Result<Boolean>
+
+    suspend fun updateAvatar(userId: String, avatar: UserAvatarDbModel): Result<Unit>
+
+    suspend fun getAvatar(userId: String): Result<UserAvatarDbModel>
 }

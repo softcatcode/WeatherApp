@@ -55,9 +55,9 @@ class ProfileComponentImpl @AssistedInject constructor(
         store.accept(ProfileStore.Intent.ClearWeatherDataClicked)
     }
 
-    override fun saveAvatar(context: Context, uri: Uri?) {
+    override fun saveAvatar(context: Context, uri: Uri?, userId: String) {
         Timber.i("${this::class.simpleName}.saveAvatar($uri)")
-        store.accept(ProfileStore.Intent.SaveAvatar(context, uri))
+        store.accept(ProfileStore.Intent.SaveAvatar(context, uri, userId))
     }
 
     @AssistedFactory

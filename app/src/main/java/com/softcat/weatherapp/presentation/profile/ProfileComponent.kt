@@ -12,7 +12,7 @@ interface ProfileComponent {
 
     fun clearWeatherData()
 
-    fun saveAvatar(context: Context, uri: Uri?)
+    fun saveAvatar(context: Context, uri: Uri?, userId: String)
 
     fun back()
 }

@@ -7,7 +7,7 @@ import com.softcat.domain.entity.UserAvatar
 interface UserAvatarRepository {
     suspend fun loadAvatarFromGallery(context: Context, uri: Uri?): Result<UserAvatar>
 
-    suspend fun saveAvatar(avatar: UserAvatar): Result<Unit>
+    suspend fun saveAvatar(userId: String, avatar: UserAvatar): Result<Unit>
 
     suspend fun getAvatarFromDatabase(userId: String): Result<UserAvatar>
 }

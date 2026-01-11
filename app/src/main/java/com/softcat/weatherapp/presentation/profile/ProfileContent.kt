@@ -1,5 +1,9 @@
 package com.softcat.weatherapp.presentation.profile
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
@@ -64,6 +68,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.softcat.domain.entity.User
 import com.softcat.weatherapp.R
 import com.softcat.weatherapp.presentation.ui.theme.DarkBlue
@@ -415,22 +420,43 @@ fun UserInfoScreen(
 
 }
 
+private fun checkReadImagePermission(context: Context) = ContextCompat.checkSelfPermission(
+    context,
+    Manifest.permission.READ_MEDIA_IMAGES
+) == PackageManager.PERMISSION_GRANTED
+
 @Composable
 fun ProfileContent(component: ProfileComponent) {
     val model by component.model.collectAsState()
+
     val context = LocalContext.current
+    val permissionWarning = stringResource(R.string.deny_read_images_warning)
+
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = {
-            component.saveAvatar(context, it)
+        contract = ActivityResultContracts.GetContent()
+    ) {
+        component.saveAvatar(context, it, model.user.id)
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            launcher.launch("image/*")
+        } else {
+            Toast.makeText(context, permissionWarning, Toast.LENGTH_SHORT).show()
         }
-    )
+    }
 
     UserInfoScreen(
         user = model.user,
         avatarState = model.avatarState,
         onSettingsClick = { component.openSettings() },
         onClearWeatherDataClick = { component.clearWeatherData() },
-        onAvatarClick = { launcher.launch("image/*") }
+        onAvatarClick = {
+            if (checkReadImagePermission(context))
+                launcher.launch("image/*")
+            else
+                permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+        }
     )
 }

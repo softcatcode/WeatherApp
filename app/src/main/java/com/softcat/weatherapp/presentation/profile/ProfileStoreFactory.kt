@@ -84,7 +84,9 @@ class ProfileStoreFactory @Inject constructor(
                         clearWeatherUseCase()
                     }
                 }
-                is ProfileStore.Intent.SaveAvatar -> getAndSaveAvatar(intent.context, intent.uri)
+                is ProfileStore.Intent.SaveAvatar -> with (intent) {
+                    getAndSaveAvatar(context, uri, userId)
+                }
             }
         }
 
@@ -100,14 +102,14 @@ class ProfileStoreFactory @Inject constructor(
             }
         }
 
-        fun getAndSaveAvatar(context: Context, uri: Uri?) {
+        fun getAndSaveAvatar(context: Context, uri: Uri?, userId: String) {
             dispatch(Msg.AvatarLoading)
             scope.launch(Dispatchers.IO) {
                 avatarUseCase.read(context, uri).onSuccess { avatar ->
                     withContext(Dispatchers.Main) {
                         dispatch(Msg.AvatarLoaded(avatar))
                     }
-                    avatarUseCase.save(avatar).onSuccess {
+                    avatarUseCase.save(userId, avatar).onSuccess {
                         showMessage(context, R.string.avatar_saved)
                     }.onFailure {
                         showMessage(context, R.string.avatar_save_error)

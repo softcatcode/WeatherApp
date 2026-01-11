@@ -8,6 +8,7 @@ import com.softcat.database.model.CityDbModel
 import com.softcat.database.model.CountryDbModel
 import com.softcat.database.model.CurrentWeatherDbModel
 import com.softcat.database.model.PlotDbModel
+import com.softcat.database.model.UserAvatarDbModel
 import com.softcat.database.model.UserDbModel
 import com.softcat.database.model.WeatherDbModel
 import com.softcat.database.model.WeatherTypeDbModel
@@ -179,5 +180,12 @@ class DatabaseProxy @Inject constructor(
     override suspend fun weatherTypesLoaded(): Result<Boolean> {
         return database.weatherTypesLoaded()
     }
+
+    override suspend fun updateAvatar(
+        userId: String,
+        avatar: UserAvatarDbModel
+    ) = database.updateAvatar(userId, avatar)
+
+    override suspend fun getAvatar(userId: String) = database.getAvatar(userId)
 
 }

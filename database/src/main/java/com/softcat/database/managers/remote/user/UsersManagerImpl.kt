@@ -6,10 +6,12 @@ import com.google.firebase.database.database
 import com.google.gson.Gson
 import com.softcat.database.exceptions.UserVerificationException
 import com.softcat.database.internal.DatabaseRules
+import com.softcat.database.model.UserAvatarDbModel
 import com.softcat.database.model.UserDbModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
@@ -20,6 +22,10 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
     }
     private val usersRef by lazy {
         Firebase.database.getReference(DatabaseRules.USERS_TABLE_NAME)
+    }
+
+    private val avatarsRef by lazy {
+        Firebase.database.getReference(DatabaseRules.AVATAR_TABLE_NAME)
     }
 
     private fun UserDbModel.formatUser(id: String) = copy(
@@ -143,5 +149,42 @@ class UsersManagerImpl @Inject constructor(): UsersManager {
         return users.find { it.name == name && it.password == password }?.let {
             Result.success(it)
         } ?: Result.failure(UserVerificationException(name))
+    }
+
+    private suspend fun writeAvatarToDatabase(userId: String, avatar: UserAvatarDbModel) {
+        return withTimeout(DatabaseRules.TIMEOUT) {
+            val ref = avatarsRef.child(userId)
+            ref.setValue(avatar.image).await()
+        }
+    }
+
+    override suspend fun updateUserAvatar(
+        userId: String,
+        avatar: UserAvatarDbModel
+    ): Result<Unit> {
+        return try {
+            writeAvatarToDatabase(userId, avatar)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    private suspend fun readAvatarFromDatabase(userId: String): UserAvatarDbModel {
+        return withTimeout(DatabaseRules.TIMEOUT) {
+            val job = avatarsRef.child(userId).get()
+            val data = job.await()
+            val avatar = data.getValue(String::class.java)
+            UserAvatarDbModel(avatar!!)
+        }
+    }
+
+    override suspend fun readUserAvatar(userId: String): Result<UserAvatarDbModel> {
+        return try {
+            val result = readAvatarFromDatabase(userId)
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

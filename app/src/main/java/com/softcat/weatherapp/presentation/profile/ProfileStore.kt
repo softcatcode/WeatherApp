@@ -17,7 +17,8 @@ interface ProfileStore: Store<ProfileStore.Intent, ProfileStore.State, ProfileSt
 
         data class SaveAvatar(
             val context: Context,
-            val uri: Uri?
+            val uri: Uri?,
+            val userId: String
         ): Intent
     }
 
