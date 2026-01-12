@@ -146,8 +146,10 @@ class ProfileStoreFactory @Inject constructor(
         }
 
         fun showMessage(context: Context, msgId: Int) {
-            val text = context.getString(msgId)
-            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+            scope.launch(Dispatchers.Main) {
+                val text = context.getString(msgId)
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
